@@ -1,0 +1,12 @@
+// modules
+@import './modules/variables';
+@import './modules/placeholders';
+
+// partials
+@import './partials/base';
+@import './partials/global';
+
+// containers
+@import '../containers/App.scss';
+@import '../containers/Login/Login.scss';
+@import '../containers/Home/Home.scss';

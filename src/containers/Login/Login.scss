@@ -1,0 +1,41 @@
+.login {
+  @extend %flex-center-column;
+  height: 100vh;
+}
+
+.login__form {
+  @extend %flex-center-column;
+  width: 100%;
+  padding: $space-md;
+
+  .login__form__input {
+    margin: $space-xs;
+  }
+
+  .buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: $space-sm;
+    padding: $space-sm 0;
+    width: 100%;
+
+    .login__form-fullWidth {
+      grid-column: 1/3;
+    }
+
+    .google-login {
+      background: $color-red-500;
+      color: white;
+    }
+
+    .facebook-login {
+      background: $color-indigo-500;
+      color: white;
+    }
+
+    .kakao-login {
+      background: $color-yellow-500;
+      color: $color-grey-800;
+    }
+  }
+}

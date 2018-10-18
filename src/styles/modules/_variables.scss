@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,400,700|Material+Icons');
+
+// font weights
+$font-weight-light: 300;
+$font-weight-regular: 400;
+$font-weight-bold: 700;
+
+// font size
+$font-size-xsmall: 0.7rem;
+$font-size-small: 1rem;
+$font-size-medium: 1.2rem;
+$font-size-large: 1.5rem;
+$font-size-xlarge: 2rem;
+
+// base font
+$base-font-family: 'Noto Sans KR', sans-serif;
+$base-font-weight: $font-weight-regular;
+$base-font-size: $font-size-medium;
+$base-line-height: 1.5;
+
+// spacing
+$space-xs: 0.25rem;
+$space-sm: 0.75rem;
+$space-md: 1.25rem;
+$space-lg: 2rem;
+$space-xl: 2.5rem;
+
+// border-radius
+$border-radius: 0.25rem;
+
+// breakpoints
+$break-sm: 320px;
+$break-md: 768px;
+$break-lg: 1024px;
+
+// colors
+$color-green-50: #E8F5E9;
+$color-green-100: #C8E6C9;
+$color-green-200: #A5D6A7;
+$color-green-300: #81C784;
+$color-green-400: #66BB6A;
+$color-green-500: #4CAF50;
+$color-green-600: #43A047;
+$color-green-700: #388E3C;
+$color-green-800: #2E7D32;
+$color-green-900: #1B5E20;
+
+$color-yellow-50: #FFFDE7;
+$color-yellow-100: #FFF9C4;
+$color-yellow-200: #FFF59D;
+$color-yellow-300: #FFF176;
+$color-yellow-400: #FFEE58;
+$color-yellow-500: #FFEB3B;
+$color-yellow-600: #FDD835;
+$color-yellow-700: #FBC02D;
+$color-yellow-800: #F9A825;
+$color-yellow-900: #F57F17;
+
+$color-indigo-50: #E8EAF6;
+$color-indigo-100: #C5CAE9;
+$color-indigo-200: #9FA8DA;
+$color-indigo-300: #7986CB;
+$color-indigo-400: #5C6BC0;
+$color-indigo-500: #3F51B5;
+$color-indigo-600: #3949AB;
+$color-indigo-700: #303F9F;
+$color-indigo-800: #283593;
+$color-indigo-900: #1A237E;
+
+$color-red-50: #FFEBEE;
+$color-red-100: #FFCDD2;
+$color-red-200: #EF9A9A;
+$color-red-300: #E57373;
+$color-red-400: #EF5350;
+$color-red-500: #F44336;
+$color-red-600: #E53935;
+$color-red-700: #D32F2F;
+$color-red-800: #C62828;
+$color-red-900: #B71C1C;
+
+$color-grey-50: #FAFAFA;
+$color-grey-100: #F5F5F5;
+$color-grey-200: #EEEEEE;
+$color-grey-300: #E0E0E0;
+$color-grey-400: #BDBDBD;
+$color-grey-500: #9E9E9E;
+$color-grey-600: #757575;
+$color-grey-700: #616161;
+$color-grey-800: #424242;
+$color-grey-900: #212121;

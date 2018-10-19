@@ -3,6 +3,9 @@ import React, { Component } from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+/** Actions */
+import * as actions from '../actions';
+
 /** Components */
 import Login from './Login/Login';
 import Home from './Home/Home';
@@ -31,17 +34,10 @@ const PrivateRoute = ({ isLoggedIn, ...rest }) =>
   isLoggedIn === false ? <Redirect to="/" /> : <Route {...rest} />;
 
 
-
-
 class App extends Component {
-
-  // /**
-  //  * @param {string} locale 'en' or 'ko'
-  //  */
-  // setLocale = locale => {
-  //   console.log(locale);
-  //   this.props.dispatch(IntlActions.setLocale(locale));
-  // }
+  componentDidMount() {
+    this.props.getCurrentUser();
+  }
 
   renderPublicRoutes = (routes, isLoggedIn) => {
     return routes.map(({ path, component }) => (
@@ -68,8 +64,6 @@ class App extends Component {
   }
 
   render() {
-    console.log(window.navigator.language);
-    console.log(this.props);
     const { isLoggedInAsGuest, isLoggedInAsUser, currentUser } = this.props.auth;
     const isLoggedIn = (isLoggedInAsGuest || isLoggedInAsUser) && currentUser;
     return (
@@ -89,4 +83,4 @@ const mapStateToProps = ({ auth, Intl: { locale } }) => {
   return { auth, locale };
 }
 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps, actions)(App);

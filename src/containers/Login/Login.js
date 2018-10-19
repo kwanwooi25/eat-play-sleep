@@ -11,6 +11,8 @@ import Divider from '@material-ui/core/Divider';
 /** Actions */
 import * as actions from '../../actions';
 
+const API_HOST = process.env.REACT_APP_API_HOST || 'http://localhost:5000';
+
 class Login extends Component {
 
   handleLoginAsUser = () => {
@@ -21,25 +23,12 @@ class Login extends Component {
     console.log('handleSignUpWithEmail');
   }
 
-  handleLoginWithGoogle = () => {
-    console.log('handleLoginWithGoogle');
-  }
-  
-  handleLoginWithFacebook = () => {
-    console.log('handleLoginWithFacebook');
-  }
-  
-  handleLoginWithKakao = () => {
-    console.log('handleLoginWithKakao');
-  }
-  
-  handleLoginAsGuest = () => {
-    this.props.loginAsGuest();
-  }
-
   render() {
     console.log(this.props);
-    const { translate } = this.props;
+    const {
+      translate,
+      loginAsGuest
+    } = this.props;
 
     return (
       <div className="login">
@@ -79,29 +68,29 @@ class Login extends Component {
               variant="text"
               color="primary"
               className="login__form-fullWidth"
-              onClick={this.handleLoginAsGuest}
+              onClick={loginAsGuest}
             >
               {translate('continueAsGuest')}
             </Button>
             <Divider className="login__form-fullWidth"/>
             <Button
+              href={`${API_HOST}/auth/google`}
               variant="contained"
               className="login__form-fullWidth google-login"
-              onClick={this.handleLoginWithGoogle}
             >
               {translate('loginWithGoogle')}
             </Button>
             <Button
+              href={`${API_HOST}/auth/facebook`}
               variant="contained"
               className="login__form-fullWidth facebook-login"
-              onClick={this.handleLoginWithFacebook}
             >
               {translate('loginWithFacebook')}
             </Button>
             <Button
+              href={`${API_HOST}/auth/kakao`}
               variant="contained"
               className="login__form-fullWidth kakao-login"
-              onClick={this.handleLoginWithKakao}
             >
               {translate('loginWithKakao')}
             </Button>

@@ -14,8 +14,12 @@ import * as actions from '../../actions';
 class Home extends Component {
 
   renderUserInfo = user => {
+    if (!user) return undefined;
+
     const { id, email, babies } = user;
     const renderBabies = babies => {
+      if (!babies) return undefined;
+      
       return babies.map(({ id, name, gender, birthday }) => {
         return (
           <li key={id}>

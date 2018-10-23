@@ -10,9 +10,14 @@
 
   .login__form__input {
     margin: $space-xs;
+
+    &.error {
+      color: $color-red-500;
+    }
   }
 
-  .buttons {
+  .login-buttons,
+  .oauth-buttons {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: $space-sm;
@@ -36,6 +41,11 @@
     .kakao-login {
       background: $color-yellow-500;
       color: $color-grey-800;
+    }
+
+    .naver-login {
+      background: $color-green-600;
+      color: white;
     }
   }
 }

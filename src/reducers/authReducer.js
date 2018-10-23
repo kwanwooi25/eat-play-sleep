@@ -1,14 +1,16 @@
 import {
   GET_CURRENT_USER,
-  GET_CURRENT_USER_FAILED,
   LOGIN_AS_GUEST,
-  LOGOUT_USER
+  LOGIN_WITH_EMAIL,
+  AUTH_ERROR,
+  LOGOUT_USER,
 } from '../actions/types';
 
 const INITIAL_STATE = {
   isLoggedInAsGuest: false,
   isLoggedInAsUser: false,
   currentUser: null,
+  loginMethod: '',
   error: ''
 }
 
@@ -19,15 +21,8 @@ export default (state = INITIAL_STATE, action) => {
         isLoggedInAsGuest: false,
         isLoggedInAsUser: true,
         currentUser: action.payload,
+        loginMethod: action.payload.provider,
         error: ''
-      };
-
-    case GET_CURRENT_USER_FAILED:
-      return {
-        isLoggedInAsGuest: false,
-        isLoggedInAsUser: false,
-        currentUser: null,
-        error: action.payload
       };
 
     case LOGIN_AS_GUEST:
@@ -35,8 +30,22 @@ export default (state = INITIAL_STATE, action) => {
         isLoggedInAsGuest: true,
         isLoggedInAsUser: false,
         currentUser: action.payload,
+        loginMethod: 'guest',
         error: ''
       };
+    
+    case LOGIN_WITH_EMAIL:
+      localStorage.setItem('eps_user_token', action.payload.token);
+      return {
+        isLoggedInAsGuest: false,
+        isLoggedInAsUser: true,
+        currentUser: action.payload.user,
+        loginMethod: action.payload.user.provider,
+        error: ''
+      }
+
+    case AUTH_ERROR:
+      return Object.assign({}, INITIAL_STATE, { error: action.payload });
 
     case LOGOUT_USER:
       return INITIAL_STATE;

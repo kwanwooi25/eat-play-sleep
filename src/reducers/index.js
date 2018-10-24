@@ -2,8 +2,10 @@ import { combineReducers } from 'redux';
 // to make the app multilingual
 import { IntlReducer } from 'react-redux-multilingual';
 import authReducer from './authReducer';
+import babyReducer from './babyReducer';
 
 export default combineReducers({
   Intl: IntlReducer,
-  auth: authReducer
+  auth: authReducer,
+  babies: babyReducer,
 });

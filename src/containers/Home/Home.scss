@@ -1,3 +1,19 @@
-.app-title {
-  flex-grow: 1;
+.home {
+  @extend %flex-center-column;
+  padding: 1rem;
+  height: 100%;
+}
+
+.no-baby {
+  @extend %flex-center-column;
+
+  button {
+    margin: $space-lg;
+  }
+
+  p {
+    text-align: center;
+    margin: 0;
+    margin-bottom: $space-sm;
+  }
 }

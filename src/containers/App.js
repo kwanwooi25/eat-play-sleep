@@ -8,7 +8,7 @@ import * as actions from '../actions';
 
 /** Components */
 import Login from './Login/Login';
-import Home from './Home/Home';
+import MainContainer from './MainContainer/MainContainer';
 
 /** Stylesheet */
 import './App.scss';
@@ -28,7 +28,7 @@ const PublicRoute = ({ isLoggedIn, ...rest }) =>
  * - can only be accessed when logged in
  */
 const PRIVATE_ROUTES = [
-  { path: '/home', component: () => <Home /> },
+  { path: '/home', component: () => <MainContainer /> },
 ];
 const PrivateRoute = ({ isLoggedIn, ...rest }) =>
   isLoggedIn === false ? <Redirect to="/" /> : <Route {...rest} />;
@@ -68,12 +68,10 @@ class App extends Component {
     const isLoggedIn = (isLoggedInAsGuest || isLoggedInAsUser) && currentUser;
     return (
       <BrowserRouter>
-        <div className="App">
-          <Switch>
-            {this.renderPublicRoutes(PUBLIC_ROUTES, isLoggedIn)}
-            {this.renderPrivateRoutes(PRIVATE_ROUTES, isLoggedIn)}
-          </Switch>
-        </div>
+        <Switch>
+          {this.renderPublicRoutes(PUBLIC_ROUTES, isLoggedIn)}
+          {this.renderPrivateRoutes(PRIVATE_ROUTES, isLoggedIn)}
+        </Switch>
       </BrowserRouter>
     );
   }

@@ -30,12 +30,11 @@ export default (state = INITIAL_STATE, action) => {
         isLoggedInAsGuest: true,
         isLoggedInAsUser: false,
         currentUser: action.payload,
-        loginMethod: 'guest',
+        loginMethod: 'local',
         error: ''
       };
     
     case LOGIN_WITH_EMAIL:
-      localStorage.setItem('eps_user_token', action.payload.token);
       return {
         isLoggedInAsGuest: false,
         isLoggedInAsUser: true,

@@ -6,23 +6,38 @@ import {
   AUTH_ERROR,
   LOGOUT_USER,
 } from './types';
+import {
+  getGuestUser,
+  setGuestUser,
+  getUserToken,
+  setUserToken,
+  removeUserToken
+} from '../helpers/localStorage';
+import {
+  getBabies
+} from './babyActions';
 
 const API_HOST = process.env.REACT_APP_API_HOST || 'http://localhost:5000';
 
 export const getCurrentUser = () => async dispatch => {
   // 1. check for guest user
-  const guest = JSON.parse(localStorage.getItem('eps_guest_user'));
+  const guest = getGuestUser();
   if (guest && guest.isLoggedIn) {
+    dispatch(getBabies(guest));
     return dispatch({ type: GET_CURRENT_USER, payload: guest });
   }
 
   // 2. get user info logged in
-  const token = localStorage.getItem('eps_user_token');
+  const token = getUserToken();
   const res = await axios.get(`/auth/current_user?token=${token}`);
   const { success, error, data } = res.data;
   
-  if (success) dispatch({ type: GET_CURRENT_USER, payload: data });
-  else dispatch({ type: AUTH_ERROR, payload: error });
+  if (success) {
+    dispatch(getBabies(data));
+    dispatch({ type: GET_CURRENT_USER, payload: data });
+  } else {
+    dispatch({ type: AUTH_ERROR, payload: error });
+  } 
 }
 
 export const signupWithEmail = (email, password) => async dispatch => {
@@ -44,12 +59,17 @@ export const loginWithEmail = (email, password) => async dispatch => {
   const res = await axios.post(`${API_HOST}/auth/email`, credentials);
   const { success, error, data } = res.data;
 
-  if (success) dispatch({ type: LOGIN_WITH_EMAIL, payload: data });
-  else dispatch({ type: AUTH_ERROR, payload: error });
+  if (success) {
+    setUserToken(data.token);
+    dispatch(getBabies(data.user));
+    dispatch({ type: LOGIN_WITH_EMAIL, payload: data });
+  } else {
+    dispatch({ type: AUTH_ERROR, payload: error });
+  }
 }
 
 export const loginAsGuest = () => dispatch => {
-  let user = JSON.parse(localStorage.getItem('eps_guest_user'));
+  let user = getGuestUser();
 
   /**
    * when user exists,
@@ -65,26 +85,27 @@ export const loginAsGuest = () => dispatch => {
     user = {
       isLoggedIn: true,
       id: 'localuser',
-      babies: []
+      provider: 'local',
     };
   }
 
   // save guest info to localStorage;
-  localStorage.setItem('eps_guest_user', JSON.stringify(user));
+  setGuestUser(user);
   // remove user info from localStorage;
-  localStorage.removeItem('eps_user_token');
+  removeUserToken();
 
+  dispatch(getBabies(user));
   dispatch({ type: LOGIN_AS_GUEST, payload: user });
 }
 
 export const logoutUser = () => async dispatch => {
   // logout guest user
-  const guest = JSON.parse(localStorage.getItem('eps_guest_user'));
+  const guest = getGuestUser();
   guest.isLoggedIn = false;
-  localStorage.setItem('eps_guest_user', JSON.stringify(guest));
+  setGuestUser(guest);
 
   // logout user
-  localStorage.removeItem('eps_user_token');
+  removeUserToken();
   await axios.get('/auth/logout');
   dispatch({ type: LOGOUT_USER });
 }

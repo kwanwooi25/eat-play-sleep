@@ -3,67 +3,65 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withTranslate } from 'react-redux-multilingual';
 
-/** Material UI Components */
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
+/** Material UI */
 import Button from '@material-ui/core/Button';
+import Icon from '@material-ui/core/Icon';
+
+/** Components */
+import NewBabyModal from '../../components/NewBabyModal/NewBabyModal';
 
 /** Actions */
 import * as actions from '../../actions';
 
 class Home extends Component {
+  state = {
+    isNewBabyModalOpen: false
+  }
 
-  renderUserInfo = user => {
-    if (!user) return undefined;
+  handleAddBabyButton = () => {
+    this.setState({ isNewBabyModalOpen: true });
+  }
 
-    const { id, email, babies } = user;
-    const renderBabies = babies => {
-      if (!babies) return undefined;
-      
-      return babies.map(({ id, name, gender, birthday }) => {
-        return (
-          <li key={id}>
-            <span>{name}</span>
-            <span>{gender}</span>
-            <span>{birthday}</span>
-          </li>
-        )
-      })
-    }
+  handleNewBabyModalClose = baby => {
+    const { auth, addBaby } = this.props;
+    this.setState({ isNewBabyModalOpen: false });
 
-    return (
-      <div className="user-info">
-        <p>user_id: {id}</p>
-        <p>user_email: {email}</p>
-        {renderBabies(babies)}
-      </div>
-    )
+    baby.guardians = [ auth.currentUser.id ];
+    if (baby) addBaby(auth.currentUser, baby);
   }
 
   render() {
-    const { translate, auth } = this.props;
+    let { isNewBabyModalOpen } = this.state;
+    const { babies, translate } = this.props;
 
     return (
       <div className="home">
-        <AppBar position="static">
-          <Toolbar>
-            <h6 className="app-title">Home</h6>
+        {!babies.currentBaby && (
+          <div className="no-baby">
             <Button
-              color="inherit"
-              onClick={this.props.logoutUser}
+              variant="fab"
+              color="secondary"
+              aria-label="add baby"
+              onClick={this.handleAddBabyButton}
             >
-              {translate('logout')}
+              <Icon fontSize="large">add</Icon>
             </Button>
-          </Toolbar>
-        </AppBar>
-        {this.renderUserInfo(auth.currentUser)}
+            <p>{translate('noBabyMessage_line1')}</p>
+            <p>{translate('noBabyMessage_line2')}</p>
+          </div>
+        )}
+        
+        <NewBabyModal
+          open={isNewBabyModalOpen}
+          onClose={this.handleNewBabyModalClose}
+        />
       </div>
     )
   }
 }
 
-const mapStateToProps = ({ auth }) => {
-  return { auth }
+const mapStateToProps = ({ auth, babies }) => {
+  return { auth, babies }
 }
 
 export default withTranslate(

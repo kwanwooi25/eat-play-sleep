@@ -76,6 +76,7 @@ class Login extends Component {
    */
   validateField = name => {
     /** RegEx */
+    /* eslint-disable */
     const emailRegEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     const passwordRegEx = /(?=.*\d)(?=.*[a-z]).{8,}/
 

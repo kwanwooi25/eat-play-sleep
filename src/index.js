@@ -15,6 +15,11 @@ import translations from './translations';
 /** Material UI */
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
+/** Material UI Picker */
+import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
+import MomentUtils from 'material-ui-pickers/utils/moment-utils';
+import 'moment/locale/ko';
+
 /** Service Worker */
 import * as serviceWorker from './serviceWorker';
 
@@ -24,11 +29,13 @@ import App from './containers/App';
 /** Styles */
 import './styles/index.scss';
 
+const locale = window.navigator.language.slice(0, 2) === 'ko' ? 'ko' : 'en';
+
 // create Redux + Multilingual store
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
   reducers,
-  { Intl: { locale: window.navigator.language.slice(0, 2) || 'en'} },
+  { Intl: { locale: locale } },
   composeEnhancers(applyMiddleware(reduxThunk))
 );
 
@@ -61,7 +68,9 @@ ReactDOM.render(
   <Provider store={store}>
     <IntlProvider translations={translations}>
       <MuiThemeProvider theme={theme}>
-        <App/>
+        <MuiPickersUtilsProvider utils={MomentUtils} locale={locale}>
+          <App/>
+        </MuiPickersUtilsProvider>
       </MuiThemeProvider>
     </IntlProvider>
   </Provider>,

@@ -1,7 +1,6 @@
 import {
   GET_CURRENT_USER,
   LOGIN_AS_GUEST,
-  LOGIN_WITH_EMAIL,
   AUTH_ERROR,
   LOGOUT_USER,
 } from '../actions/types';
@@ -33,15 +32,6 @@ export default (state = INITIAL_STATE, action) => {
         loginMethod: 'local',
         error: ''
       };
-    
-    case LOGIN_WITH_EMAIL:
-      return {
-        isLoggedInAsGuest: false,
-        isLoggedInAsUser: true,
-        currentUser: action.payload.user,
-        loginMethod: action.payload.user.provider,
-        error: ''
-      }
 
     case AUTH_ERROR:
       return Object.assign({}, INITIAL_STATE, { error: action.payload });

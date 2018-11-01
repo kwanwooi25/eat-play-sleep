@@ -1,0 +1,85 @@
+.custom-selector {
+  @extend %flex-center-row;
+
+  &__option {
+    @extend %flex-center-column;
+    margin: $space-sm;
+    width: 6rem;
+    height: 6rem;
+    position: relative;
+    cursor: pointer;
+
+    input {
+      display: none;
+
+      &:hover + .custom-selector__option__bg {
+        background: $color-primary-xlight;
+      }
+
+      &:checked + .custom-selector__option__bg {
+        background: $color-primary;
+      }
+
+      &:checked ~ .custom-selector__option__icon {
+        height: 3rem;
+        width: 3rem;
+      }
+
+      &:checked ~ .custom-selector__option__title {
+        width: auto;
+        height: auto;
+      }
+    }
+
+    
+    &__icon {
+      width: 4.5rem;
+      height: 4.5rem;
+      z-index: 2;
+    }
+    
+    &__title {
+      font-size: $font-size-small;
+      width: 0;
+      height: 0;
+      color: white;
+      overflow: hidden;
+      z-index: 2;
+    }
+    
+    &__bg {
+      position: absolute;
+      background: $color-grey-light;
+      border-radius: 100%;
+      width: 6rem;
+      height: 6rem;
+    }
+    
+    &.small {
+      width: 4rem;
+      height: 4rem;
+
+      .custom-selector__option__bg {
+        width: 4rem;
+        height: 4rem;
+      }
+  
+      .custom-selector__option__icon {
+        width: 3rem;
+        height: 3rem;
+      }
+
+      input:checked ~ .custom-selector__option__icon {
+        height: 2rem;
+        width: 2rem;
+      }
+  
+      .custom-selector__option__title {
+        font-size: $font-size-xsmall;
+        width: 0;
+        height: 0;
+      }
+    }
+
+  }
+}

@@ -7,6 +7,9 @@ import {
   getGuestBabies,
   addGuestBaby
 } from '../helpers/localStorage';
+import {
+  getActivities,
+} from './activityActions';
 
 const API_HOST = process.env.REACT_APP_API_HOST || 'http://localhost:5000';
 

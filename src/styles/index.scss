@@ -1,6 +1,7 @@
 // modules
 @import './modules/variables';
 @import './modules/placeholders';
+@import './modules/animations';
 
 // partials
 @import './partials/base';
@@ -11,6 +12,14 @@
 @import '../containers/Login/Login.scss';
 @import '../containers/Home/Home.scss';
 @import '../containers/MainContainer/MainContainer.scss';
+@import '../containers/Activity/Activity.scss';
 
 // components
-@import '../components/NewBabyModal/NewBabyModal.scss';
+@import '../components/SVGIcon/SVGIcon.scss';
+@import '../components/CustomDialog/CustomDialog.scss';
+@import '../components/NewBabyDialog/NewBabyDialog.scss';
+@import '../components/ActivityTimer/ActivityTimer.scss';
+@import '../components/ActivityTimerMulti/ActivityTimerMulti.scss';
+@import '../components/NumberInput/NumberInput.scss';
+@import '../components/CustomSelector/CustomSelector.scss';
+@import '../components/CustomDateTimePicker/CustomDateTimePicker.scss';

@@ -1,16 +1,17 @@
 const GUEST_USER = 'eps_guest_user';
-const USER_TOKEN = 'eps_user_token';
 const GUEST_BABIES = 'eps_guest_babies';
 const GUEST_BABY_ID = 'eps_guest_baby_id';
+const GUEST_ACTIVITIES = 'eps_guest_activities';
+const GUEST_ACTIVITY_ID = 'eps_guest_activity_id';
 
 /** Guest User Info */
 export const getGuestUser = () => JSON.parse(localStorage.getItem(GUEST_USER));
 export const setGuestUser = user => localStorage.setItem(GUEST_USER, JSON.stringify(user));
-
-/** Login Token (for email login) */
-export const getUserToken = () => localStorage.getItem(USER_TOKEN);
-export const setUserToken = token => localStorage.setItem(USER_TOKEN, token);
-export const removeUserToken = () => localStorage.removeItem(USER_TOKEN);
+export const logoutGuestUser = () => {
+  const guest = getGuestUser();
+  guest.isLoggedIn = false;
+  setGuestUser(guest);
+}
 
 /** Guest's baby info */
 export const getGuestBabies = () => JSON.parse(localStorage.getItem(GUEST_BABIES));
@@ -26,4 +27,26 @@ export const addGuestBaby = baby => {
   babies.push(baby);
   setGuestBabies(babies);
   return getGuestBabies();
+}
+
+/** Guest's babies' activities */
+export const getGuestActivities = babyID => {
+  const activities = JSON.parse(localStorage.getItem(GUEST_ACTIVITIES));
+  let filtered = activities;
+  if (activities && babyID) filtered = activities.filter(activity => activity.babyID === babyID); 
+  return filtered;
+}
+export const setGuestActivities = activities =>
+  localStorage.setItem(GUEST_ACTIVITIES, JSON.stringify(activities));
+export const getNextActivityId = () => {
+  const nextId = Number(localStorage.getItem(GUEST_ACTIVITY_ID)) + 1 || 1;
+  localStorage.setItem(GUEST_ACTIVITY_ID, nextId);
+  return nextId;
+};
+export const addGuestActivity = activity => {
+  activity.id = getNextActivityId();
+  const activities = getGuestActivities() || [];
+  activities.push(activity);
+  setGuestActivities(activities);
+  return getGuestActivities(activity.babyID);
 }

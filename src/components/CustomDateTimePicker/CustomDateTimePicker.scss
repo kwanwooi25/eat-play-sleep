@@ -1,0 +1,35 @@
+.custom-date-time-picker {
+  @extend %flex-center-row;
+
+  border: 1px solid $color-primary;
+  border-radius: $space-xs;
+  margin: $space-md 0;
+  
+  div,
+  fieldset {
+    border: none;
+    flex: 1;
+  }
+
+  input {
+    font-size: $font-size-large;
+    padding: $space-sm;
+    text-align: center;
+  }
+
+  &__button {
+    align-self: stretch;
+    justify-self: stretch;
+    background: $color-primary;
+    color: white;
+    border: none;
+    outline: none;
+    padding: $space-md;
+    font-size: $font-size-medium;
+    cursor: pointer;
+
+    &:hover {
+      background: $color-primary-light;
+    }
+  }
+}

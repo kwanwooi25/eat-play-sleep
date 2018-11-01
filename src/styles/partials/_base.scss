@@ -2,6 +2,9 @@
 *::before,
 *::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  transition: .2s;
 }
 
 body {
@@ -12,6 +15,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: $color-primary-xdark;
   font-size: $base-font-size;
 }
 

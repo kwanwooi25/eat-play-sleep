@@ -43,16 +43,16 @@ const store = createStore(
 const theme = createMuiTheme({
   palette: {
     primary: {
-      light: '#bef67a',
-      main: '#8bc34a',
-      dark: '#5a9216',
-      contrastText: '#f1f8e9'
+      light: '#7986CB',
+      main: '#3F51B5',
+      dark: '#303F9F',
+      contrastText: '#fff'
     },
     secondary: {
-      light: '#ffe54c',
-      main: '#ffb300',
-      dark: '#c68400',
-      contrastText: '#fff8e1'
+      light: '#FFD86A',
+      main: '#FBC658',
+      dark: '#D19C2E',
+      contrastText: '#fff'
     },
   },
   typography: {

@@ -79,6 +79,7 @@ export const saveActivity = (user, activity) => async dispatch => {
   } else if (name === 'bottle' || name === 'sleep') {
     activity.timer.stop();
   }
+  activity.guardianID = user.id;
 
   const activityToSave = formActivityToSave(activity);
   if (user.provider === 'local') addGuestActivity(activityToSave);
@@ -89,6 +90,7 @@ export const saveActivity = (user, activity) => async dispatch => {
 
 const formActivityToSave = activity => {
   const {
+    guardianID,
     babyID,
     name,
     type,
@@ -116,6 +118,7 @@ const formActivityToSave = activity => {
   else duration_total = duration_left + duration_right;
 
   return {
+    guardianID,
     babyID,
     name,
     type,

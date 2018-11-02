@@ -5,6 +5,8 @@ import { withTranslate } from 'react-redux-multilingual';
 /** Material UI Components */
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
+import Slide from '@material-ui/core/Slide';
+import Snackbar from '@material-ui/core/Snackbar';
 
 /** Components */
 import ActivityTimer from '../../components/ActivityTimer/ActivityTimer';
@@ -16,6 +18,8 @@ import CustomTextInput from '../../components/CustomTextInput/CustomTextInput';
 
 /** Actions */
 import * as actions from '../../actions';
+
+const Transition = props => <Slide direction="left" {...props} />;
 
 const CUSTOM_SELECTOR_OPTIONS = {
   bottle: [ 'breast_milk', 'formula_milk' ],
@@ -202,7 +206,7 @@ class Activity extends Component {
   }
 
   render() {
-    const { onBack, onCancel, onSave } = this.props;
+    const { onBack, onCancel, onSave, error, closeSnackbar } = this.props;
     const { title } = this.props.activity;
 
     return (
@@ -230,6 +234,15 @@ class Activity extends Component {
             <Icon>check</Icon>
           </button>
         </div>
+
+        <Snackbar
+          className="snackbar error"
+          open={!!error}
+          autoHideDuration={2000}
+          onClose={closeSnackbar}
+          TransitionComponent={Transition}
+          message={<span>{error}</span>}
+        />
       </div>
     )
   }

@@ -51,7 +51,7 @@ export default {
       menu: 'Menu',
       pee: 'Pee',
       poo: 'Poo',
-      peepoo: 'Pee+Poo',
+      peepoo: 'Pee & Poo',
       memo: 'Memo',
       amount: 'Amount',
       height: 'Height',
@@ -59,6 +59,14 @@ export default {
       head: 'Head',
       confirmActivityCancelTitle: 'Cancel Activity',
       confirmActivityCancelMessage: 'You will lost progress. Do you want to abort?',
+      successActivitySave: 'Activity saved : {title}',
+      error_NoAmount: 'Amount cannot be 0',
+      error_NoType_bottle: 'Please choose milk type.',
+      error_NoType_babyfood: 'Please input menu',
+      error_NoType_diaper: "Please choose one of them: 'Pee', 'Poo', 'Pee & Poo'",
+      error_NoHeight: 'Please input height',
+      error_NoWeight: 'Please input weight',
+      error_NoHead: 'Please input head size',
     }
   },
   ko: {
@@ -113,7 +121,7 @@ export default {
       menu: '메뉴',
       pee: '쉬야',
       poo: '응가',
-      peepoo: '쉬야+응가',
+      peepoo: '쉬야 & 응가',
       memo: '메모',
       amount: '양',
       height: '키',
@@ -121,6 +129,14 @@ export default {
       head: '머리둘레',
       confirmActivityCancelTitle: '활동 취소',
       confirmActivityCancelMessage: '현재 활동을 취소하시겠습니까?',
+      successActivitySave: '저장되었습니다 : {title}',
+      error_NoAmount: '양을 입력하세요.',
+      error_NoType_bottle: '모유/분유를 선택하세요.',
+      error_NoType_babyfood: '메뉴를 입력하세요.',
+      error_NoType_diaper: "다음 중 하나를 선택하세요: '쉬야', '응가', '쉬야 & 응가'",
+      error_NoHeight: '키를 입력하세요.',
+      error_NoWeight: '몸무게를 입력하세요.',
+      error_NoHead: '머리둘레를 입력하세요.',
     }
   }
 }

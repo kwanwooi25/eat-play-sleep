@@ -1,0 +1,16 @@
+.snackbar {
+  max-width: 90%;
+  margin: 0 auto $space-lg;
+
+  div {
+    border-radius: $border-radius;
+  }
+
+  &.success div {
+    background: $color-success;
+  }
+
+  &.error div {
+    background: $color-error;
+  }
+}

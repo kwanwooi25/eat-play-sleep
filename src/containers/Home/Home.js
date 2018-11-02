@@ -8,6 +8,7 @@ import moment from 'moment';
 import Icon from '@material-ui/core/Icon';
 import Slide from '@material-ui/core/Slide';
 import Dialog from '@material-ui/core/Dialog';
+import Snackbar from '@material-ui/core/Snackbar';
 
 /** Components */
 import Activity from '../Activity/Activity';
@@ -17,6 +18,9 @@ import SVGIcon from '../../components/SVGIcon/SVGIcon';
 
 /** Actions */
 import * as actions from '../../actions';
+
+/** Helper functions */
+import validate from '../../helpers/validateActivityBeforeSave';
 
 const Transition = props => <Slide direction="left" {...props} />;
 
@@ -37,6 +41,9 @@ class Home extends Component {
     isNewBabyDialogOpen: false,
     isActivityDialogOpen: false,
     isConfirmModalOpen: false,
+    isSnackbarOpen: false,
+    snackbarMessage: '',
+    snackbarType: '',
     activity: null
   }
 
@@ -117,19 +124,30 @@ class Home extends Component {
   }
 
   handleActivitySave = () => {
-    const { name } = this.state.activity;
+    const { name, title } = this.state.activity;
     const {
       updateCurrentActivities,
       saveActivity,
       activities: { currentActivities },
-      auth: { currentUser }
+      auth: { currentUser },
+      translate,
     } = this.props;
 
     const activityToSave = currentActivities.find(activity => activity.name === name);
     const updated = currentActivities.filter(activity => activity.name !== name);
-    updateCurrentActivities(updated);
-    saveActivity(currentUser, activityToSave);
-    this.closeActivityDialog();
+
+    const { isValid, error } = validate(activityToSave);
+
+    if (isValid) {
+      this.showSnackbar(translate('successActivitySave', { title }), 'success');
+      updateCurrentActivities(updated);
+      saveActivity(currentUser, activityToSave);
+      this.closeActivityDialog();
+    } else {
+      this.showSnackbar(translate(error), 'error');
+    }
+
+    
   }
 
   handleActivityInProgress = () => {
@@ -153,6 +171,22 @@ class Home extends Component {
   handleConfirmModalClose = result => {
     if (result === true) this.handleActivityCancel();
     this.setState({ isConfirmModalOpen: false });
+  }
+
+  showSnackbar = (message, type) => {
+    this.setState({
+      isSnackbarOpen: true,
+      snackbarMessage: message,
+      snackbarType: type,
+    });
+  }
+
+  handleSnackbarClose = () => {
+    this.setState({
+      isSnackbarOpen: false,
+      snackbarMessage: '',
+      snackbarType: '',
+    });
   }
 
   renderActivityButtons = (activities, currentActivities) => {
@@ -181,11 +215,12 @@ class Home extends Component {
       isNewBabyDialogOpen,
       isActivityDialogOpen,
       isConfirmModalOpen,
+      isSnackbarOpen,
+      snackbarMessage,
+      snackbarType,
       activity
     } = this.state;
     const { babies, activities, translate } = this.props;
-
-    console.log(activities.all);
 
     return (
       <div className="home">
@@ -224,6 +259,8 @@ class Home extends Component {
               onBack={this.handleActivityInProgress}
               onCancel={this.showConfirmModal}
               onSave={this.handleActivitySave}
+              error={snackbarType === 'error' && snackbarMessage}
+              closeSnackbar={this.handleSnackbarClose}
             />
           )}
         </Dialog>
@@ -234,6 +271,15 @@ class Home extends Component {
           title={translate('confirmActivityCancelTitle')}
           message={translate('confirmActivityCancelMessage')}
           variant="confirm"
+        />
+
+        <Snackbar
+          className="snackbar success"
+          open={isSnackbarOpen && snackbarType === 'success'}
+          autoHideDuration={2000}
+          onClose={this.handleSnackbarClose}
+          TransitionComponent={Transition}
+          message={<span>{snackbarMessage}</span>}
         />
       </div>
     )

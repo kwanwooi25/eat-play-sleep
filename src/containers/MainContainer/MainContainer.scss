@@ -11,7 +11,7 @@
   background: $color-primary;
   color: white;
   width: 100%;
-  padding: $space-sm;
+  padding: $space--sm;
 
   &__button {
     @extend %button--primary;
@@ -22,11 +22,11 @@
 .baby-info {
   flex: 1;
   margin: 0;
-  padding-left: $space-sm;
+  padding-left: $space--sm;
 }
 
 .swipeable-views {
-  background: $color-grey-100;
+  background: $color-grey--100;
 }
 
 .react-swipeable-view-container {
@@ -41,13 +41,14 @@
 .bottom-nav {
   @extend %flex-center-row;
   align-items: stretch;
+  border-top: 1px solid $color-primary--xxlight;
 
   &__button {
     @extend %button;
     @extend %flex-center-column;
     flex: 1;
     border-radius: 0;
-    padding: $space-xs;
+    padding: $space--xs;
     
     &__label {
       width: 0;
@@ -56,7 +57,7 @@
     }
 
     &.active {
-      background: $color-primary-xlight;
+      background: $color-primary--xxlight;
 
       .bottom-nav__button__label {
         width: auto;

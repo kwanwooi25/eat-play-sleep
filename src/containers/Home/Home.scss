@@ -10,15 +10,15 @@
 
   &__button {
     @extend %button--primary;
-    margin: $space-lg;
-    padding: $space-sm;
+    margin: $space--lg;
+    padding: $space--sm;
     border-radius: 100%;
   }
 
   p {
     text-align: center;
     margin: 0;
-    margin-bottom: $space-sm;
+    margin-bottom: $space--sm;
   }
 }
 
@@ -44,9 +44,17 @@
     "pump_left pump_left pump_left pump_right pump_right pump_right"
     "bottle bottle bottle babyfood babyfood babyfood"
     "diaper diaper sleep sleep growth growth";
-  grid-gap: $space-md;
+  grid-gap: $space--md;
   align-items: center;
   justify-items: center;
+
+  .breast_left, .breast_right { background: $color-breast }
+  .pump_left, .pump_right { background: $color-pump }
+  .bottle { background: $color-bottle }
+  .babyfood { background: $color-babyfood }
+  .diaper { background: $color-diaper }
+  .sleep { background: $color-sleep }
+  .growth { background: $color-growth }
 
 
   &__button {
@@ -58,11 +66,11 @@
     border-radius: 100%;
     width: 6rem;
     height: 6rem;
-    padding: $space-xs;
+    padding: $space--xs;
     cursor: pointer;
 
     &:hover {
-      background: $color-primary-light;
+      background: $color-primary--light;
     }
 
     &__icon {

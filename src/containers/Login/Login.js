@@ -34,13 +34,13 @@ class Login extends Component {
   renderOauthButtons = providers => {
     return providers.map(name => {
       return (
-        <button
+        <a
           key={name}
           href={`${API_HOST}/auth/${name}`}
           className="social-login__button"
         >
           <SVGIcon name={name} />
-        </button>
+        </a>
       )
     })
   }

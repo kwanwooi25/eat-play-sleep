@@ -4,10 +4,10 @@
 
   &__timer--main {
     @extend %flex-center-column;
-    font-size: $font-size-xlarge;
-    font-weight: $font-weight-bold;
-    margin: $space-sm;
-    padding: $space-sm;
+    font-size: $font-size--xlarge;
+    font-weight: $font-weight--bold;
+    margin: $space--sm;
+    padding: $space--sm;
     border: 3px solid $color-primary;
     border-radius: 1rem;
     width: 10rem;
@@ -20,7 +20,7 @@
   &__controls {
     @extend %flex-center-row;
     justify-content: space-around;
-    padding: $space-md 0;
+    padding: $space--md 0;
     width: 100%;
 
     &__side {
@@ -28,25 +28,20 @@
 
       &__icon {
         border-radius: 100%;
-        background: $color-grey-light;
+        background: $color-grey--light;
         color: white;
         width: 4rem;
         height: 4rem;
-        padding: $space-xs;
-        margin: $space-xs;
+        padding: $space--xs;
+        margin: $space--xs;
       }
   
       &__timer {
-        color: $color-grey-light;
+        color: $color-grey--light;
       }
 
-      &.active &__icon {
-        background: $color-primary;
-
-        img {
-          animation: 1s heartbeat infinite;
-        }
-      }
+      &.active.breast &__icon { background: $color-breast }
+      &.active.pump &__icon { background: $color-pump }
 
       &.active &__timer {
         color: $color-primary;
@@ -63,11 +58,11 @@
         background: white;
         width: 4rem;
         height: 4rem;
-        margin: $space-sm;
+        margin: $space--sm;
         cursor: pointer;
   
         &:hover {
-          background: $color-primary-xlight;
+          background: $color-primary--xlight;
         }
       }
     }

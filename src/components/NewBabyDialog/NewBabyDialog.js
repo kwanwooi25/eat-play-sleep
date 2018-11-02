@@ -92,7 +92,6 @@ class NewBabyDialog extends Component {
               {translate('babyNameLabel')}
             </label>
             <FormControl
-              fullWidth
               variant="outlined"
               error={nameError ? true : false}
             >
@@ -111,7 +110,6 @@ class NewBabyDialog extends Component {
               {translate('babyGenderLabel')}
             </label>
             <FormControl
-              fullWidth
               variant="outlined"
               error={genderError ? true : false}
             >
@@ -129,7 +127,6 @@ class NewBabyDialog extends Component {
               {translate('babyBirthdayLabel')}
             </label>
             <FormControl
-              fullWidth
               variant="outlined"
               error={birthdayError ? true : false}
             >

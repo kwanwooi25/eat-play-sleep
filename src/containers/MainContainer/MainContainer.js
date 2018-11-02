@@ -11,6 +11,7 @@ import Icon from '@material-ui/core/Icon';
 
 /** Components */
 import Home from '../Home/Home';
+import Logs from '../Logs/Logs';
 
 /** actions */
 import * as actions from '../../actions';
@@ -24,16 +25,6 @@ const BOTTOM_NAV_ITEMS = [
 
 class MainContainer extends Component {
   state = { value: 0 }
-
-  componentDidMount() {
-    const {
-      auth: { currentUser },
-      babies: { currentBaby },
-      getActivities,
-    } = this.props;
-
-    if (currentBaby) getActivities(currentUser, currentBaby.id);
-  }
 
   renderBottomNavItems = items => {
     const { translate } = this.props;
@@ -100,7 +91,7 @@ class MainContainer extends Component {
           onChangeIndex={this.handleChangeIndex}
         >
           <Home className="content" dir="ltr" />
-          <div className="content" dir="ltr">Logs</div>
+          <Logs className="content" dir="ltr" />
           <div className="content" dir="ltr">Chart</div>
           <div className="content" dir="ltr">Settings</div>
         </SwipeableViews>

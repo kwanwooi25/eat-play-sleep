@@ -4,10 +4,10 @@
 
   &__timer {
     @extend %flex-center-column;
-    font-size: $font-size-xlarge;
-    font-weight: $font-weight-bold;
-    margin: $space-sm;
-    padding: $space-sm;
+    font-size: $font-size--xlarge;
+    font-weight: $font-weight--bold;
+    margin: $space--sm;
+    padding: $space--sm;
     border: 3px solid $color-primary;
     border-radius: 1rem;
     width: 10rem;
@@ -19,7 +19,7 @@
 
   &__controls {
     @extend %flex-center-row;
-    padding: $space-md 0;
+    padding: $space--md 0;
 
     &__button {
       @extend %flex-center-column;
@@ -30,10 +30,10 @@
       background: white;
       width: 4rem;
       height: 4rem;
-      margin: $space-sm;
+      margin: $space--sm;
 
       &:hover {
-        background: $color-primary-xlight;
+        background: $color-primary--xlight;
       }
     }
   }

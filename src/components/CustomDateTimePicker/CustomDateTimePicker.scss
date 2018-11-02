@@ -2,8 +2,8 @@
   @extend %flex-center-row;
 
   border: 1px solid $color-primary;
-  border-radius: $space-xs;
-  margin: $space-md 0;
+  border-radius: $space--xs;
+  margin: $space--md 0;
   
   div,
   fieldset {
@@ -12,8 +12,8 @@
   }
 
   input {
-    font-size: $font-size-large;
-    padding: $space-sm;
+    font-size: $font-size--large;
+    padding: $space--sm;
     text-align: center;
   }
 
@@ -24,12 +24,12 @@
     color: white;
     border: none;
     outline: none;
-    padding: $space-md;
-    font-size: $font-size-medium;
+    padding: $space--md;
+    font-size: $font-size--medium;
     cursor: pointer;
 
     &:hover {
-      background: $color-primary-light;
+      background: $color-primary--light;
     }
   }
 }

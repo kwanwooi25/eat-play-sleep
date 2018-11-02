@@ -7,18 +7,18 @@
     background: $color-primary;
     color: white;
     width: 100%;
-    padding: $space-sm;
+    padding: $space--sm;
 
     h2 {
       flex: 1;
-      padding-left: $space-sm;
+      padding-left: $space--sm;
     }
   }
 
   &__content {
     flex: 1;
     width: 100%;
-    padding: $space-sm;
+    padding: $space--sm;
     overflow-y: auto;
   }
 
@@ -31,8 +31,8 @@
       cursor: pointer;
       border: none;
       outline: none;
-      font-size: $font-size-medium;
-      padding: $space-md;
+      font-size: $font-size--medium;
+      padding: $space--md;
     }
     
     &__confirm {
@@ -40,16 +40,16 @@
       color: white;
 
       &:hover {
-        background: $color-success-dark;
+        background: $color-success--dark;
       }
     }
 
     &__cancel {
-      background: $color-grey-xlight;
-      color: $color-grey-xdark;
+      background: $color-grey--xlight;
+      color: $color-grey--xdark;
 
       &:hover {
-        background: $color-grey-light;
+        background: $color-grey--light;
         color: white;
       }
     }

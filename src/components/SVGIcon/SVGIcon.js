@@ -70,7 +70,8 @@ const getPath = name => {
           <path className="drop" d="M109,366L109,366L109,366L109,366L109,366c0.6,0.5,27,25.3,26,52s-25.4,27-26,27l0,0l0,0l0,0l0,0 c-0.6,0-25-0.3-26-27S108.4,366.6,109,366z"/>
         </g>
       );
-
+    
+    case 'breast':
     case 'breast_right':
       return (
         <g>
@@ -78,7 +79,8 @@ const getPath = name => {
 	        <path className="drop" d="M391,366L391,366L391,366L391,366L391,366c-0.6,0.5-27,25.3-26,52s25.4,27,26,27l0,0l0,0l0,0l0,0 c0.6,0,25-0.3,26-27S391.6,366.6,391,366z"/>
         </g>
       );
-
+    
+    case 'pump':
     case 'pump_left':
       return (
         <g>

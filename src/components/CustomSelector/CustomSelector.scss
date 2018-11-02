@@ -3,9 +3,9 @@
 
   &__option {
     @extend %flex-center-column;
-    margin: $space-sm;
-    width: 6rem;
-    height: 6rem;
+    margin: $space--sm;
+    width: 5rem;
+    height: 5rem;
     position: relative;
     cursor: pointer;
 
@@ -13,7 +13,7 @@
       display: none;
 
       &:hover + .custom-selector__option__bg {
-        background: $color-primary-xlight;
+        background: $color-primary--xlight;
       }
 
       &:checked + .custom-selector__option__bg {
@@ -21,8 +21,8 @@
       }
 
       &:checked ~ .custom-selector__option__icon {
-        height: 3rem;
-        width: 3rem;
+        height: 50%;
+        width: 50%;
       }
 
       &:checked ~ .custom-selector__option__title {
@@ -31,15 +31,22 @@
       }
     }
 
+    &__bg {
+      position: absolute;
+      background: $color-grey--light;
+      border-radius: 100%;
+      width: 100%;
+      height: 100%;
+    }
     
     &__icon {
-      width: 4.5rem;
-      height: 4.5rem;
+      width: 80%;
+      height: 80%;
       z-index: 2;
     }
     
     &__title {
-      font-size: $font-size-small;
+      font-size: $font-size--small;
       width: 0;
       height: 0;
       color: white;
@@ -47,37 +54,12 @@
       z-index: 2;
     }
     
-    &__bg {
-      position: absolute;
-      background: $color-grey-light;
-      border-radius: 100%;
-      width: 6rem;
-      height: 6rem;
-    }
-    
     &.small {
       width: 4rem;
       height: 4rem;
-
-      .custom-selector__option__bg {
-        width: 4rem;
-        height: 4rem;
-      }
-  
-      .custom-selector__option__icon {
-        width: 3rem;
-        height: 3rem;
-      }
-
-      input:checked ~ .custom-selector__option__icon {
-        height: 2rem;
-        width: 2rem;
-      }
   
       .custom-selector__option__title {
-        font-size: $font-size-xsmall;
-        width: 0;
-        height: 0;
+        font-size: $font-size--xsmall;
       }
     }
 

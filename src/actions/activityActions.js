@@ -22,10 +22,10 @@ export const getActivities = (user, babyID) => async dispatch => {
   if (provider === 'local') {
     activities = getGuestActivities(babyID) || [];
   } else {
-    // const res = await axios.get(`${API_HOST}/api/babies?userID=${id}`);
-    // const { success, error, data } = res.data;
-    // if (error) return dispatch({ type: GET_BABIES_FAILED, payload: error });
-    // if (success) babies = data;
+    const res = await axios.get(`${API_HOST}/api/activities?babyID=${babyID}`);
+    const { success, error, data } = res.data;
+    if (error) return dispatch({ type: GET_ACTIVITIES_FAILED, payload: error });
+    if (success) activities = data;
   }
 
   dispatch({ type: GET_ACTIVITIES, payload: activities });
@@ -83,7 +83,7 @@ export const saveActivity = (user, activity) => async dispatch => {
 
   const activityToSave = formActivityToSave(activity);
   if (user.provider === 'local') addGuestActivity(activityToSave);
-  // else await axios.post(`${API_HOST}/api/activities/add`, activity);
+  else await axios.post(`${API_HOST}/api/activities/add`, activityToSave);
 
   dispatch(getActivities(user, activity.babyID));
 }
@@ -118,8 +118,8 @@ const formActivityToSave = activity => {
   else duration_total = duration_left + duration_right;
 
   return {
-    guardianID,
-    babyID,
+    guardian_id: guardianID,
+    baby_id: babyID,
     name,
     type,
     time_start,

@@ -95,7 +95,7 @@ class ActivityTimerMulti extends Component {
           <span>{secondsToHMS(left + right)}</span>
         </div>
         <div className="activity-timer-multi__controls">
-          <div className={`activity-timer-multi__controls__side ${isLeftActive ? 'active' : ''}`}>
+          <div className={`activity-timer-multi__controls__side ${name} ${isLeftActive ? 'active' : ''}`}>
             <SVGIcon
               name={`${name}_left`}
               isActive={isLeftActive}
@@ -134,7 +134,7 @@ class ActivityTimerMulti extends Component {
               </button>
             )}
           </div>
-          <div className={`activity-timer-multi__controls__side ${isRightActive ? 'active' : ''}`}>
+          <div className={`activity-timer-multi__controls__side ${name} ${isRightActive ? 'active' : ''}`}>
             <SVGIcon
               name={`${name}_right`}
               isActive={isRightActive}

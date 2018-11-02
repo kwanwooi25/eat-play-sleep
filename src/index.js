@@ -13,7 +13,7 @@ import { IntlProvider } from 'react-redux-multilingual';
 import translations from './translations';
 
 /** Material UI */
-import { MuiThemeProvider } from '@material-ui/core/styles';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 /** Material UI Picker */
 import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
@@ -40,10 +40,17 @@ const store = createStore(
   composeEnhancers(applyMiddleware(reduxThunk))
 );
 
+// Mui Theme
+const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+  },
+});
+
 ReactDOM.render(
   <Provider store={store}>
     <IntlProvider translations={translations}>
-      <MuiThemeProvider>
+      <MuiThemeProvider theme={theme}>
         <MuiPickersUtilsProvider utils={MomentUtils} moment={moment} locale={locale}>
           <App/>
         </MuiPickersUtilsProvider>

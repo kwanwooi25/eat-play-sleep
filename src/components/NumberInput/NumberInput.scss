@@ -1,17 +1,17 @@
 .number-input {
   @extend %flex-center-row;
   justify-content: space-between;
-  margin: $space-sm 0;
+  margin: $space--sm 0;
   width: 100%;
   border-top: 1px solid $color-primary;
   border-bottom: 1px solid $color-primary;
-  border-radius: $space-xs;
+  border-radius: $space--xs;
 
   &-container {
     @extend %flex-center-row;
 
     label {
-      margin-right: $space-sm;
+      margin-right: $space--sm;
       width: 5.5rem;
     }
   }
@@ -21,21 +21,21 @@
     color: white;
     border: none;
     outline: none;
-    padding: $space-sm;
+    padding: $space--sm;
     cursor: pointer;
 
     &:hover {
-      background: $color-primary-light;
+      background: $color-primary--light;
     }
 
     &:first-child {
-      border-top-left-radius: $space-xs;
-      border-bottom-left-radius: $space-xs;
+      border-top-left-radius: $space--xs;
+      border-bottom-left-radius: $space--xs;
     }
 
     &:last-child {
-      border-top-right-radius: $space-xs;
-      border-bottom-right-radius: $space-xs;
+      border-top-right-radius: $space--xs;
+      border-bottom-right-radius: $space--xs;
     }
   }
 
@@ -43,12 +43,12 @@
     @extend %flex-center-row;
     align-items: baseline;
     flex: 1;
-    font-size: $font-size-large;
+    font-size: $font-size--large;
 
     input {
-      font-size: $font-size-xlarge;
-      margin-right: $space-xs;
-      color: $color-primary-xdark;
+      font-size: $font-size--xlarge;
+      margin-right: $space--xs;
+      color: $color-primary--xdark;
       border: none;
       outline: none;
       max-width: 5rem;

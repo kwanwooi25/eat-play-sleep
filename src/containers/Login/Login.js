@@ -5,7 +5,6 @@ import { withTranslate } from 'react-redux-multilingual';
 
 /** Material UI Components */
 import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
 
 /** Components */
 import SVGIcon from '../../components/SVGIcon/SVGIcon';
@@ -61,9 +60,12 @@ class Login extends Component {
           </div>
           <div className="login-form__divider">OR</div>
           <div className="guest-login">
-            <Button color="primary" size="large" onClick={this.handleGuestLogin}>
+            <button
+              className="guest-login__button"
+              onClick={this.handleGuestLogin}
+            >
               {translate('continueAsGuest')}
-            </Button>
+            </button>
           </div>
         </Paper>
         

@@ -95,6 +95,9 @@ $color-primary: $color-indigo-500;
 $color-primary-dark: $color-indigo-700;
 $color-primary-xdark: $color-indigo-900;
 
+$color-primary-text: $color-primary-dark;
+$color-primary-text-contrast: lighten($color-primary-xlight, 10%);
+
 $color-grey-xlight: $color-grey-100;
 $color-grey-light: $color-grey-300;
 $color-grey: $color-grey-500;
@@ -106,3 +109,9 @@ $color-success-light: $color-green-300;
 $color-success: $color-green-500;
 $color-success-dark: $color-green-700;
 $color-success-xdark: $color-green-900;
+
+$color-error-xlight: $color-red-100;
+$color-error-light: $color-red-300;
+$color-error: $color-red-500;
+$color-error-dark: $color-red-700;
+$color-error-xdark: $color-red-900;

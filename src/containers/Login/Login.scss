@@ -36,6 +36,10 @@
 
 .guest-login {
   padding-bottom: 0;
+
+  &__button {
+    @extend %button;
+  }
 }
 
 .social-login__button {

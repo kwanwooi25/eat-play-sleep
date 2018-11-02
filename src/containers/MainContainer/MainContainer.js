@@ -7,9 +7,6 @@ import moment from 'moment';
 import SwipeableViews from 'react-swipeable-views';
 
 /** Material UI */
-import Button from '@material-ui/core/Button';
-import BottomNavigation from '@material-ui/core/BottomNavigation';
-import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import Icon from '@material-ui/core/Icon';
 
 /** Components */
@@ -18,7 +15,7 @@ import Home from '../Home/Home';
 /** actions */
 import * as actions from '../../actions';
 
-const ACTIONS = [
+const BOTTOM_NAV_ITEMS = [
   { label: 'home', icon: 'home' },
   { label: 'logs', icon: 'list' },
   { label: 'chart', icon: 'pie_chart' },
@@ -35,23 +32,32 @@ class MainContainer extends Component {
       getActivities,
     } = this.props;
 
-    getActivities(currentUser, currentBaby.id);
+    if (currentBaby) getActivities(currentUser, currentBaby.id);
   }
 
-  renderActions = actions => {
+  renderBottomNavItems = items => {
     const { translate } = this.props;
+    const { value } = this.state;
 
-    return actions.map(({ label, icon }, index) => (
-      <BottomNavigationAction
-        key={label}
-        label={translate(`${label}Label`)}
-        value={index}
-        icon={<Icon>{icon}</Icon>}
-      />
-    ))
+    return items.map(({ label, icon }, index) => {
+      const activeClassName = value === index ? 'active' : '';
+
+      return (
+        <button
+          key={label}
+          className={`bottom-nav__button ${activeClassName}`}
+          onClick={() => { this.handleBottomNavChange(index) }}
+        >
+          <Icon>{icon}</Icon>
+          <span className="bottom-nav__button__label">
+            {translate(`${label}Label`)}
+          </span>
+        </button>
+      )
+    })
   }
 
-  handleChangeBottomNav = (event, value) => this.setState({ value });
+  handleBottomNavChange = index => this.setState({ value: index });
 
   handleChangeIndex = index => this.setState({ value: index });
 
@@ -80,12 +86,12 @@ class MainContainer extends Component {
               </span>
             )}
           </div>
-          <Button
-            color="inherit"
+          <button
+            className="main-header__button"
             onClick={logoutUser}
           >
             {translate('logout')}
-          </Button>
+          </button>
         </header>
         <SwipeableViews
           className="swipeable-views"
@@ -98,9 +104,9 @@ class MainContainer extends Component {
           <div className="content" dir="ltr">Chart</div>
           <div className="content" dir="ltr">Settings</div>
         </SwipeableViews>
-        <BottomNavigation value={value} onChange={this.handleChangeBottomNav}>
-          {this.renderActions(ACTIONS)}
-        </BottomNavigation>
+        <div className="bottom-nav">
+          {this.renderBottomNavItems(BOTTOM_NAV_ITEMS)}
+        </div>
       </div>
     )
   }

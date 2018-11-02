@@ -1,0 +1,20 @@
+.custom-text-input {
+  @extend %flex-center-column;
+  width: 100%;
+
+  label {
+    align-self: flex-start;
+    padding: $space-xs;
+  }
+
+  input,
+  textarea {
+    @extend %input;
+    width: 100%;
+  }
+
+  textarea {
+    resize: none;
+    overflow: hidden;
+  }
+}

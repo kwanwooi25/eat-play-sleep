@@ -16,6 +16,10 @@
     padding: $space-sm;
     display: grid;
     grid-template-columns: 1fr 2fr;
+
+    &__input {
+      @extend %input;
+    }
   }
 
   &__buttons {

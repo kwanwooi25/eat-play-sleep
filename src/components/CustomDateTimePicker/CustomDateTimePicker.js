@@ -9,7 +9,7 @@ const CustomDateTimePicker = ({
 }) => {
   return (
     <div className="custom-date-time-picker">
-      <InlineDateTimePicker {...props} />
+      <InlineDateTimePicker onlyCalendar {...props} />
       <button
         className="custom-date-time-picker__button"
         onClick={onNowButtonClick}

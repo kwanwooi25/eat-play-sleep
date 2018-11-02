@@ -63,10 +63,11 @@ export const loginAsGuest = () => dispatch => {
 }
 
 export const logoutUser = () => async dispatch => {
+  dispatch({ type: LOGOUT_USER });
+  
   // logout guest user
   logoutGuestUser();
 
   // logout user
   await axios.get('/auth/logout');
-  dispatch({ type: LOGOUT_USER });
 }

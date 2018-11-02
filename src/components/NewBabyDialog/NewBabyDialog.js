@@ -6,13 +6,10 @@ import Dialog from '@material-ui/core/Dialog';
 import Slide from '@material-ui/core/Slide';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-
-/** Material UI Picker */
-import DatePicker from 'material-ui-pickers/DatePicker';
 
 /** Components */
 import CustomSelector from '../../components/CustomSelector/CustomSelector';
+import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
 
 const Transition = props => <Slide direction="up" {...props} />;
 
@@ -78,21 +75,6 @@ class NewBabyDialog extends Component {
   render() {
     const { translate, open } = this.props;
     const { name, gender, birthday, nameError, genderError, birthdayError } = this.state;
-    const FormField = ({
-      error,
-      inputComponent
-    }) => {
-      return (
-        <FormControl
-          fullWidth
-          variant="outlined"
-          error={error ? true : false}
-        >
-          {inputComponent}
-          {error && <FormHelperText>{error}</FormHelperText>}
-        </FormControl>
-      );
-    }
 
     return (
       <Dialog
@@ -114,8 +96,8 @@ class NewBabyDialog extends Component {
               variant="outlined"
               error={nameError ? true : false}
             >
-              <OutlinedInput
-                labelWidth={0}
+              <input
+                className={`new-baby-dialog__form__input ${nameError ? 'error' : ''}`}
                 type="text"
                 id="name"
                 name="name"
@@ -128,33 +110,36 @@ class NewBabyDialog extends Component {
             <label htmlFor="gender">
               {translate('babyGenderLabel')}
             </label>
-            <FormField
-              error={genderError}
-              inputComponent={
-                <CustomSelector
-                  name="gender"
-                  options={GENDER_OPTIONS}
-                  value={gender}
-                  onChange={this.handleInputChange}
-                  size="small"
-                />
-              }
-            />
+            <FormControl
+              fullWidth
+              variant="outlined"
+              error={genderError ? true : false}
+            >
+              <CustomSelector
+                name="gender"
+                options={GENDER_OPTIONS}
+                value={gender}
+                onChange={this.handleInputChange}
+                size="small"
+              />
+              {genderError && <FormHelperText>{genderError}</FormHelperText>}
+            </FormControl>
             
             <label htmlFor="birthday">
               {translate('babyBirthdayLabel')}
             </label>
-            <FormField
-              error={birthdayError}
-              inputComponent={
-                <DatePicker
-                  variant="outlined"
-                  value={birthday}
-                  onChange={this.handleDateChange}
-                  format={translate('dateFormat')}
-                />
-              }
-            />
+            <FormControl
+              fullWidth
+              variant="outlined"
+              error={birthdayError ? true : false}
+            >
+              <CustomDatePicker
+                value={birthday}
+                onChange={this.handleDateChange}
+                format={translate('dateFormat')}
+              />
+              {birthdayError && <FormHelperText>{birthdayError}</FormHelperText>}
+            </FormControl>
           </div>
           <div className="new-baby-dialog__buttons">
             <button

@@ -1,0 +1,11 @@
+.custom-date-picker {
+  div::before,
+  div::after {
+    display: none;
+    border: none;
+  }
+
+  input {
+    @extend %input;
+  }
+}

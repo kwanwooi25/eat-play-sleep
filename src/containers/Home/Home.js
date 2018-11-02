@@ -167,7 +167,7 @@ class Home extends Component {
       return (
         <button
           key={name}
-          className={`activity-buttons__button ${isActive ? 'active' : ''}`}
+          className={`activity-buttons__button ${name} ${isActive ? 'active' : ''}`}
           onClick={() => { this.handleActivityButtonClick(name) }}
         >
           <SVGIcon name={name} isActive={isActive} />

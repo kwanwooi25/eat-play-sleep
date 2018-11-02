@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { withTranslate } from 'react-redux-multilingual';
 
 /** Material UI Components */
-import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
 
@@ -13,6 +12,7 @@ import ActivityTimerMulti from '../../components/ActivityTimerMulti/ActivityTime
 import CustomSelector from '../../components/CustomSelector/CustomSelector';
 import NumberInput from '../../components/NumberInput/NumberInput';
 import CustomDateTimePicker from '../../components/CustomDateTimePicker/CustomDateTimePicker';
+import CustomTextInput from '../../components/CustomTextInput/CustomTextInput';
 
 /** Actions */
 import * as actions from '../../actions';
@@ -147,14 +147,12 @@ class Activity extends Component {
           />
         )}
         {shouldRenderMenuInput && (
-          <TextField
-            label={translate('menu')}
+          <CustomTextInput
+            id="type"
             name="type"
+            label={translate('menu')}
             value={type}
             onChange={this.handleInputChange}
-            margin="normal"
-            variant="outlined"
-            fullWidth
           />
         )}
         {shouldRenderHeightInput && (
@@ -190,14 +188,13 @@ class Activity extends Component {
             onChange={this.handleNumberChange}
           />
         )}
-        <TextField
+        <CustomTextInput
+          className="activity__content__memo"
+          id="memo"
           label={translate('memo')}
           name="memo"
           value={memo}
           onChange={this.handleInputChange}
-          margin="normal"
-          variant="outlined"
-          fullWidth
           multiline
         />
       </div>

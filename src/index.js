@@ -13,11 +13,12 @@ import { IntlProvider } from 'react-redux-multilingual';
 import translations from './translations';
 
 /** Material UI */
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 
 /** Material UI Picker */
 import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
 import MomentUtils from 'material-ui-pickers/utils/moment-utils';
+import moment from 'moment';
 import 'moment/locale/ko';
 
 /** Service Worker */
@@ -39,36 +40,11 @@ const store = createStore(
   composeEnhancers(applyMiddleware(reduxThunk))
 );
 
-// customize Material UI Theme
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      light: '#7986CB',
-      main: '#3F51B5',
-      dark: '#303F9F',
-      contrastText: '#fff'
-    },
-    secondary: {
-      light: '#FFD86A',
-      main: '#FBC658',
-      dark: '#D19C2E',
-      contrastText: '#fff'
-    },
-  },
-  typography: {
-    useNextVariants: true,
-    fontFamily: [
-      'Noto Sans KR',
-      'sans-serif'
-    ].join(',')
-  }
-});
-
 ReactDOM.render(
   <Provider store={store}>
     <IntlProvider translations={translations}>
-      <MuiThemeProvider theme={theme}>
-        <MuiPickersUtilsProvider utils={MomentUtils} locale={locale}>
+      <MuiThemeProvider>
+        <MuiPickersUtilsProvider utils={MomentUtils} moment={moment} locale={locale}>
           <App/>
         </MuiPickersUtilsProvider>
       </MuiThemeProvider>

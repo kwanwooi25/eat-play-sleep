@@ -11,10 +11,10 @@ import Dialog from '@material-ui/core/Dialog';
 import Snackbar from '@material-ui/core/Snackbar';
 
 /** Components */
+import ActivityButton from '../../components/ActivityButton/ActivityButton';
 import Activity from '../Activity/Activity';
 import NewBabyDialog from '../../components/NewBabyDialog/NewBabyDialog';
 import CustomDialog from '../../components/CustomDialog/CustomDialog';
-import SVGIcon from '../../components/SVGIcon/SVGIcon';
 
 /** Actions */
 import * as actions from '../../actions';
@@ -25,11 +25,9 @@ import validate from '../../helpers/validateActivityBeforeSave';
 const Transition = props => <Slide direction="left" {...props} />;
 
 const ACTIVITY_BUTTONS = [
-  'breast_left',
-  'breast_right',
-  'pump_left',
-  'pump_right',
+  'breast',
   'bottle',
+  'pump',
   'babyfood',
   'diaper',
   'sleep',
@@ -68,7 +66,7 @@ class Home extends Component {
     const {
       translate,
       babies : { currentBaby },
-      activities : { currentActivities },
+      activities : { activitiesInProgress },
       startActivity,
       resumeActivity
     } = this.props;
@@ -93,7 +91,7 @@ class Home extends Component {
       memo: ''
     };
 
-    const existingActivity = currentActivities.find(({ name }) => name === activity.name);
+    const existingActivity = activitiesInProgress.find(({ name }) => name === activity.name);
     if (existingActivity) {
       activity = existingActivity;
 
@@ -114,33 +112,33 @@ class Home extends Component {
   handleActivityCancel = () => {
     const { name } = this.state.activity;
     const {
-      updateCurrentActivities,
-      activities: { currentActivities }
+      updateActivitiesInProgress,
+      activities: { activitiesInProgress }
     } = this.props;
 
-    const updated = currentActivities.filter(activity => activity.name !== name);
-    updateCurrentActivities(updated);
+    const updated = activitiesInProgress.filter(activity => activity.name !== name);
+    updateActivitiesInProgress(updated);
     this.closeActivityDialog();
   }
 
   handleActivitySave = () => {
     const { name, title } = this.state.activity;
     const {
-      updateCurrentActivities,
+      updateActivitiesInProgress,
       saveActivity,
-      activities: { currentActivities },
+      activities: { activitiesInProgress },
       auth: { currentUser },
       translate,
     } = this.props;
 
-    const activityToSave = currentActivities.find(activity => activity.name === name);
-    const updated = currentActivities.filter(activity => activity.name !== name);
+    const activityToSave = activitiesInProgress.find(activity => activity.name === name);
+    const updated = activitiesInProgress.filter(activity => activity.name !== name);
 
     const { isValid, error } = validate(activityToSave);
 
     if (isValid) {
       this.showSnackbar(translate('successActivitySave', { title }), 'success');
-      updateCurrentActivities(updated);
+      updateActivitiesInProgress(updated);
       saveActivity(currentUser, activityToSave);
       this.closeActivityDialog();
     } else {
@@ -189,23 +187,19 @@ class Home extends Component {
     });
   }
 
-  renderActivityButtons = (activities, currentActivities) => {
+  renderActivityButtons = (activities, activitiesInProgress, lastActivities) => {
     return activities.map(name => {
-      const activityName = name.split('_')[0];
-      const currentSide = name.split('_')[1];
-      const isActive = currentActivities
-        .filter(activity => {
-          return (activity.name === activityName) && (activity.currentSide === currentSide)
-        }).length > 0;
+      const activityInProgress = activitiesInProgress
+        .filter(activity => activity.name === name);
 
       return (
-        <button
+        <ActivityButton
           key={name}
-          className={`activity-buttons__button ${name} ${isActive ? 'active' : ''}`}
-          onClick={() => { this.handleActivityButtonClick(name) }}
-        >
-          <SVGIcon name={name} isActive={isActive} />
-        </button>
+          name={name}
+          lastActivity={lastActivities && lastActivities[name]}
+          activityInProgress={activityInProgress && activityInProgress[0]}
+          onClick={this.handleActivityButtonClick}
+        />
       )
     })
   }
@@ -221,12 +215,13 @@ class Home extends Component {
       activity
     } = this.state;
     const { babies, activities, translate } = this.props;
+    const { lastActivities, activitiesInProgress } = activities;
 
     return (
       <div className="home">
         {babies.currentBaby ? (
           <div className="activity-buttons">
-            {this.renderActivityButtons(ACTIVITY_BUTTONS, activities.currentActivities)}
+            {this.renderActivityButtons(ACTIVITY_BUTTONS, activitiesInProgress, lastActivities)}
           </div>
         ) : (
           <div className="no-baby">

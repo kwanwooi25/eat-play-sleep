@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withTranslate } from 'react-redux-multilingual';
@@ -24,6 +25,13 @@ const Transition = props => <Slide direction="left" {...props} />;
 const CUSTOM_SELECTOR_OPTIONS = {
   bottle: [ 'breast_milk', 'formula_milk' ],
   diaper: [ 'pee', 'poo', 'peepoo' ],
+};
+
+const NUMBER_ATTRIBUTES = {
+  amount: { step: 10, min: 0, max: 500 },
+  height: { step: 1, min: 0, max: 150 },
+  weight: { step: 0.5, min: 0, max: 50 },
+  head: { step: 0.5, min: 0, max: 100 },
 };
 
 class Activity extends Component {
@@ -59,37 +67,51 @@ class Activity extends Component {
     }
   }
 
+  adjustValue = (name, value) => {
+    const { min, max } = NUMBER_ATTRIBUTES[name];
+
+    if (value > min && value <= max) return value;
+    else if (value <= min) return min;
+    else if (value > max) return max;
+  }
+
   handleInputChange = e => {
-    const { name, value } = e.target;
-    const { activity, updateCurrentActivity } = this.props;
+    let { name, value } = e.target;
+    const { activity, updateActivityInProgress } = this.props;
 
     this.setState({ [name]: value });
     activity[name] = value;
-    updateCurrentActivity(activity);
+    updateActivityInProgress(activity);
   }
 
-  handleNumberChange = (name, value) => {
-    const { activity, updateCurrentActivity } = this.props;
+  handleNumberInputButtonClick = (name, change) => {
+    const { activity, updateActivityInProgress } = this.props;
+    let value = this.state[name];
+    const { step } = NUMBER_ATTRIBUTES[name];
+    
+    if (change === 'minus') value -= step;
+    else if (change === 'plus') value += step;
 
+    value = this.adjustValue(name, value);
+    this.setState({ [name]: value });
     activity[name] = value;
-
-    updateCurrentActivity(activity);
+    updateActivityInProgress(activity);
   }
 
   handleDateTimeChange = date => {
-    const { activity, updateCurrentActivity } = this.props;
+    const { activity, updateActivityInProgress } = this.props;
 
     this.setState({ time_start: date });
     activity.time_start = date;
-    updateCurrentActivity(activity);
+    updateActivityInProgress(activity);
   }
 
   setDateTimeToNow = () => {
-    const { activity, updateCurrentActivity } = this.props;
+    const { activity, updateActivityInProgress } = this.props;
 
-    this.setState({ time_start: new Date() });
-    activity.time_start = new Date();
-    updateCurrentActivity(activity);
+    this.setState({ time_start: moment() });
+    activity.time_start = moment();
+    updateActivityInProgress(activity);
   }
 
   renderContent = () => {
@@ -127,19 +149,13 @@ class Activity extends Component {
           <CustomDateTimePicker
             value={time_start}
             onChange={this.handleDateTimeChange}
-            variant="outlined"
-            format={translate('dateTimeFormat')}
-            onNowButtonClick={this.setDateTimeToNow}
           />
         )}
         {shouldRenderAmountInput && (
           <NumberInput
-            name="amount"
-            unit={amount_unit}
-            interval={10}
-            value={amount}
-            max={300}
-            onChange={this.handleNumberChange}
+            value={`${amount} ${amount_unit}`}
+            onMinus={() => { this.handleNumberInputButtonClick('amount', 'minus') }}
+            onPlus={() => { this.handleNumberInputButtonClick('amount', 'plus') }}
           />
         )}
         {shouldRenderCustomSelector && (
@@ -162,34 +178,25 @@ class Activity extends Component {
         {shouldRenderHeightInput && (
           <NumberInput
             label={translate('height')}
-            name="height"
-            unit={height_unit}
-            interval={1}
-            value={height}
-            max={150}
-            onChange={this.handleNumberChange}
+            value={`${height} ${height_unit}`}
+            onMinus={() => { this.handleNumberInputButtonClick('height', 'minus') }}
+            onPlus={() => { this.handleNumberInputButtonClick('height', 'plus') }}
           />
         )}
         {shouldRenderWeightInput && (
           <NumberInput
             label={translate('weight')}
-            name="weight"
-            unit={weight_unit}
-            interval={0.5}
-            value={weight}
-            max={50}
-            onChange={this.handleNumberChange}
+            value={`${weight} ${weight_unit}`}
+            onMinus={() => { this.handleNumberInputButtonClick('weight', 'minus') }}
+            onPlus={() => { this.handleNumberInputButtonClick('weight', 'plus') }}
           />
         )}
         {shouldRenderHeadInput && (
           <NumberInput
             label={translate('head')}
-            name="head"
-            unit={head_unit}
-            interval={0.5}
-            value={head}
-            max={100}
-            onChange={this.handleNumberChange}
+            value={`${head} ${head_unit}`}
+            onMinus={() => { this.handleNumberInputButtonClick('head', 'minus') }}
+            onPlus={() => { this.handleNumberInputButtonClick('head', 'plus') }}
           />
         )}
         <CustomTextInput

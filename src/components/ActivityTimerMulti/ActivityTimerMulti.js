@@ -45,7 +45,7 @@ class ActivityTimerMulti extends Component {
   }
 
   changeSide = () => {
-    const { activity, updateCurrentActivity } = this.props;
+    const { activity, updateActivityInProgress } = this.props;
     const { currentSide } = this.state;
     let opposite = '';
 
@@ -62,26 +62,26 @@ class ActivityTimerMulti extends Component {
     activity.currentSide = opposite;
     
     this.setState({ currentSide: opposite, paused: false });
-    updateCurrentActivity(activity);
+    updateActivityInProgress(activity);
   }
 
   handlePause = () => {
-    const { activity, updateCurrentActivity } = this.props;
+    const { activity, updateActivityInProgress } = this.props;
     activity.leftTimer.stop();
     activity.rightTimer.stop();
     
     this.setState({ paused: true });
-    updateCurrentActivity(activity);
+    updateActivityInProgress(activity);
   }
 
   handleResume = () => {
-    const { activity, updateCurrentActivity } = this.props;
+    const { activity, updateActivityInProgress } = this.props;
     const { currentSide } = this.state;
     if (currentSide === 'left') activity.leftTimer.start();
     else if (currentSide === 'right') activity.rightTimer.start();
 
     this.setState({ paused: false });
-    updateCurrentActivity(activity);
+    updateActivityInProgress(activity);
   }
 
   render() {

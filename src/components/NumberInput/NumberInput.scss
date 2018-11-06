@@ -1,22 +1,31 @@
 .number-input {
   @extend %flex-center-row;
   justify-content: space-between;
-  margin: $space--sm 0;
   width: 100%;
-  border-top: 1px solid $color-primary;
-  border-bottom: 1px solid $color-primary;
+  border: 1px solid $color-primary;
   border-radius: $space--xs;
+  overflow: hidden;
 
   &-container {
-    @extend %flex-center-row;
+    margin-bottom: $space--sm;
 
-    label {
-      margin-right: $space--sm;
-      width: 5.5rem;
+    &.label-align--row {
+      @extend %flex-center-row;
+
+      label {
+        margin-right: $space--sm;
+        width: 5.5rem;
+      }
+    }
+
+    &.label-align--column {
+      @extend %flex-center-column;
+      align-items: flex-start;
     }
   }
 
   &__button {
+    align-self: stretch;
     background: $color-primary;
     color: white;
     border: none;
@@ -27,32 +36,12 @@
     &:hover {
       background: $color-primary--light;
     }
-
-    &:first-child {
-      border-top-left-radius: $space--xs;
-      border-bottom-left-radius: $space--xs;
-    }
-
-    &:last-child {
-      border-top-right-radius: $space--xs;
-      border-bottom-right-radius: $space--xs;
-    }
   }
 
   &__value {
-    @extend %flex-center-row;
-    align-items: baseline;
     flex: 1;
     font-size: $font-size--large;
-
-    input {
-      font-size: $font-size--xlarge;
-      margin-right: $space--xs;
-      color: $color-primary--xdark;
-      border: none;
-      outline: none;
-      max-width: 5rem;
-      text-align: right;
-    }
+    text-align: center;
+    padding: $space--sm;
   } 
 }

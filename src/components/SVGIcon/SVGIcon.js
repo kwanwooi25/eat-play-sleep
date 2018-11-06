@@ -205,6 +205,26 @@ const getPath = name => {
         </g>
       );
 
+    case 'arrow_up':
+      return (
+        <path d="M400,249.4l-150-150l-150,150l35.2,35.2L250,170.1l114.8,114.5L400,249.4z"/>
+      );
+
+    case 'arrow_down':
+      return (
+        <path d="M100,249.6l150,150l150-150l-35.2-35.2L250,328.9L135.2,214.4L100,249.6z"/>
+      );
+
+    case 'arrow_left':
+      return (
+        <path d="M286,364.8L171.5,250L286,135.2L250.8,100l-150,150l150,150L286,364.8z"/>
+      );
+
+    case 'arrow_right':
+      return (
+        <path d="M249.6,400l150-150l-150-150l-35.2,35.2L328.9,250L214.4,364.8L249.6,400z"/>
+      );
+
     default:
       return <path />
   }

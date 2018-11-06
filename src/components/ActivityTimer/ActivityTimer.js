@@ -36,19 +36,19 @@ class ActivityTimer extends Component {
   }
 
   handlePause = () => {
-    const { activity, updateCurrentActivity } = this.props;
+    const { activity, updateActivityInProgress } = this.props;
     activity.timer.stop();
     
     this.setState({ paused: true });
-    updateCurrentActivity(activity);
+    updateActivityInProgress(activity);
   }
 
   handleResume = () => {
-    const { activity, updateCurrentActivity } = this.props;
+    const { activity, updateActivityInProgress } = this.props;
     activity.timer.start();
 
     this.setState({ paused: false });
-    updateCurrentActivity(activity);
+    updateActivityInProgress(activity);
   }
 
   render() {

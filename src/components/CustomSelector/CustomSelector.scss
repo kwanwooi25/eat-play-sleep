@@ -3,9 +3,9 @@
 
   &__option {
     @extend %flex-center-column;
-    margin: $space--sm;
-    width: 5rem;
-    height: 5rem;
+    margin: $space--xs;
+    width: 4rem;
+    height: 4rem;
     position: relative;
     cursor: pointer;
 
@@ -46,7 +46,7 @@
     }
     
     &__title {
-      font-size: $font-size--small;
+      font-size: $font-size--xsmall;
       width: 0;
       height: 0;
       color: white;
@@ -55,8 +55,8 @@
     }
     
     &.small {
-      width: 4rem;
-      height: 4rem;
+      width: 3rem;
+      height: 3rem;
   
       .custom-selector__option__title {
         font-size: $font-size--xsmall;

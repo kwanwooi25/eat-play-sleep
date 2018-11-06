@@ -47,6 +47,9 @@ const theme = createMuiTheme({
   },
 });
 
+// moment localize
+moment.locale(locale);
+
 ReactDOM.render(
   <Provider store={store}>
     <IntlProvider translations={translations}>

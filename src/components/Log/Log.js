@@ -19,13 +19,13 @@ class Log extends React.Component {
   openMenu = e => this.setState({ anchorEl: e.currentTarget });
 
   handleMenuClose = menuClicked => {
-    console.log('handleMenuClose::', menuClicked);
-    console.log('activityID::', this.props.activity.id);
     this.setState({ anchorEl: null });
+    this.props.onMenuClick(this.props.activity.id, menuClicked);
   }
 
-  renderContent = activity => {
-    const { translate } = this.props;
+  render() {
+    const { anchorEl } = this.state;
+    const { activity, translate } = this.props;
     const {
       name,
       time_start,
@@ -47,37 +47,25 @@ class Log extends React.Component {
     if (totalTime.m) minute = `${translate('minute', { m: totalTime.m })}`;
     if (totalTime.s) second = `${translate('second', { s: totalTime.s })}`;
     const timeString = `${hour} ${minute} ${second}`.trim();
-  
-    return (
-      <div className="log__content">
-        <span className="log__content__title">
-          {translate(name)}
-        </span>
-        <div className="log__content__info">
-          {shouldRenderDuration ? timeString : ''}
-          {shouldRenderAmount ? `${amount} ${amount_unit}` : ''}
-          {shouldRenderType ? translate(type) : '' }
-        </div>
-        <span className="log__content__time">
-          {moment(time_start).format(translate('dateTimeFormat'))}
-        </span>
-      </div>
-    )
-  }
-
-  render() {
-    const { anchorEl } = this.state;
-    const { activity } = this.props;
-    const { name } = activity;
 
     return (
       <div className="log">
         <div className={`log__icon ${name}`}>
           <SVGIcon className="log__title__icon" name={name} />
         </div>
-
-        {this.renderContent(activity)}
-
+        <div className="log__content">
+          <span className="log__content__title">
+            {translate(name)}
+          </span>
+          <div className="log__content__info">
+            {shouldRenderDuration ? timeString : ''}
+            {shouldRenderAmount ? `${amount} ${amount_unit}` : ''}
+            {shouldRenderType ? translate(type) : '' }
+          </div>
+          <span className="log__content__time">
+            {moment(time_start).format(translate('dateTimeFormat'))}
+          </span>
+        </div>
         <div className="log__buttons">
           <button className="log__buttons__edit" onClick={this.openMenu}>
             <Icon>more_vert</Icon>

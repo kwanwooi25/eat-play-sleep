@@ -7,7 +7,7 @@ import {
   getGuestBabies,
   addGuestBaby
 } from '../helpers/localStorage';
-import { getActivities } from './activityActions';
+import { getActivities, updateActivitiesInProgress } from './activityActions';
 
 const API_HOST = process.env.REACT_APP_API_HOST || 'http://localhost:5000';
 
@@ -24,7 +24,10 @@ export const getBabies = user => async dispatch => {
     if (success) babies = data;
   }
 
-  if (babies.length > 0) dispatch(getActivities(user, babies[0].id));
+  if (babies.length > 0) {
+    dispatch(getActivities(user, babies[0].id));
+    dispatch(updateActivitiesInProgress([]));
+  }
   dispatch({ type: GET_BABIES, payload: babies });
 }
 

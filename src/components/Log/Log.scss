@@ -1,25 +1,28 @@
 .log {
   &__icon { grid-area: icon }
-  &__header { grid-area: header }
   &__content { grid-area: content }
   &__buttons { grid-area: buttons }
+  &__details { grid-area: details }
 }
 
 .log {
   display: grid;
   grid-template-columns: auto 1fr auto;
   grid-template-rows: auto;
-  grid-template-areas: "icon content buttons";
-  grid-gap: $space--sm;
+  grid-template-areas:
+    "icon content buttons"
+    ". details .";
+  grid-column-gap: $space--sm;
+  grid-row-gap: 0;
 
   background: white;
-  border: 1px solid $color-primary--xlight;
+  border: 1px solid $color-grey--light;
   border-radius: $border-radius;
   padding: $space--sm;
   margin: $space--sm;
 
   &:hover {
-    background: $color-primary--xxlight;
+    border-color: $color-primary--light;
     cursor: pointer;
   }
 
@@ -68,6 +71,16 @@
       border-radius: 50%;
       width: 3rem;
       height: 3rem;
+    }
+  }
+
+  &__details {
+    max-height: 0;
+    overflow: hidden;
+    transition: 0.5s max-height;
+
+    &.expanded {
+      max-height: 100vh;
     }
   }
 

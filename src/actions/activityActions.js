@@ -2,13 +2,16 @@ import axios from 'axios';
 import moment from 'moment';
 import {
   GET_ACTIVITIES,
-  GET_ACTIVITIES_FAILED,
+  GET_ACTIVITY_BY_ID,
+  RESET_CURRENT_ACTIVITY,
   START_ACTIVITY,
-  UPDATE_CURRENT_ACTIVITY,
-  UPDATE_CURRENT_ACTIVITIES
+  UPDATE_ACTIVITY_IN_PROGRESS,
+  UPDATE_ACTIVITIES_IN_PROGRESS,
+  ACTIVITY_ERROR,
 } from './types';
 import {
   getGuestActivities,
+  getGuestActivityById,
   addGuestActivity
 } from '../helpers/localStorage';
 import Timer from '../helpers/Timer';
@@ -17,18 +20,50 @@ const API_HOST = process.env.REACT_APP_API_HOST || 'http://localhost:5000';
 
 export const getActivities = (user, babyID) => async dispatch => {
   const { provider } = user;
-  let activities = [];
-
+  
+  /** Get all activities */
+  let all = [];
   if (provider === 'local') {
-    activities = getGuestActivities(babyID) || [];
+    all = getGuestActivities(babyID) || [];
   } else {
     const res = await axios.get(`${API_HOST}/api/activities?babyID=${babyID}`);
     const { success, error, data } = res.data;
-    if (error) return dispatch({ type: GET_ACTIVITIES_FAILED, payload: error });
-    if (success) activities = data;
+    if (error) return dispatch({ type: ACTIVITY_ERROR, payload: error });
+    if (success) all = data;
   }
 
-  dispatch({ type: GET_ACTIVITIES, payload: activities });
+  /** store last activities */
+  let lastActivities = {};
+  all.forEach(activity => {
+    const { name } = activity;
+    if (!lastActivities[name]) {
+      lastActivities[name] = activity;
+    } else if (lastActivities[name].time_start < activity.time_start) {
+      lastActivities[name] = activity;
+    }
+  });
+
+  dispatch({ type: GET_ACTIVITIES, payload: { all, lastActivities } });
+}
+
+export const getActivityById = (user, activityID) => async dispatch => {
+  const { provider } = user;
+
+  let activity;
+  if (provider === 'local') {
+    activity = getGuestActivityById(activityID);
+  } else {
+    const res = await axios.get(`${API_HOST}/api/activity?activityID=${activityID}`);
+    const { success, error, data } = res.data;
+    if (error) return dispatch({ ACTIVITY_ERROR, payload: error });
+    if (success) activity = data;
+  }
+
+  dispatch({ type: GET_ACTIVITY_BY_ID, payload: activity });
+}
+
+export const resetCurrentActivity = () => dispatch => {
+  dispatch({ type: RESET_CURRENT_ACTIVITY });
 }
 
 export const startActivity = activity => dispatch => {
@@ -63,12 +98,12 @@ export const resumeActivity = activity => dispatch => {
   dispatch({ type: START_ACTIVITY, payload: activity });
 }
 
-export const updateCurrentActivity = activity => dispatch => {
-  dispatch({ type: UPDATE_CURRENT_ACTIVITY, payload: activity });
+export const updateActivityInProgress = activity => dispatch => {
+  dispatch({ type: UPDATE_ACTIVITY_IN_PROGRESS, payload: activity });
 }
 
-export const updateCurrentActivities = currentActivities => dispatch => {
-  dispatch({ type: UPDATE_CURRENT_ACTIVITIES, payload: currentActivities });
+export const updateActivitiesInProgress = activities => dispatch => {
+  dispatch({ type: UPDATE_ACTIVITIES_IN_PROGRESS, payload: activities });
 }
 
 export const saveActivity = (user, activity) => async dispatch => {

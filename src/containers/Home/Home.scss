@@ -22,60 +22,13 @@
   }
 }
 
-.breast_left { grid-area: breast_left }
-.breast_right { grid-area: breast_right }
-.pump_left { grid-area: pump_left }
-.pump_right { grid-area: pump_right }
-.bottle { grid-area: bottle }
-.babyfood { grid-area: babyfood }
-.diaper { grid-area: diaper }
-.sleep { grid-area: sleep }
-.growth { grid-area: growth }
-
 .activity-buttons {
   width: 100%;
   height: 100%;
   overflow: hidden;
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(4, 1fr);
-  grid-template-areas:
-    "breast_left breast_left breast_left breast_right breast_right breast_right"
-    "pump_left pump_left pump_left pump_right pump_right pump_right"
-    "bottle bottle bottle babyfood babyfood babyfood"
-    "diaper diaper sleep sleep growth growth";
+  grid-template-columns: repeat(3, 1fr);
   grid-gap: $space--md;
   align-items: center;
   justify-items: center;
-
-  .breast_left, .breast_right { background: $color-breast }
-  .pump_left, .pump_right { background: $color-pump }
-  .bottle { background: $color-bottle }
-  .babyfood { background: $color-babyfood }
-  .diaper { background: $color-diaper }
-  .sleep { background: $color-sleep }
-  .growth { background: $color-growth }
-
-
-  &__button {
-    @extend %flex-center-column;
-    background: $color-primary;
-    border: none;
-    color: white;
-    outline: none;
-    border-radius: 100%;
-    width: 6rem;
-    height: 6rem;
-    padding: $space--xs;
-    cursor: pointer;
-
-    &:hover {
-      background: $color-primary--light;
-    }
-
-    &__icon {
-      width: 100%;
-      height: 100%;
-    }
-  }
 }

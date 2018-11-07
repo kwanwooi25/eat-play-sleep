@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withTranslate } from 'react-redux-multilingual';
@@ -10,14 +11,26 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Log from '../../components/Log/Log';
 import EditActivityDialog from '../../components/EditActivityDialog/EditActivityDialog';
 import CustomDialog from '../../components/CustomDialog/CustomDialog';
+import CustomSelector from '../../components/CustomSelector/CustomSelector';
 
 /** Actions */
 import * as actions from '../../actions';
+
+const DISPLAY_TOGGLE_OPTIONS = [
+  'breast',
+  'bottle',
+  'pump',
+  'babyfood',
+  'diaper',
+  'sleep',
+  'growth',
+];
 
 const Transition = props => <Slide direction="left" {...props} />;
 
 class Logs extends Component {
   state = {
+    show: DISPLAY_TOGGLE_OPTIONS,
     isEditActivityDialogOpen: false,
     isConfirmModalOpen: false,
     isSnackbarOpen: false,
@@ -32,6 +45,22 @@ class Logs extends Component {
 
     if (menuClicked === 'edit') this.openEditActivityDialog();
     else if (menuClicked === 'delete') this.openConfirmDialog();
+  }
+
+  handleDisplayOptionClick = e => {
+    const { value } = e.target;
+    const {
+      auth: { currentUser },
+      babies: { currentBaby },
+      getActivities
+    } = this.props;
+    let { show } = this.state;
+
+    if (show.includes(value)) show = show.filter(i => i !== value);
+    else show.push(value);
+    
+    getActivities(currentUser, currentBaby.id, { name: show });
+    this.setState({ show });
   }
 
   openEditActivityDialog = () => {
@@ -93,8 +122,42 @@ class Logs extends Component {
     });
   }
 
+  renderLog = data => {
+    const { translate } = this.props;
+    const mappedByDates = {};
+
+    data.forEach(activity => {
+      const date = moment(activity.time_start).format('YYYYMMDD');
+      if (mappedByDates[date]) {
+        mappedByDates[date].push(activity);
+      } else {
+        mappedByDates[date] = [activity];
+      }
+    });
+
+    return Object.keys(mappedByDates).sort((a, b) => b - a).map(key => {
+      const activities = mappedByDates[key];
+      const date = moment(key).format(translate('dateFormatLong'));
+      return (
+        <div className="logs__group" key={key}>
+          <div className="logs__group__title">{date}</div>
+          <div className="logs__group__list">
+            {activities.map(activity => (
+              <Log
+                key={activity.id}
+                activity={activity}
+                onMenuClick={this.handleMenuClick}
+              />
+            ))}
+          </div>
+        </div>
+      )
+    });
+  }
+
   render() {
     const {
+      show,
       isEditActivityDialogOpen,
       isConfirmModalOpen,
       isSnackbarOpen,
@@ -106,13 +169,19 @@ class Logs extends Component {
 
     return (
       <div className="logs">
-        {all.map(activity => (
-          <Log
-            key={activity.id}
-            activity={activity}
-            onMenuClick={this.handleMenuClick}
+        <div className="logs__display-options">
+          <CustomSelector
+            options={DISPLAY_TOGGLE_OPTIONS}
+            value={show}
+            onChange={this.handleDisplayOptionClick}
+            multiChoice={true}
           />
-        ))}
+        </div>
+        {all.length === 0 ? (
+          <div className="no-logs">
+            {translate('noLogs')}
+          </div>
+        ) : this.renderLog(all)}
 
         <EditActivityDialog
           open={isEditActivityDialogOpen}
@@ -141,8 +210,8 @@ class Logs extends Component {
   }
 }
 
-const mapStateToProps = ({ auth, activities }) => {
-  return { auth, activities };
+const mapStateToProps = ({ auth, babies, activities }) => {
+  return { auth, babies, activities };
 }
 
 export default withTranslate(connect(mapStateToProps, actions)(Logs));

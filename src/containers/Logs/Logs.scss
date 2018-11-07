@@ -4,4 +4,23 @@
   justify-content: flex-start;
   padding: $space--sm;
   height: 100%;
+
+  &__display-options {
+    .custom-selector {
+      display: list-item;
+      overflow-x: scroll;
+      white-space: nowrap;
+    }
+  }
+
+  &__group {
+    &__title {
+      margin: $space--sm 0;
+    }
+  }
+}
+
+.no-logs {
+  @extend %flex-center-column;
+  margin: $space--lg;
 }

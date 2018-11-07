@@ -32,12 +32,13 @@ export const addGuestBaby = baby => {
 /** Guest's babies' activities */
 const getGuestActivitiesAll = () =>
   JSON.parse(localStorage.getItem(GUEST_ACTIVITIES));
-export const getGuestActivities = babyID => {
+export const getGuestActivities = (babyID, options) => {
   const activities = getGuestActivitiesAll();
   let filtered = activities;
   if (activities && babyID) {
     filtered = activities
       .filter(activity => activity.baby_id === babyID)
+      .filter(activity => options.name.includes(activity.name))
       .sort((a, b) => {
         if (a.time_start > b.time_start) return -1;
         if (a.time_start < b.time_start) return 1;

@@ -9,6 +9,7 @@ export default {
       dateLabel: 'Date',
       timeLabel: 'Time',
       dateFormat: 'DD/MM/YYYY',
+      dateFormatLong: 'MMM Do, YYYY (ddd)',
       timeFormat: 'hh:mm A',
       yearMonthFormat: 'MMM YYYY',
       dateMask: [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/],
@@ -95,6 +96,7 @@ export default {
       right: 'Right',
       total: 'Total',
       /** Logs */
+      noLogs: 'No logs to display.',
       confirmActivityDeleteTitle: 'Delete Activity',
       confirmActivityDeleteMessage: 'Do you want to delete?',
       successActivityUpdate: 'Activity updated : {title}',
@@ -111,6 +113,7 @@ export default {
       dateLabel: '날짜',
       timeLabel: '시간',
       dateFormat: 'YYYY/MM/DD',
+      dateFormatLong: 'Y년 M월 D일 (ddd)',
       timeFormat: 'A hh:mm',
       yearMonthFormat: 'YYYY년 M월',
       dateMask: [/\d/, /\d/, /\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/],
@@ -197,6 +200,7 @@ export default {
       right: '오른쪽',
       total: '전체',
       /** Logs */
+      noLogs: '표시할 기록이 없습니다.',
       confirmActivityDeleteTitle: '기록 삭제',
       confirmActivityDeleteMessage: '삭제하시겠습니까?',
       successActivityUpdate: '수정되었습니다 : {title}',

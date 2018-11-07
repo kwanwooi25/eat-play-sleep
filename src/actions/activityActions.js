@@ -19,15 +19,22 @@ import Timer from '../helpers/Timer';
 
 const API_HOST = process.env.REACT_APP_API_HOST || 'http://localhost:5000';
 
-export const getActivities = (user, babyID) => async dispatch => {
+export const getActivities = (user, babyID, options) => async dispatch => {
   const { provider } = user;
+  if (!options) {
+    options = {
+      name: ['breast', 'bottle', 'pump', 'babyfood', 'diaper', 'sleep', 'growth'],
+    }
+  }
   
   /** Get all activities */
   let all = [];
   if (provider === 'local') {
-    all = getGuestActivities(babyID) || [];
+    all = getGuestActivities(babyID, options) || [];
   } else {
-    const res = await axios.get(`${API_HOST}/api/activities?babyID=${babyID}`);
+    const res = await axios.get(
+      `${API_HOST}/api/activities?babyID=${babyID}&options=${JSON.stringify(options)}`
+    );
     const { success, error, data } = res.data;
     if (error) return dispatch({ type: ACTIVITY_ERROR, payload: error });
     if (success) all = data;

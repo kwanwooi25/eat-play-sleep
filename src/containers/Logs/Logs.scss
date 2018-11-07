@@ -1,0 +1,7 @@
+.logs {
+  @extend %flex-center-column;
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: $space--sm;
+  height: 100%;
+}

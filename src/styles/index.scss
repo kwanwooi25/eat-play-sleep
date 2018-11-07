@@ -9,9 +9,10 @@
 
 // containers
 @import '../containers/App.scss';
+@import '../containers/MainContainer/MainContainer.scss';
 @import '../containers/Login/Login.scss';
 @import '../containers/Home/Home.scss';
-@import '../containers/MainContainer/MainContainer.scss';
+@import '../containers/Logs/Logs.scss';
 @import '../containers/Activity/Activity.scss';
 
 // components
@@ -22,6 +23,7 @@
 @import '../components/ActivityTimer/ActivityTimer.scss';
 @import '../components/ActivityTimerMulti/ActivityTimerMulti.scss';
 @import '../components/NumberInput/NumberInput.scss';
+@import '../components/TimeInput/TimeInput.scss';
 @import '../components/CustomTextInput/CustomTextInput.scss';
 @import '../components/CustomSelector/CustomSelector.scss';
 @import '../components/CustomDatePicker/CustomDatePicker.scss';

@@ -1,0 +1,56 @@
+.time-input {
+  @extend %flex-center-row;
+  width: 100%;
+  border: 1px solid $color-primary;
+  border-radius: $space--xs;
+  overflow: hidden;
+  
+  &-container {
+    margin-bottom: $space--sm;
+    
+    &.label-align--row {
+      @extend %flex-center-row;
+      
+      label {
+        margin-right: $space--sm;
+        width: 5.5rem;
+      }
+    }
+    
+    &.label-align--column {
+      @extend %flex-center-column;
+      align-items: flex-start;
+    }
+  }
+
+  &__value {
+    flex: 1;
+    font-size: $font-size--large;
+    text-align: center;
+    padding: $space--sm;
+  } 
+  
+  &__controllers {
+    @extend %flex-center-row;
+  }
+  
+  &__buttons {
+    @extend %flex-center-column;
+    margin-left: $space--xs;
+
+    &__button {
+      width: 100%;
+      background: $color-primary;
+      color: white;
+      border: none;
+      outline: none;
+      padding: $space--xs;
+      cursor: pointer;
+  
+      &:hover {
+        background: $color-primary--light;
+      }
+    }
+  }
+
+}

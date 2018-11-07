@@ -7,6 +7,7 @@ import Dialog from '@material-ui/core/Dialog';
 import Slide from '@material-ui/core/Slide';
 import CustomDateTimePicker from '../CustomDateTimePicker/CustomDateTimePicker';
 import NumberInput from '../NumberInput/NumberInput';
+import TimeInput from '../TimeInput/TimeInput';
 import CustomSelector from '../CustomSelector/CustomSelector';
 import CustomTextInput from '../CustomTextInput/CustomTextInput';
 
@@ -47,19 +48,25 @@ class EditActivityDialog extends Component {
     this.setState({ [name]: value });
   }
 
-  handleDurationChange = (name, change) => {
-    const step = 60;
+  handleDurationChange = (name, unit, change) => {
+    let step = 0;
     let value = 0;
+
+    if (unit === 'hour') step = 3600;
+    else if (unit === 'minute') step = 60;
+    else if (unit === 'second') step = 1;
 
     if (change === 'minus') value = this.state[name] - step;
     else if (change === 'plus') value = this.state[name] + step;
-    
+
     if (value < 0) value = 0;
 
     this.setState({ [name]: value }, () => {
-      this.setState({
-        duration_total: this.state.duration_left + this.state.duration_right
-      });
+      if (name !== 'duration_total') {
+        this.setState({
+          duration_total: this.state.duration_left + this.state.duration_right
+        });
+      }
     });
   }
 
@@ -107,16 +114,15 @@ class EditActivityDialog extends Component {
 
     const { name } = activity;
   
-    const shouldRenderStartTime =
-      ['breast', 'pump', 'bottle', 'babyfood', 'diaper', 'sleep'].includes(name);
-    const shouldRenderEndTime = ['bottle', 'sleep'].includes(name);
     const shouldRenderSidesDuration = ['breast', 'pump'].includes(name);
+    const shouldRenderDuration = ['bottle', 'sleep'].includes(name);
     const shouldRenderAmount = ['pump', 'bottle', 'babyfood'].includes(name);
     const shouldRenderCustomSelector = ['bottle', 'diaper'].includes(name);
     const shouldRenderMenuInput = ['babyfood'].includes(name);
     const shouldRenderHeightInput = ['growth'].includes(name);
     const shouldRenderWeightInput = ['growth'].includes(name);
     const shouldRenderHeadInput = ['growth'].includes(name);
+    const hasCalendarMinMax = ['bottle', 'sleep'].includes(name);
   
     return (
       <Dialog
@@ -130,63 +136,51 @@ class EditActivityDialog extends Component {
             <h3>{name && translate(name)}</h3>
           </div>
           <div className="edit-activity-dialog__form">
-            {shouldRenderStartTime && (
-              <div className="edit-activity-dialog__form__element">
-                <label
-                  className="edit-activity-dialog__form__element__label"
-                  htmlFor="time_start"
-                >
-                  {translate('time_start')}
-                </label>
-                <CustomDateTimePicker
-                  className="edit-activity-dialog__form__element__date-time-picker"
-                  value={time_start}
-                  onChange={date => { this.handleDateTimeChange('time_start', date)}}
-                  max={time_end}
-                />
-              </div>
-            )}
-            {shouldRenderEndTime && (
-              <div className="edit-activity-dialog__form__element">
-                <label
-                  className="edit-activity-dialog__form__element__label"
-                  htmlFor="time_end"
-                >
-                  {translate('time_end')}
-                </label>
-                <CustomDateTimePicker
-                  className="edit-activity-dialog__form__element__date-time-picker"
-                  value={time_end}
-                  onChange={date => { this.handleDateTimeChange('time_end', date)}}
-                  min={time_start}
-                />
-              </div>
-            )}
+            <CustomDateTimePicker
+              className="edit-activity-dialog__form__element__date-time-picker"
+              value={time_start}
+              onChange={date => this.handleDateTimeChange('time_start', date)}
+              max={hasCalendarMinMax && time_end}
+            />
             {shouldRenderSidesDuration && (
-              <div className="edit-activity-dialog__form__element sides-duration">
+              <div className="edit-activity-dialog__form__element">
                 {['left', 'right', 'total'].map(side => {
                   const name = `duration_${side}`;
                   return (
-                    <NumberInput
+                    <TimeInput
                       key={side}
                       label={translate(side)}
                       labelAlign="column"
                       value={secondsToHMS(this.state[name])}
-                      onMinus={() => { this.handleDurationChange(name, 'minus')}}
-                      onPlus={() => { this.handleDurationChange(name, 'plus')}}
+                      onMinuteMinus={() => this.handleDurationChange(name, 'minute', 'minus')}
+                      onMinutePlus={() => this.handleDurationChange(name, 'minute', 'plus')}
+                      onSecondMinus={() => this.handleDurationChange(name, 'second', 'minus')}
+                      onSecondPlus={() => this.handleDurationChange(name, 'second', 'plus')}
                       readonly={side === 'total'}
                     />
                   )
                 })}
               </div>
             )}
+            {shouldRenderDuration && (
+              <TimeInput
+                value={secondsToHMS(this.state.duration_total)}
+                hourController={name === 'sleep'}
+                onHourMinus={() => this.handleDurationChange('duration_total', 'hour', 'minus')}
+                onHourPlus={() => this.handleDurationChange('duration_total', 'hour', 'plus')}
+                onMinuteMinus={() => this.handleDurationChange('duration_total', 'minute', 'minus')}
+                onMinutePlus={() => this.handleDurationChange('duration_total', 'minute', 'plus')}
+                onSecondMinus={() => this.handleDurationChange('duration_total', 'second', 'minus')}
+                onSecondPlus={() => this.handleDurationChange('duration_total', 'second', 'plus')}
+              />
+            )}
             {shouldRenderAmount && (
               <NumberInput
                 label={translate('amount')}
                 labelAlign="column"
                 value={`${amount} ${amount_unit}`}
-                onMinus={() => { this.handleNumberInputButtonClick('amount', 'minus') }}
-                onPlus={() => { this.handleNumberInputButtonClick('amount', 'plus') }}
+                onMinus={() => this.handleNumberInputButtonClick('amount', 'minus')}
+                onPlus={() => this.handleNumberInputButtonClick('amount', 'plus')}
               />
             )}
             {shouldRenderCustomSelector && (
@@ -210,8 +204,8 @@ class EditActivityDialog extends Component {
                 label={translate('height')}
                 labelAlign="column"
                 value={`${height} ${height_unit}`}
-                onMinus={() => { this.handleNumberInputButtonClick('height', 'minus') }}
-                onPlus={() => { this.handleNumberInputButtonClick('height', 'plus') }}
+                onMinus={() =>this.handleNumberInputButtonClick('height', 'minus')}
+                onPlus={() =>this.handleNumberInputButtonClick('height', 'plus')}
               />
             )}
             {shouldRenderWeightInput && (
@@ -219,8 +213,8 @@ class EditActivityDialog extends Component {
                 label={translate('weight')}
                 labelAlign="column"
                 value={`${weight} ${weight_unit}`}
-                onMinus={() => { this.handleNumberInputButtonClick('weight', 'minus') }}
-                onPlus={() => { this.handleNumberInputButtonClick('weight', 'plus') }}
+                onMinus={() =>this.handleNumberInputButtonClick('weight', 'minus')}
+                onPlus={() =>this.handleNumberInputButtonClick('weight', 'plus')}
               />
             )}
             {shouldRenderHeadInput && (
@@ -228,8 +222,8 @@ class EditActivityDialog extends Component {
                 label={translate('head')}
                 labelAlign="column"
                 value={`${head} ${head_unit}`}
-                onMinus={() => { this.handleNumberInputButtonClick('head', 'minus') }}
-                onPlus={() => { this.handleNumberInputButtonClick('head', 'plus') }}
+                onMinus={() =>this.handleNumberInputButtonClick('head', 'minus')}
+                onPlus={() =>this.handleNumberInputButtonClick('head', 'plus')}
               />
             )}
             <CustomTextInput
@@ -250,7 +244,7 @@ class EditActivityDialog extends Component {
             </button>
             <button
               className="edit-activity-dialog__buttons__confirm"
-              onClick={() => { onClose(true) }}
+              onClick={() => { onClose(true, this.state) }}
             >
               {translate('confirm')}
             </button>

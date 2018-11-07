@@ -1,5 +1,4 @@
 import axios from 'axios';
-import moment from 'moment';
 import {
   GET_ACTIVITIES,
   GET_ACTIVITY_BY_ID,
@@ -12,7 +11,9 @@ import {
 import {
   getGuestActivities,
   getGuestActivityById,
-  addGuestActivity
+  addGuestActivity,
+  updateGuestActivity,
+  removeGuestActivity,
 } from '../helpers/localStorage';
 import Timer from '../helpers/Timer';
 
@@ -108,19 +109,35 @@ export const updateActivitiesInProgress = activities => dispatch => {
 
 export const saveActivity = (user, activity) => async dispatch => {
   const { name } = activity;
+  
+  activity.guardianID = user.id;
+
   if (name === 'breast' || name === 'pump') {
     activity.leftTimer.stop();
     activity.rightTimer.stop();
   } else if (name === 'bottle' || name === 'sleep') {
     activity.timer.stop();
   }
-  activity.guardianID = user.id;
 
   const activityToSave = formActivityToSave(activity);
   if (user.provider === 'local') addGuestActivity(activityToSave);
-  else await axios.post(`${API_HOST}/api/activities/add`, activityToSave);
+  else await axios.post(`${API_HOST}/api/activity`, activityToSave);
 
-  dispatch(getActivities(user, activity.babyID));
+  dispatch(getActivities(user, activityToSave.baby_id));
+}
+
+export const updateActivity = (user, activity) => async dispatch => {
+  if (user.provider === 'local') updateGuestActivity(activity);
+  else await axios.put(`${API_HOST}/api/activity`, activity);
+
+  dispatch(getActivities(user, activity.baby_id));
+}
+
+export const removeActivity = (user, activity) => async dispatch => {
+  if (user.provider === 'local') removeGuestActivity(activity.id);
+  else await axios.delete(`${API_HOST}/api/activity?activityID=${activity.id}`);
+
+  dispatch(getActivities(user, activity.baby_id));
 }
 
 const formActivityToSave = activity => {
@@ -158,7 +175,6 @@ const formActivityToSave = activity => {
     name,
     type,
     time_start,
-    time_end: moment(),
     duration_left,
     duration_right,
     duration_total,

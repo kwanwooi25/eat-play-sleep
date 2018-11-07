@@ -94,6 +94,11 @@ export default {
       left: 'Left',
       right: 'Right',
       total: 'Total',
+      /** Logs */
+      confirmActivityDeleteTitle: 'Delete Activity',
+      confirmActivityDeleteMessage: 'Do you want to delete?',
+      successActivityUpdate: 'Activity updated : {title}',
+      successActivityRemove: 'Activity removed : {title}',
     }
   },
   ko: {
@@ -191,6 +196,11 @@ export default {
       left: '왼쪽',
       right: '오른쪽',
       total: '전체',
+      /** Logs */
+      confirmActivityDeleteTitle: '기록 삭제',
+      confirmActivityDeleteMessage: '삭제하시겠습니까?',
+      successActivityUpdate: '수정되었습니다 : {title}',
+      successActivityRemove: '삭제되었습니다 : {title}',
     }
   }
 }

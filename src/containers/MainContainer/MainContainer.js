@@ -1,17 +1,11 @@
+import moment from 'moment';
 import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withTranslate } from 'react-redux-multilingual';
-import moment from 'moment';
-
-/** Swipeable Views */
-import SwipeableViews from 'react-swipeable-views';
 
 /** Material UI */
 import Icon from '@material-ui/core/Icon';
-
-/** Components */
-import Home from '../Home/Home';
-import Logs from '../Logs/Logs';
 
 /** actions */
 import * as actions from '../../actions';
@@ -24,37 +18,36 @@ const BOTTOM_NAV_ITEMS = [
 ];
 
 class MainContainer extends Component {
-  state = { value: 0 }
-
   renderBottomNavItems = items => {
     const { translate } = this.props;
-    const { value } = this.state;
 
-    return items.map(({ label, icon }, index) => {
-      const activeClassName = value === index ? 'active' : '';
+    return items.map(({ label, icon }) => {
+      const pathname = window.location.pathname.slice(1);
+      const isActive = pathname === label;
+      const className = isActive ? 'bottom-nav__button--active' : 'bottom-nav__button';
 
       return (
-        <button
-          key={label}
-          className={`bottom-nav__button ${activeClassName}`}
-          onClick={() => { this.handleBottomNavChange(index) }}
-        >
-          <Icon>{icon}</Icon>
-          <span className="bottom-nav__button__label">
-            {translate(`${label}Label`)}
-          </span>
-        </button>
+        <NavLink key={label} to={label}>
+          <button className={className}>
+            <Icon className="bottom-nav__button__icon" color="inherit">
+              {icon}
+            </Icon>
+            <span className="bottom-nav__button__label">
+              {translate(`${label}Label`)}
+            </span>
+          </button>
+        </NavLink>
       )
     })
   }
 
-  handleBottomNavChange = index => this.setState({ value: index });
-
-  handleChangeIndex = index => this.setState({ value: index });
-
   render() {
-    const { value } = this.state;
-    const { babies, translate, logoutUser } = this.props;
+    const {
+      babies,
+      translate,
+      logoutUser,
+      children
+    } = this.props;
 
     let babyName = '';
     let babyAge = '';
@@ -67,7 +60,7 @@ class MainContainer extends Component {
     }
 
     return (
-      <div className="main">
+      <main className="main">
         <header className="main-header">
           <div className="baby-info">
             {babyName && <h3 className="baby-name">{babyName}</h3>}
@@ -84,21 +77,15 @@ class MainContainer extends Component {
             {translate('logout')}
           </button>
         </header>
-        <SwipeableViews
-          className="swipeable-views"
-          axis="x"
-          index={value}
-          onChangeIndex={this.handleChangeIndex}
-        >
-          <Home className="content" dir="ltr" />
-          <Logs className="content" dir="ltr" />
-          <div className="content" dir="ltr">Chart</div>
-          <div className="content" dir="ltr">Settings</div>
-        </SwipeableViews>
+        
+        <div className="page-content">
+          {children}
+        </div>
+
         <div className="bottom-nav">
           {this.renderBottomNavItems(BOTTOM_NAV_ITEMS)}
         </div>
-      </div>
+      </main>
     )
   }
 }

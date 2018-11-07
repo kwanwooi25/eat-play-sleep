@@ -18,24 +18,15 @@
   }
 }
 
-
 .baby-info {
   flex: 1;
   margin: 0;
   padding-left: $space--sm;
 }
 
-.swipeable-views {
-  background: $color-grey--100;
-}
-
-.react-swipeable-view-container {
-  height: 100%;
-}
-
-.content {
-  width: 100%;
-  height: 100%;
+.page-content {
+  background: $color-grey--xlight;
+  overflow-y: auto;
 }
 
 .bottom-nav {
@@ -43,12 +34,19 @@
   align-items: stretch;
   border-top: 1px solid $color-primary--xxlight;
 
+  a {
+    flex: 1;
+    text-decoration: none;
+  }
+
   &__button {
     @extend %button;
     @extend %flex-center-column;
-    flex: 1;
     border-radius: 0;
-    padding: $space--xs;
+    height: 100%;
+    width: 100%;
+    padding: $space--sm;
+    cursor: pointer;
     
     &__label {
       width: 0;
@@ -56,7 +54,8 @@
       overflow: hidden;
     }
 
-    &.active {
+    &--active {
+      @extend .bottom-nav__button;
       background: $color-primary--xxlight;
 
       .bottom-nav__button__label {

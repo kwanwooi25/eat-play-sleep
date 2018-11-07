@@ -1,6 +1,7 @@
 .login {
   @extend %flex-center-column;
   background: $color-grey--100;
+  width: 100vw;
   height: 100vh;
 }
 

@@ -1,7 +1,7 @@
 .home {
   @extend %flex-center-column;
   justify-content: flex-start;
-  padding: 1rem;
+  padding: $space--sm;
   height: 100%;
 }
 

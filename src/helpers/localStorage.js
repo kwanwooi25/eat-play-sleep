@@ -30,8 +30,10 @@ export const addGuestBaby = baby => {
 }
 
 /** Guest's babies' activities */
+const getGuestActivitiesAll = () =>
+  JSON.parse(localStorage.getItem(GUEST_ACTIVITIES));
 export const getGuestActivities = babyID => {
-  const activities = JSON.parse(localStorage.getItem(GUEST_ACTIVITIES));
+  const activities = getGuestActivitiesAll();
   let filtered = activities;
   if (activities && babyID) {
     filtered = activities
@@ -47,7 +49,7 @@ export const getGuestActivities = babyID => {
 export const setGuestActivities = activities =>
   localStorage.setItem(GUEST_ACTIVITIES, JSON.stringify(activities));
 export const getGuestActivityById = activityID => {
-  const activities = JSON.parse(localStorage.getItem(GUEST_ACTIVITIES));
+  const activities = getGuestActivitiesAll();
   const activity = activities.find(activity => activity.id === activityID);
   return activity;
 }
@@ -56,10 +58,25 @@ export const getNextActivityId = () => {
   localStorage.setItem(GUEST_ACTIVITY_ID, nextId);
   return nextId;
 };
-export const addGuestActivity = activity => {
-  activity.id = getNextActivityId();
+export const addGuestActivity = data => {
+  data.id = getNextActivityId();
   const activities = getGuestActivities() || [];
-  activities.push(activity);
+  activities.push(data);
   setGuestActivities(activities);
-  return getGuestActivities(activity.babyID);
+  return data;
+}
+export const updateGuestActivity = data => {
+  const activities = getGuestActivitiesAll();
+  const updated = activities.map(activity => {
+    if (activity.id === data.id) return data;
+    return activity;
+  });
+  setGuestActivities(updated);
+  return data;
+}
+export const removeGuestActivity = id => {
+  const activities = getGuestActivitiesAll();
+  const updated = activities.filter(activity => activity.id !== id);
+  setGuestActivities(updated);
+  return id;
 }

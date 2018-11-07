@@ -7,8 +7,10 @@ import { connect } from 'react-redux';
 import * as actions from '../actions';
 
 /** Components */
-import Login from './Login/Login';
 import MainContainer from './MainContainer/MainContainer';
+import Login from './Login/Login';
+import Home from './Home/Home';
+import Logs from './Logs/Logs';
 
 /** Stylesheet */
 import './App.scss';
@@ -28,7 +30,22 @@ const PublicRoute = ({ isLoggedIn, ...rest }) =>
  * - can only be accessed when logged in
  */
 const PRIVATE_ROUTES = [
-  { path: '/home', component: () => <MainContainer /> },
+  {
+    path: '/home',
+    component: () => (
+      <MainContainer>
+        <Home />
+      </MainContainer>
+    )
+  },
+  {
+    path: '/logs',
+    component: () => (
+      <MainContainer>
+        <Logs />
+      </MainContainer>
+    )
+  },
 ];
 const PrivateRoute = ({ isLoggedIn, ...rest }) =>
   isLoggedIn === false ? <Redirect to="/" /> : <Route {...rest} />;

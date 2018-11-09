@@ -18,10 +18,10 @@ class TabSummary extends Component {
   }
   generateSummaryContents = activityName => {
     const { translate, trend } = this.props;
-    const { breast, bottle, babyfood } = trend;
+    const { breast, bottle, babyfood, sleep, diaper } = trend;
     let summaryContents = [];
 
-    if (activityName === 'feed') {
+    if (activityName === 'feed' && breast && bottle && babyfood) {
       const daysCount = breast.keys.length;
       const totalCount = breast.totalCount + bottle.totalCount + babyfood.totalCount;
       const averageFeedingsPerDay = totalCount / daysCount;
@@ -49,11 +49,11 @@ class TabSummary extends Component {
         },
       ];
 
-    } else if (activityName === 'sleep') {
-      const daysCount = trend[activityName].keys.length;
-      const averageTimesPerDay = trend[activityName].totalCount / daysCount;
+    } else if (activityName === 'sleep' && sleep) {
+      const daysCount = sleep.keys.length;
+      const averageTimesPerDay = sleep.totalCount / daysCount;
       const averageDurationPerDay = 
-        this.transformDurationToString(trend[activityName].totalDuration / daysCount);
+        this.transformDurationToString(sleep.totalDuration / daysCount);
 
       summaryContents = [
         {
@@ -65,11 +65,11 @@ class TabSummary extends Component {
           content: averageDurationPerDay,
         },
       ];
-    } else if (activityName === 'diaper') {
-      const daysCount = trend[activityName].keys.length;
-      const averageDiapersPerDay = trend[activityName].totalCount / daysCount;
-      const averagePeePerDay = trend[activityName].totalPee / daysCount;
-      const averagePooPerDay = trend[activityName].totalPoo / daysCount;
+    } else if (activityName === 'diaper' && diaper) {
+      const daysCount = diaper.keys.length;
+      const averageDiapersPerDay = diaper.totalCount / daysCount;
+      const averagePeePerDay = diaper.totalPee / daysCount;
+      const averagePooPerDay = diaper.totalPoo / daysCount;
 
       summaryContents = [
         {

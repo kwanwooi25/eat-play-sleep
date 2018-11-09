@@ -52,8 +52,8 @@ class GrowthChart extends Component {
           (age - 2 <= month && month <= age + 2));
 
       const min = standardsData[key][0].third;
-      const max = standardsData[key][4].ninetyseventh;
-      const median = standardsData[key][2].median;
+      const max = standardsData[key][standardsData[key].length - 1].ninetyseventh;
+      const median = standardsData[key][0].median;
 
       minMax[key] = {
         min: min - (median * 0.1),

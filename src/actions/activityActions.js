@@ -85,6 +85,13 @@ export const getActivitySummaryByDate = (user, babyID, date) => async dispatch =
   let summary;
   if (provider === 'local') {
     summary = getGuestActivitySummaryByDate(babyID, range);
+  } else {
+    const res = await axios.get(
+      `${API_HOST}/api/activity_summary?babyID=${babyID}&range=${JSON.stringify(range)}`
+    );
+    const { success, error, data } = res.data;
+    if (error) return dispatch({ ACTIVITY_ERROR, payload: error });
+    if (success) summary = data;
   }
 
   dispatch({ type: GET_ACTIVITY_SUMMARY_BY_DATE, payload: summary });
@@ -96,6 +103,13 @@ export const getActivityTrendByName = (user, babyID, options) => async dispatch 
   let trendByName;
   if (provider === 'local') {
     trendByName = getGuestActivityTrendByName(babyID, options);
+  } else {
+    const res = await axios.get(
+      `${API_HOST}/api/activity_trend?babyID=${babyID}&options=${JSON.stringify(options)}`
+    );
+    const { success, error, data } = res.data;
+    if (error) return dispatch({ ACTIVITY_ERROR, payload: error });
+    if (success) trendByName = data;
   }
 
   const payload = { name: options.name, trendByName };

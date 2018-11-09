@@ -17,6 +17,10 @@ const Trend = ({
   onMenuChange,
 }) => {
   const { breast, bottle, babyfood, sleep, diaper, growth } = trend;
+  const renderFeed = Boolean(breast && bottle && babyfood);
+  const renderSleep = Boolean(sleep);
+  const renderDiaper = Boolean(diaper);
+  const renderGrowth = Boolean(growth);
 
   return (
     <div className="trend">
@@ -36,16 +40,16 @@ const Trend = ({
       )}
 
       <div className="trend__chart">
-        {activityName === 'feed' && (
+        {activityName === 'feed' && renderFeed && (
           <FeedChart breast={breast} bottle={bottle} babyfood={babyfood} />
         )}
-        {activityName === 'sleep' && (
+        {activityName === 'sleep' && renderSleep && (
           <DurationChart source={sleep} />
         )}
-        {activityName === 'diaper' && (
+        {activityName === 'diaper' && renderDiaper && (
           <DiaperChart source={diaper} />
         )}
-        {activityName === 'growth' && (
+        {activityName === 'growth' && renderGrowth && (
           <GrowthChart source={growth} baby={baby} />
         )}
       </div>

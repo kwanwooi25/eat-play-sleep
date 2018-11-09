@@ -39,18 +39,21 @@ const LABEL_COLOR = {
 class FeedChart extends Component {
 
   transformData = source => {
-    const data = source.keys.map(key => {
-      switch (source.name) {
-        case 'breast':
-          return { date: key, duration: source[key].duration / 5 };
-        case 'bottle':
-        case 'babyfood':
-          return { date: key, amount: source[key].amount };
-        default:
-          return {};
-      }
-      
-    });
+    let data = [];
+
+    if (source) {
+      data = source.keys.map(key => {
+        switch (source.name) {
+          case 'breast':
+            return { date: key, duration: source[key].duration / 5 };
+          case 'bottle':
+          case 'babyfood':
+            return { date: key, amount: source[key].amount };
+          default:
+            return {};
+        }    
+      });
+    }
 
     return data;
   }

@@ -13,7 +13,6 @@ import {
   VictoryAxis,
   VictoryTheme,
   VictoryScatter,
-  VictoryZoomContainer,
 } from 'victory';
 
 /** Helper functions */
@@ -122,10 +121,7 @@ class GrowthChart extends Component {
           return (
             <div key={name} className="growth-chart__item" >
               <div>{translate(name)}</div>
-              <VictoryChart
-                theme={VictoryTheme.material}
-                containerComponent={<VictoryZoomContainer />}
-              >
+              <VictoryChart theme={VictoryTheme.material}>
                 <VictoryAxis tickFormat={x => `${x}m`} />
                 <VictoryAxis
                   dependentAxis

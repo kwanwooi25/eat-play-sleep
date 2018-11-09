@@ -12,7 +12,6 @@ import {
   VictoryLegend,
   VictoryGroup,
   VictoryScatter,
-  VictoryZoomContainer,
   VictoryLabel,
 } from 'victory';
 
@@ -138,7 +137,6 @@ class FeedChart extends Component {
         <VictoryChart
           theme={VictoryTheme.material}
           domainPadding={20}
-          containerComponent={<VictoryZoomContainer />}
         >
           <VictoryAxis
             tickCount={7}

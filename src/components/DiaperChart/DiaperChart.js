@@ -9,7 +9,6 @@ import {
   VictoryTheme,
   VictoryStack,
   VictoryLegend,
-  VictoryZoomContainer,
   VictoryLabel,
 } from 'victory';
 
@@ -68,11 +67,7 @@ class DiaperChart extends Component {
 
     return (
       <div className="diaper-chart">
-        <VictoryChart
-          theme={VictoryTheme.material}
-          domainPadding={20}
-          containerComponent={<VictoryZoomContainer />}
-        >
+        <VictoryChart theme={VictoryTheme.material} domainPadding={20}>
           <VictoryAxis
             tickCount={7}
             tickValues={keys}

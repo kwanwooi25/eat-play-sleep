@@ -8,7 +8,6 @@ import {
   VictoryAxis,
   VictoryTheme,
   VictoryLegend,
-  VictoryZoomContainer,
   VictoryLabel,
 } from 'victory';
 
@@ -77,7 +76,6 @@ class DurationChart extends Component {
         <VictoryChart
           theme={VictoryTheme.material}
           domainPadding={20}
-          containerComponent={<VictoryZoomContainer />}
         >
           <VictoryAxis
             tickCount={7}

@@ -63,7 +63,7 @@ class Log extends React.Component {
             {shouldRenderType ? translate(type) : '' }
           </div>
           <span className="log__content__time">
-            {moment(time_start).format(translate('dateTimeFormat'))}
+            {moment(time_start).format(translate('timeFormat'))}
           </span>
         </div>
         <div className="log__buttons">

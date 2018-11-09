@@ -135,12 +135,16 @@ class Logs extends Component {
       }
     });
 
-    return Object.keys(mappedByDates).sort((a, b) => b - a).map(key => {
-      const activities = mappedByDates[key];
-      const date = moment(key).format(translate('dateFormatLong'));
+    return Object.keys(mappedByDates).sort((a, b) => b - a).map(date => {
+      const activities = mappedByDates[date];
+      const isToday = moment(date).format('YYYYMMDD') === moment().format('YYYYMMDD');
+      const dateString = isToday ?
+        translate('today') :
+        moment(date).format(translate('dateFormatLong'));
+        
       return (
-        <div className="logs__group" key={key}>
-          <div className="logs__group__title">{date}</div>
+        <div className="logs__group" key={date}>
+          <div className="logs__group__title">{dateString}</div>
           <div className="logs__group__list">
             {activities.map(activity => (
               <Log

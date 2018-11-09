@@ -46,7 +46,7 @@ export default {
       babyAge: '{age} days old',
       homeLabel: 'Home',
       logsLabel: 'Logs',
-      chartLabel: 'Chart',
+      chartsLabel: 'Charts',
       settingsLabel: 'Settings',
       /** NewBabyDialog */
       newBabyDialogTitle: 'New Baby',
@@ -101,6 +101,23 @@ export default {
       confirmActivityDeleteMessage: 'Do you want to delete?',
       successActivityUpdate: 'Activity updated : {title}',
       successActivityRemove: 'Activity removed : {title}',
+      /** Charts */
+      summaryLabel: 'Summary',
+      feedLabel: 'Feeding',
+      sleepLabel: 'Sleep',
+      diaperLabel: 'Diaper',
+      growthLabel: 'Growth',
+      today: 'Today',
+      count: '{count} times',
+      durationLabel: 'Duration',
+      one_week: '1 Week',
+      two_weeks: '2 Weeks',
+      one_month: '1 Month',
+      /** TabSummary */
+      averageFeedingsPerDay: 'Avg. Feedings / Day',
+      averageDurationPerBreastFeeding: 'Avg. Duration / Feeding',
+      averageAmountPerBottleFeeding: 'Avg. Amount / Bottle',
+      averageAmountPerBabyfoodFeeding: 'Avg. Amount / Babyfood',
     }
   },
   ko: {
@@ -150,7 +167,7 @@ export default {
       babyAge: '생후 {age}일',
       homeLabel: '홈',
       logsLabel: '기록',
-      chartLabel: '차트',
+      chartsLabel: '차트',
       settingsLabel: '설정',
       /** NewBabyDialog */
       newBabyDialogTitle: '아이 추가',
@@ -205,6 +222,23 @@ export default {
       confirmActivityDeleteMessage: '삭제하시겠습니까?',
       successActivityUpdate: '수정되었습니다 : {title}',
       successActivityRemove: '삭제되었습니다 : {title}',
+      /** Charts */
+      summaryLabel: '요약',
+      feedLabel: '수유/식사',
+      sleepLabel: '수면',
+      diaperLabel: '기저귀',
+      growthLabel: '성장',
+      today: '오늘',
+      count: '{count} 회',
+      durationLabel: '시간',
+      one_week: '일주일',
+      two_weeks: '이주일',
+      one_month: '한달',
+      /** TabSummary */
+      averageFeedingsPerDay: 'Avg. Feedings / Day',
+      averageDurationPerBreastFeeding: 'Avg. Duration / Feeding',
+      averageAmountPerBottleFeeding: 'Avg. Amount / Bottle',
+      averageAmountPerBabyfoodFeeding: 'Avg. Amount / Babyfood',
     }
   }
 }

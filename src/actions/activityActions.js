@@ -1,7 +1,10 @@
 import axios from 'axios';
+import moment from 'moment';
 import {
   GET_ACTIVITIES,
   GET_ACTIVITY_BY_ID,
+  GET_ACTIVITY_SUMMARY_BY_DATE,
+  GET_ACTIVITY_TREND_BY_NAME,
   RESET_CURRENT_ACTIVITY,
   START_ACTIVITY,
   UPDATE_ACTIVITY_IN_PROGRESS,
@@ -11,6 +14,8 @@ import {
 import {
   getGuestActivities,
   getGuestActivityById,
+  getGuestActivitySummaryByDate,
+  getGuestActivityTrendByName,
   addGuestActivity,
   updateGuestActivity,
   removeGuestActivity,
@@ -68,6 +73,34 @@ export const getActivityById = (user, activityID) => async dispatch => {
   }
 
   dispatch({ type: GET_ACTIVITY_BY_ID, payload: activity });
+}
+
+export const getActivitySummaryByDate = (user, babyID, date) => async dispatch => {
+  const { provider } = user;
+  const range = {
+    from: moment(date).startOf('date'),
+    to: moment(date).endOf('date')
+  }
+
+  let summary;
+  if (provider === 'local') {
+    summary = getGuestActivitySummaryByDate(babyID, range);
+  }
+
+  dispatch({ type: GET_ACTIVITY_SUMMARY_BY_DATE, payload: summary });
+}
+
+export const getActivityTrendByName = (user, babyID, options) => async dispatch => {
+  const { provider } = user;
+  
+  let trendByName;
+  if (provider === 'local') {
+    trendByName = getGuestActivityTrendByName(babyID, options);
+  }
+
+  const payload = { name: options.name, trendByName };
+
+  dispatch({ type: GET_ACTIVITY_TREND_BY_NAME, payload });
 }
 
 export const resetCurrentActivity = () => dispatch => {

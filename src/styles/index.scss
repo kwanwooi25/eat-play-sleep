@@ -14,6 +14,7 @@
 @import '../containers/Home/Home.scss';
 @import '../containers/Logs/Logs.scss';
 @import '../containers/Activity/Activity.scss';
+@import '../containers/Charts/Charts.scss';
 
 // components
 @import '../components/SVGIcon/SVGIcon.scss';
@@ -30,3 +31,8 @@
 @import '../components/CustomDateTimePicker/CustomDateTimePicker.scss';
 @import '../components/Log/Log.scss';
 @import '../components/EditActivityDialog/EditActivityDialog.scss';
+@import '../components/ActivitySummary/ActivitySummary.scss';
+@import '../components/Trend/Trend.scss';
+@import '../components/TabSummary/TabSummary.scss';
+@import '../components/MenuSelector/MenuSelector.scss';
+@import '../components/FeedChart/FeedChart.scss';

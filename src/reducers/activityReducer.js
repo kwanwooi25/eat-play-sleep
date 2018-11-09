@@ -1,6 +1,8 @@
 import {
   GET_ACTIVITIES,
   GET_ACTIVITY_BY_ID,
+  GET_ACTIVITY_SUMMARY_BY_DATE,
+  GET_ACTIVITY_TREND_BY_NAME,
   RESET_CURRENT_ACTIVITY,
   START_ACTIVITY,
   UPDATE_ACTIVITY_IN_PROGRESS,
@@ -13,6 +15,8 @@ const INITIAL_STATE = {
   lastActivities: {},
   activitiesInProgress: [],
   currentActivity: {},
+  summaryByDate: {},
+  trend: {},
   error: ''
 }
 
@@ -24,6 +28,15 @@ export default (state = INITIAL_STATE, action) => {
 
     case GET_ACTIVITY_BY_ID:
       return Object.assign({}, state, { currentActivity: action.payload });
+
+    case GET_ACTIVITY_SUMMARY_BY_DATE:
+      return Object.assign({}, state, { summaryByDate: action.payload });
+
+    case GET_ACTIVITY_TREND_BY_NAME:
+      const { name, trendByName } = action.payload;
+      const { trend } = state;
+      trend[name] = trendByName;
+      return Object.assign({}, state, { trend });
     
     case RESET_CURRENT_ACTIVITY:
       return Object.assign({}, state, { currentActivity: {} });

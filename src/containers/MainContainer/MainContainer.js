@@ -13,7 +13,7 @@ import * as actions from '../../actions';
 const BOTTOM_NAV_ITEMS = [
   { label: 'home', icon: 'home' },
   { label: 'logs', icon: 'list' },
-  { label: 'chart', icon: 'pie_chart' },
+  { label: 'charts', icon: 'pie_chart' },
   { label: 'settings', icon: 'settings' },
 ];
 

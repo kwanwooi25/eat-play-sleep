@@ -11,6 +11,7 @@ import MainContainer from './MainContainer/MainContainer';
 import Login from './Login/Login';
 import Home from './Home/Home';
 import Logs from './Logs/Logs';
+import Charts from './Charts/Charts';
 
 /** Stylesheet */
 import './App.scss';
@@ -43,6 +44,13 @@ const PRIVATE_ROUTES = [
     component: () => (
       <MainContainer>
         <Logs />
+      </MainContainer>
+    )
+  },{
+    path: '/charts',
+    component: () => (
+      <MainContainer>
+        <Charts />
       </MainContainer>
     )
   },

@@ -97,7 +97,7 @@ export const getGuestActivitySummaryByDate = (babyID, range) => {
     amount,
     type,
   }) => {
-    summary[name].count ++;
+    if (name !== 'growth') summary[name].count ++;
 
     switch (name) {
       case 'breast':
@@ -169,6 +169,12 @@ export const getGuestActivityTrendByName = (babyID, options) => {
         trend[date].pee = 0;
         trend[date].poo = 0;
         break;
+      
+      case 'growth':
+        trend[date].height = 0;
+        trend[date].weight = 0;
+        trend[date].head = 0;
+        break;
 
       default:
         break;
@@ -182,6 +188,9 @@ export const getGuestActivityTrendByName = (babyID, options) => {
       duration_total,
       amount,
       type,
+      height,
+      weight,
+      head,
     }) => {
       const isNameSame = name === options.name;
       const isInRange =
@@ -218,6 +227,12 @@ export const getGuestActivityTrendByName = (babyID, options) => {
               if (type === 'pee') trend.totalPee ++;
               else if (type === 'poo') trend.totalPoo ++;
             }
+            break;
+
+          case 'growth':
+            trend[date].height = height;
+            trend[date].weight = weight;
+            trend[date].head = head;
             break;
     
           default:

@@ -29,8 +29,8 @@ class Charts extends Component {
     this.getActivityTrendByName('breast');
     this.getActivityTrendByName('bottle');
     this.getActivityTrendByName('babyfood');
-    this.getActivityTrendByName('diaper');
     this.getActivityTrendByName('sleep');
+    this.getActivityTrendByName('diaper');
     this.getActivityTrendByName('growth');
   }
 
@@ -112,6 +112,7 @@ class Charts extends Component {
   render() {
     const {
       translate,
+      babies: { currentBaby },
       activities: { summaryByDate, trend },
     } = this.props;
     const { index, date, range } = this.state;
@@ -132,28 +133,31 @@ class Charts extends Component {
           index={index}
           onChangeIndex={this.handleChangeIndex}
         >
-          <ActivitySummary
-            isToday={isToday}
-            dateString={dateString}
-            summary={summaryByDate}
-            onButtonClick={this.handleDateButtonClick}
-          />
-          <Trend
-            activityName={TABS[index]}
-            trend={trend}
-            menuSelected={range}
-            menuItems={RANGE_SELECT_ITEMS}
-            onMenuChange={this.handleRangeSelectChange}
-          />
-          <div className="charts__content__sleep">
-            sleep
-          </div>
-          <div className="charts__content__diaper">
-            diaper
-          </div>
-          <div className="charts__content__growth">
-            growth
-          </div>
+          {TABS.map((tab, index) => {
+            if (index === 0) {
+              return (
+                <ActivitySummary
+                  key={tab}
+                  isToday={isToday}
+                  dateString={dateString}
+                  summary={summaryByDate}
+                  onButtonClick={this.handleDateButtonClick}
+                />
+              )
+            }
+
+            return (
+              <Trend
+                key={tab}
+                baby={currentBaby}
+                activityName={TABS[index]}
+                trend={trend}
+                menuSelected={range}
+                menuItems={RANGE_SELECT_ITEMS}
+                onMenuChange={this.handleRangeSelectChange}
+              />
+            );
+          })}
         </SwipeableViews>
       </div>
     )

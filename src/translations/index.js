@@ -118,6 +118,11 @@ export default {
       averageDurationPerBreastFeeding: 'Avg. Duration / Feeding',
       averageAmountPerBottleFeeding: 'Avg. Amount / Bottle',
       averageAmountPerBabyfoodFeeding: 'Avg. Amount / Babyfood',
+      averageTimesPerDay: 'Avg. Times / Day',
+      averageDurationPerDay: 'Avg. Duration / Day',
+      averageDiapersPerDay: 'Avg. Diapers / Day',
+      averagePeePerDay: 'Avg. Pee / Day',
+      averagePooPerDay: 'Avg. Poo / Day',
     }
   },
   ko: {
@@ -235,10 +240,15 @@ export default {
       two_weeks: '이주일',
       one_month: '한달',
       /** TabSummary */
-      averageFeedingsPerDay: 'Avg. Feedings / Day',
-      averageDurationPerBreastFeeding: 'Avg. Duration / Feeding',
-      averageAmountPerBottleFeeding: 'Avg. Amount / Bottle',
-      averageAmountPerBabyfoodFeeding: 'Avg. Amount / Babyfood',
+      averageFeedingsPerDay: '하루 평균 수유 횟수',
+      averageDurationPerBreastFeeding: '1회 평균 모유 수유 시간',
+      averageAmountPerBottleFeeding: '1회 평균 젖병 수유량',
+      averageAmountPerBabyfoodFeeding: '1회 평균 이유식 섭취량',
+      averageTimesPerDay: '하루 평균 횟수',
+      averageDurationPerDay: '하루 평균 시간',
+      averageDiapersPerDay: '하루 평균 기저귀 교환',
+      averagePeePerDay: '하루 평균 소변 횟수',
+      averagePooPerDay: '하루 평균 대변 횟수',
     }
   }
 }

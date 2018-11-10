@@ -14,3 +14,7 @@
     background: $color-error;
   }
 }
+
+.disabled-navlink {
+  pointer-events: none;
+}

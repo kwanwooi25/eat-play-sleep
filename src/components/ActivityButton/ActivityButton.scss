@@ -2,7 +2,7 @@
   @extend %flex-center-column;
   border-radius: $border-radius;
   overflow: hidden;
-  max-width: 7rem;
+  max-height: 8rem;
 
   &__buttons {
     @extend %flex-center-row;
@@ -33,12 +33,11 @@
     padding: $space--xs;
     background: $color-primary--xxlight;
     width: 100%;
-    text-align: right;
+    text-align: center;
   }
 
   &.two-sided {
     grid-column: 1/3;
-    max-width: 12rem;
 
     .activity-button__buttons {
       button {

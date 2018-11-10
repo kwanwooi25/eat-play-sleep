@@ -5,6 +5,9 @@ import { withTranslate } from 'react-redux-multilingual';
 import Dialog from '@material-ui/core/Dialog';
 import Slide from '@material-ui/core/Slide';
 
+/** Components */
+import DialogButtonGroup from '../DialogButtonGroup/DialogButtonGroup';
+
 const Transition = props => <Slide direction="up" {...props} />;
 
 const CustomDialog = ({
@@ -29,22 +32,13 @@ const CustomDialog = ({
         <div className="custom-dialog__message">
           <p>{message}</p>
         </div>
-        <div className="custom-dialog__buttons">
-          {variant === 'confirm' && (
-            <button
-              className="custom-dialog__buttons__cancel"
-              onClick={() => { onClose(false) }}
-            >
-              {translate('cancel')}
-            </button>
-          )}
-          <button
-            className="custom-dialog__buttons__confirm"
-            onClick={() => { onClose(true) }}
-          >
-            {translate('confirm')}
-          </button>
-        </div>
+        <DialogButtonGroup
+          variant={variant}
+          cancelLabel={translate('cancel')}
+          confirmLabel={translate('confirm')}
+          onCancel={() => onClose(false)}
+          onConfirm={() => onClose(true)}
+        />
       </div>
     </Dialog>
   )

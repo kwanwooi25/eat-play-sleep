@@ -11,7 +11,8 @@ import MainContainer from './MainContainer/MainContainer';
 import Login from './Login/Login';
 import Home from './Home/Home';
 import Logs from './Logs/Logs';
-import Charts from './Charts/Charts';
+import ActivitySummary from './ActivitySummary/ActivitySummary';
+import ActivityTrend from './ActivityTrend/ActivityTrend';
 
 /** Stylesheet */
 import './App.scss';
@@ -34,7 +35,7 @@ const PRIVATE_ROUTES = [
   {
     path: '/home',
     component: () => (
-      <MainContainer>
+      <MainContainer route='home'>
         <Home />
       </MainContainer>
     )
@@ -42,19 +43,57 @@ const PRIVATE_ROUTES = [
   {
     path: '/logs',
     component: () => (
-      <MainContainer>
+      <MainContainer route='logs'>
         <Logs />
       </MainContainer>
     )
-  },{
+  },
+  {
     path: '/charts',
+    component: () => <Redirect to='/charts/summary' />
+  },
+  {
+    path: '/charts/summary',
     component: () => (
-      <MainContainer>
-        <Charts />
+      <MainContainer route='charts'>
+        <ActivitySummary />
+      </MainContainer>
+    )
+  },
+  {
+    path: '/charts/feed',
+    component: () => (
+      <MainContainer route='charts'>
+        <ActivityTrend activityName="feed" />
+      </MainContainer>
+    )
+  },
+  {
+    path: '/charts/sleep',
+    component: () => (
+      <MainContainer route='charts'>
+        <ActivityTrend activityName="sleep" />
+      </MainContainer>
+    )
+  },
+  {
+    path: '/charts/diaper',
+    component: () => (
+      <MainContainer route='charts'>
+        <ActivityTrend activityName="diaper" />
+      </MainContainer>
+    )
+  },
+  {
+    path: '/charts/growth',
+    component: () => (
+      <MainContainer route='charts'>
+        <ActivityTrend activityName="growth" />
       </MainContainer>
     )
   },
 ];
+
 const PrivateRoute = ({ isLoggedIn, ...rest }) =>
   isLoggedIn === false ? <Redirect to="/" /> : <Route {...rest} />;
 

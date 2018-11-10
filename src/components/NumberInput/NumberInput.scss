@@ -1,9 +1,8 @@
 .number-input {
   @extend %flex-center-row;
   justify-content: space-between;
-  width: 100%;
-  border: 1px solid $color-primary;
-  border-radius: $space--xs;
+  border-top: 2px solid $color-primary;
+  border-bottom: 2px solid $color-primary;
   overflow: hidden;
 
   &-container {
@@ -13,8 +12,9 @@
       @extend %flex-center-row;
 
       label {
+        font-size: $font-size--small;
         margin-right: $space--sm;
-        width: 5.5rem;
+        width: 5rem;
       }
     }
 
@@ -24,24 +24,47 @@
     }
   }
 
-  &__button {
-    align-self: stretch;
-    background: $color-primary;
-    color: white;
-    border: none;
-    outline: none;
-    padding: $space--sm;
-    cursor: pointer;
+  &__spinner {
+    @extend %flex-center-row;
+    align-items: baseline;
 
-    &:hover {
-      background: $color-primary--light;
+    &__hundred,
+    &__ten,
+    &__one,
+    &__decimal {
+      font-size: $font-size--xlarge;
+      font-weight: $font-weight--bold;
+      height: 4rem;
+      width: 150%;
+      overflow-y: auto;
+
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      scroll-snap-type: y mandatory;
+
+      &-wrapper {
+        overflow: hidden;
+        width: 3rem;
+      }
+
+      li {
+        @extend %flex-center-column;
+        height: 100%;
+        scroll-snap-align: center;
+      }
     }
   }
 
-  &__value {
-    flex: 1;
-    font-size: $font-size--large;
-    text-align: center;
-    padding: $space--sm;
-  } 
+  &__point {
+    font-weight: $font-weight--bold;
+    margin-left: $space--sm;
+    margin-right: -$space--sm;
+  }
+
+  &__unit {
+    font-size: $font-size--medium;
+    padding: $space--md;
+  }
 }

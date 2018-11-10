@@ -8,6 +8,7 @@ import Dialog from '@material-ui/core/Dialog';
 
 /** Components */
 import SVGIcon from '../SVGIcon/SVGIcon';
+import DialogButtonGroup from '../DialogButtonGroup/DialogButtonGroup';
 
 const Transition = props => <Slide direction="down" {...props} />;
 
@@ -22,15 +23,23 @@ class CustomDateTimePicker extends Component {
     this.state = { isPickerOpen: false, date };
   }
 
-  openPicker = () => {
-    const { date } = this.state;  
-    const hour = date.hour();
-    const minute = date.minute();
-    const scrollHeight = this.hourSpinner.children[0].scrollHeight;
-    
-    this.hourSpinner.scrollTo({ top: hour * scrollHeight });
-    this.minuteSpinner.scrollTo({ top: minute * scrollHeight });
-    this.setState({ isPickerOpen: true });
+  componentWillReceiveProps(props) {
+    if (props.value) this.setTimeSpinner(props.value);
+  }
+
+  openPicker = () => this.setState({ isPickerOpen: true });
+
+  setTimeSpinner = value => {
+    const { timePicker = true } = this.props;
+
+    if (timePicker) {
+      const hour = moment(value).hour();
+      const minute = moment(value).minute();
+      const scrollHeight = this.hourSpinner.children[0].scrollHeight;
+      
+      this.hourSpinner.scrollTo({ top: hour * scrollHeight });
+      this.minuteSpinner.scrollTo({ top: minute * scrollHeight });
+    }
   }
 
   handlePickerClose = result => {
@@ -271,20 +280,13 @@ class CustomDateTimePicker extends Component {
             </div>
           )}
 
-          <div className="custom-date-time-picker__buttons">
-            <button
-              className="custom-date-time-picker__buttons__button--cancel"
-              onClick={() => this.handlePickerClose(false)}
-            >
-              {translate('cancel')}
-            </button>
-            <button
-              className="custom-date-time-picker__buttons__button--confirm"
-              onClick={() => this.handlePickerClose(true)}
-            >
-              {translate('confirm')}
-            </button>
-          </div>  
+          <DialogButtonGroup
+            variant="confirm"
+            cancelLabel={translate('cancel')}
+            confirmLabel={translate('confirm')}
+            onCancel={() => this.handlePickerClose(false)}
+            onConfirm={() => this.handlePickerClose(true)}
+          />
         </Dialog>
       </div>
     )

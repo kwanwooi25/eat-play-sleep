@@ -11,21 +11,14 @@ import TimeInput from '../TimeInput/TimeInput';
 import CustomSelector from '../CustomSelector/CustomSelector';
 import CustomTextInput from '../CustomTextInput/CustomTextInput';
 
-/** Helper functions */
-import secondsToHMS from '../../helpers/secondsToHMS';
+/** Components */
+import DialogButtonGroup from '../DialogButtonGroup/DialogButtonGroup';
 
 const Transition = props => <Slide direction="up" {...props} />;
 
 const CUSTOM_SELECTOR_OPTIONS = {
   bottle: [ 'breast_milk', 'formula_milk' ],
   diaper: [ 'pee', 'poo', 'peepoo' ],
-};
-
-const NUMBER_ATTRIBUTES = {
-  amount: { step: 10, min: 0, max: 500 },
-  height: { step: 1, min: 0, max: 150 },
-  weight: { step: 0.5, min: 0, max: 50 },
-  head: { step: 0.5, min: 0, max: 100 },
 };
 
 class EditActivityDialog extends Component {
@@ -48,19 +41,7 @@ class EditActivityDialog extends Component {
     this.setState({ [name]: value });
   }
 
-  handleDurationChange = (name, unit, change) => {
-    let step = 0;
-    let value = 0;
-
-    if (unit === 'hour') step = 3600;
-    else if (unit === 'minute') step = 60;
-    else if (unit === 'second') step = 1;
-
-    if (change === 'minus') value = this.state[name] - step;
-    else if (change === 'plus') value = this.state[name] + step;
-
-    if (value < 0) value = 0;
-
+  handleDurationChange = (name, value) => {
     this.setState({ [name]: value }, () => {
       if (name !== 'duration_total') {
         this.setState({
@@ -70,24 +51,7 @@ class EditActivityDialog extends Component {
     });
   }
 
-  adjustValue = (name, value) => {
-    const { min, max } = NUMBER_ATTRIBUTES[name];
-
-    if (value > min && value <= max) return parseInt(value);
-    else if (value <= min) return parseInt(min);
-    else if (value > max) return parseInt(max);
-  }
-
-  handleNumberInputButtonClick = (name, change) => {
-    let value = this.state[name];
-    const { step } = NUMBER_ATTRIBUTES[name];
-    
-    if (change === 'minus') value -= step;
-    else if (change === 'plus') value += step;
-
-    value = this.adjustValue(name, value);
-    this.setState({ [name]: value });
-  }
+  handleNumberInputChange = (name, value) => this.setState({ [name]: value });
 
   render() {
     const {
@@ -102,13 +66,9 @@ class EditActivityDialog extends Component {
       time_end,
       type,
       amount,
-      amount_unit,
       height,
-      height_unit,
       weight,
-      weight_unit,
       head,
-      head_unit,
       memo 
     } = this.state;
 
@@ -151,11 +111,8 @@ class EditActivityDialog extends Component {
                       key={side}
                       label={translate(side)}
                       labelAlign="column"
-                      value={secondsToHMS(this.state[name])}
-                      onMinuteMinus={() => this.handleDurationChange(name, 'minute', 'minus')}
-                      onMinutePlus={() => this.handleDurationChange(name, 'minute', 'plus')}
-                      onSecondMinus={() => this.handleDurationChange(name, 'second', 'minus')}
-                      onSecondPlus={() => this.handleDurationChange(name, 'second', 'plus')}
+                      value={this.state[name]}
+                      onChange={value => this.handleDurationChange(name, value)}
                       readonly={side === 'total'}
                     />
                   )
@@ -164,23 +121,18 @@ class EditActivityDialog extends Component {
             )}
             {shouldRenderDuration && (
               <TimeInput
-                value={secondsToHMS(this.state.duration_total)}
+                value={this.state.duration_total}
                 hourController={name === 'sleep'}
-                onHourMinus={() => this.handleDurationChange('duration_total', 'hour', 'minus')}
-                onHourPlus={() => this.handleDurationChange('duration_total', 'hour', 'plus')}
-                onMinuteMinus={() => this.handleDurationChange('duration_total', 'minute', 'minus')}
-                onMinutePlus={() => this.handleDurationChange('duration_total', 'minute', 'plus')}
-                onSecondMinus={() => this.handleDurationChange('duration_total', 'second', 'minus')}
-                onSecondPlus={() => this.handleDurationChange('duration_total', 'second', 'plus')}
+                onChange={value => this.handleDurationChange('duration_total', value)}
               />
             )}
             {shouldRenderAmount && (
               <NumberInput
                 label={translate('amount')}
                 labelAlign="column"
-                value={`${amount} ${amount_unit}`}
-                onMinus={() => this.handleNumberInputButtonClick('amount', 'minus')}
-                onPlus={() => this.handleNumberInputButtonClick('amount', 'plus')}
+                value={amount}
+                unit="ml"
+                onChange={value => this.handleNumberInputChange('amount', value)}
               />
             )}
             {shouldRenderCustomSelector && (
@@ -203,27 +155,30 @@ class EditActivityDialog extends Component {
               <NumberInput
                 label={translate('height')}
                 labelAlign="column"
-                value={`${height} ${height_unit}`}
-                onMinus={() =>this.handleNumberInputButtonClick('height', 'minus')}
-                onPlus={() =>this.handleNumberInputButtonClick('height', 'plus')}
+                value={height}
+                unit="cm"
+                isDecimal={true}
+                onChange={value => this.handleNumberInputChange('height', value)}
               />
             )}
             {shouldRenderWeightInput && (
               <NumberInput
                 label={translate('weight')}
                 labelAlign="column"
-                value={`${weight} ${weight_unit}`}
-                onMinus={() =>this.handleNumberInputButtonClick('weight', 'minus')}
-                onPlus={() =>this.handleNumberInputButtonClick('weight', 'plus')}
+                value={weight}
+                unit="kg"
+                isDecimal={true}
+                onChange={value => this.handleNumberInputChange('weight', value)}
               />
             )}
             {shouldRenderHeadInput && (
               <NumberInput
                 label={translate('head')}
                 labelAlign="column"
-                value={`${head} ${head_unit}`}
-                onMinus={() =>this.handleNumberInputButtonClick('head', 'minus')}
-                onPlus={() =>this.handleNumberInputButtonClick('head', 'plus')}
+                value={head}
+                unit="cm"
+                isDecimal={true}
+                onChange={value => this.handleNumberInputChange('head', value)}
               />
             )}
             <CustomTextInput
@@ -235,20 +190,13 @@ class EditActivityDialog extends Component {
               multiline
             />
           </div>
-          <div className="edit-activity-dialog__buttons">
-            <button
-              className="edit-activity-dialog__buttons__cancel"
-              onClick={() => { onClose(false) }}
-            >
-              {translate('cancel')}
-            </button>
-            <button
-              className="edit-activity-dialog__buttons__confirm"
-              onClick={() => { onClose(true, this.state) }}
-            >
-              {translate('confirm')}
-            </button>
-          </div>
+          <DialogButtonGroup
+            variant="confirm"
+            cancelLabel={translate('cancel')}
+            confirmLabel={translate('confirm')}
+            onCancel={() => onClose(false)}
+            onConfirm={() => onClose(true, this.state)}
+          />
         </div>
       </Dialog>
     )

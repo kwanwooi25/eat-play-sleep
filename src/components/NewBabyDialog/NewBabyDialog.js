@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React, { Component } from 'react';
 import { withTranslate } from 'react-redux-multilingual';
 
@@ -9,7 +10,8 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 
 /** Components */
 import CustomSelector from '../../components/CustomSelector/CustomSelector';
-import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
+import CustomDateTimePicker from '../../components/CustomDateTimePicker/CustomDateTimePicker';
+import DialogButtonGroup from '../../components/DialogButtonGroup/DialogButtonGroup';
 
 const Transition = props => <Slide direction="up" {...props} />;
 
@@ -19,7 +21,7 @@ class NewBabyDialog extends Component {
   state = {
     name: '',
     gender: 'boy',
-    birthday: new Date(),
+    birthday: moment(),
 
     /** error messages */
     nameError: '',
@@ -130,28 +132,22 @@ class NewBabyDialog extends Component {
               variant="outlined"
               error={birthdayError ? true : false}
             >
-              <CustomDatePicker
+              <CustomDateTimePicker
                 value={birthday}
                 onChange={this.handleDateChange}
-                format={translate('dateFormat')}
+                timePicker={false}
+                showNowButton={false}
               />
               {birthdayError && <FormHelperText>{birthdayError}</FormHelperText>}
             </FormControl>
           </div>
-          <div className="new-baby-dialog__buttons">
-            <button
-              className="new-baby-dialog__buttons__cancel"
-              onClick={this.handleCancel}
-            >
-              {translate('cancel')}
-            </button>
-            <button
-              className="new-baby-dialog__buttons__confirm"
-              onClick={this.handleSave}
-            >
-              {translate('save')}
-            </button>
-          </div>
+          <DialogButtonGroup
+            variant='confirm'
+            cancelLabel={translate('cancel')}
+            confirmLabel={translate('save')}
+            onCancel={this.handleCancel}
+            onConfirm={this.handleSave}
+          />
         </div>
       </Dialog>
     )

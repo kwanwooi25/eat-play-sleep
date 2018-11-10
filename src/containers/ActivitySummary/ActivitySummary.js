@@ -1,4 +1,6 @@
-import React from 'react';
+import moment from 'moment';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { withTranslate } from 'react-redux-multilingual';
 
 /** Components */
@@ -8,14 +10,38 @@ import SVGIcon from '../../components/SVGIcon/SVGIcon';
 import parseSeconds from '../../helpers/parseSeconds';
 import { comma } from '../../helpers/comma';
 
-const ActivitySummary = ({
-  translate,
-  isToday,
-  dateString,
-  summary,
-  onButtonClick,
-}) => {
-  const renderSummary = summary => {
+/** Actions */
+import * as actions from '../../actions';
+
+class ActivitySummary extends Component {
+  state = { date: moment() }
+
+  componentDidMount() {
+    this.getSummary(this.state.date);
+  }
+
+  getSummary = (date = moment()) => {
+    const {
+      auth: { currentUser },
+      babies: { currentBaby },
+      getActivitySummaryByDate
+    } = this.props;
+
+    getActivitySummaryByDate(currentUser, currentBaby.id, date);
+  }
+
+  handleButtonClick = change => {
+    let { date } = this.state;
+
+    if (change === 'prev') date = moment(date).subtract(1, 'days');
+    else if (change === 'next') date = moment(date).add(1, 'days');
+
+    this.setState({ date }, () => this.getSummary(this.state.date));
+  }
+
+  renderSummary = summary => {
+    const { translate } = this.props;
+
     return Object.keys(summary).map(name => {
       const { count, amount, amount_unit, duration, pee, poo } = summary[name];
 
@@ -70,31 +96,49 @@ const ActivitySummary = ({
     });
   }
 
-  return (
-    <div className="activity-summary">
-      <div className="activity-summary__date-display">
-        <button
-          className="activity-summary__date-display__button"
-          onClick={() => onButtonClick('prev')}
-        >
-          <SVGIcon name="arrow_left" />
-        </button>
-        <span className="activity-summary__date-display__date">
-          {dateString}
-        </span>
-        <button
-          className="activity-summary__date-display__button"
-          onClick={() => onButtonClick('next')}
-          disabled={isToday}
-        >
-          <SVGIcon name="arrow_right" />
-        </button>
+  render() {
+    const {
+      translate,
+      activities: { summaryByDate }
+    } = this.props;
+    const { date } = this.state;
+
+    const isToday = moment(date).format('YYYYMMDD') === moment().format('YYYYMMDD');
+    
+    const dateString = isToday ?
+      translate('today') :
+      moment(date).format(translate('dateFormatLong'));
+
+    return (
+      <div className="activity-summary">
+        <div className="activity-summary__date-display">
+          <button
+            className="activity-summary__date-display__button"
+            onClick={() => this.handleButtonClick('prev')}
+          >
+            <SVGIcon name="arrow_left" />
+          </button>
+          <span className="activity-summary__date-display__date">
+            {dateString}
+          </span>
+          <button
+            className="activity-summary__date-display__button"
+            onClick={() => this.handleButtonClick('next')}
+            disabled={isToday}
+          >
+            <SVGIcon name="arrow_right" />
+          </button>
+        </div>
+        <div className="activity-summary__info">
+          {this.renderSummary(summaryByDate)}
+        </div>
       </div>
-      <div className="activity-summary__info">
-        {renderSummary(summary)}
-      </div>
-    </div>
-  )
+    )
+  }
 }
 
-export default withTranslate(ActivitySummary);
+const mapStateToProps = ({ auth, babies, activities }) => {
+  return { auth, babies, activities };
+}
+
+export default withTranslate(connect(mapStateToProps, actions)(ActivitySummary));

@@ -103,7 +103,7 @@
 
       &__day {
         @extend %button;
-        padding: 0.6rem;
+        padding: 0.5rem;
         width: 100%;
 
         &.prevMonth,
@@ -135,9 +135,9 @@
 
       &__hour,
       &__minute {
-        font-size: $font-size--large;
-        height: 3rem;
-        width: 150%;
+        font-size: $font-size--xlarge;
+        height: 5rem;
+        width: 130%;
         overflow-y: auto;
 
         list-style: none;
@@ -148,7 +148,7 @@
 
         &-wrapper {
           overflow: hidden;
-          width: 4rem;
+          width: 5rem;
         }
 
         li {
@@ -160,64 +160,7 @@
     }
 
     &__time-label {
-      font-size: $font-size--xsmall;
-    }
-  }
-
-  &__buttons {
-    @extend %flex-center-row;
-
-    &__button--cancel,
-    &__button--confirm {
-      @extend %button--primary;
-      flex: 1;
-      border-radius: 0;
       font-size: $font-size--small;
-    }
-
-    &__button--cancel {
-      background: $color-grey--light;
-      color: $color-grey--xdark;
-
-      &:hover {
-        background: $color-grey;
-      }
     }
   }
 }
-
-// .custom-date-time-picker {
-//   @extend %flex-center-row;
-
-//   border: 1px solid $color-primary;
-//   border-radius: $space--xs;
-//   margin: $space--md 0;
-  
-//   div,
-//   fieldset {
-//     border: none;
-//     flex: 1;
-//   }
-
-//   input {
-//     font-size: $font-size--large;
-//     padding: $space--sm;
-//     text-align: center;
-//   }
-
-//   &__button {
-//     align-self: stretch;
-//     justify-self: stretch;
-//     background: $color-primary;
-//     color: white;
-//     border: none;
-//     outline: none;
-//     padding: $space--md;
-//     font-size: $font-size--medium;
-//     cursor: pointer;
-
-//     &:hover {
-//       background: $color-primary--light;
-//     }
-//   }
-// }

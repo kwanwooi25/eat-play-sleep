@@ -27,13 +27,6 @@ const CUSTOM_SELECTOR_OPTIONS = {
   diaper: [ 'pee', 'poo', 'peepoo' ],
 };
 
-const NUMBER_ATTRIBUTES = {
-  amount: { step: 10, min: 0, max: 500 },
-  height: { step: 1, min: 0, max: 150 },
-  weight: { step: 0.5, min: 0, max: 50 },
-  head: { step: 0.5, min: 0, max: 100 },
-};
-
 class Activity extends Component {
   constructor(props) {
     super(props);
@@ -42,13 +35,9 @@ class Activity extends Component {
       time_start = null,
       type = '',
       amount = 0,
-      amount_unit = 'ml',
       height = 0,
-      height_unit = 'cm',
       weight = 0,
-      weight_unit = 'kg',
       head = 0,
-      head_unit = 'cm',
       memo
     } = props.activity;
 
@@ -56,23 +45,11 @@ class Activity extends Component {
       time_start,
       type,
       amount,
-      amount_unit,
       height,
-      height_unit,
       weight,
-      weight_unit,
       head,
-      head_unit,
       memo
     }
-  }
-
-  adjustValue = (name, value) => {
-    const { min, max } = NUMBER_ATTRIBUTES[name];
-
-    if (value > min && value <= max) return value;
-    else if (value <= min) return min;
-    else if (value > max) return max;
   }
 
   handleInputChange = e => {
@@ -84,15 +61,8 @@ class Activity extends Component {
     updateActivityInProgress(activity);
   }
 
-  handleNumberInputButtonClick = (name, change) => {
+  handleNumberInputChange = (name, value) => {
     const { activity, updateActivityInProgress } = this.props;
-    let value = this.state[name];
-    const { step } = NUMBER_ATTRIBUTES[name];
-    
-    if (change === 'minus') value -= step;
-    else if (change === 'plus') value += step;
-
-    value = this.adjustValue(name, value);
     this.setState({ [name]: value });
     activity[name] = value;
     updateActivityInProgress(activity);
@@ -120,13 +90,9 @@ class Activity extends Component {
     const {
       time_start,
       amount,
-      amount_unit,
       height,
-      height_unit,
       weight,
-      weight_unit,
       head,
-      head_unit,
       type,
       memo
     } = this.state;
@@ -153,7 +119,9 @@ class Activity extends Component {
         )}
         {shouldRenderAmountInput && (
           <NumberInput
-            value={`${amount} ${amount_unit}`}
+            value={amount}
+            unit="ml"
+            onChange={value => this.handleNumberInputChange('amount', value)}
             onMinus={() => { this.handleNumberInputButtonClick('amount', 'minus') }}
             onPlus={() => { this.handleNumberInputButtonClick('amount', 'plus') }}
           />
@@ -178,25 +146,28 @@ class Activity extends Component {
         {shouldRenderHeightInput && (
           <NumberInput
             label={translate('height')}
-            value={`${height} ${height_unit}`}
-            onMinus={() => { this.handleNumberInputButtonClick('height', 'minus') }}
-            onPlus={() => { this.handleNumberInputButtonClick('height', 'plus') }}
+            value={height}
+            unit="cm"
+            isDecimal={true}
+            onChange={value => this.handleNumberInputChange('height', value)}
           />
         )}
         {shouldRenderWeightInput && (
           <NumberInput
             label={translate('weight')}
-            value={`${weight} ${weight_unit}`}
-            onMinus={() => { this.handleNumberInputButtonClick('weight', 'minus') }}
-            onPlus={() => { this.handleNumberInputButtonClick('weight', 'plus') }}
+            value={weight}
+            unit="kg"
+            isDecimal={true}
+            onChange={value => this.handleNumberInputChange('weight', value)}
           />
         )}
         {shouldRenderHeadInput && (
           <NumberInput
             label={translate('head')}
-            value={`${head} ${head_unit}`}
-            onMinus={() => { this.handleNumberInputButtonClick('head', 'minus') }}
-            onPlus={() => { this.handleNumberInputButtonClick('head', 'plus') }}
+            value={head}
+            unit="cm"
+            isDecimal={true}
+            onChange={value => this.handleNumberInputChange('head', value)}
           />
         )}
         <CustomTextInput

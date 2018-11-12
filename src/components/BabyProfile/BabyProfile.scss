@@ -1,0 +1,29 @@
+.baby-profile {
+
+  &__info {
+    display: grid;
+    grid-template-columns: 2fr 5fr;
+    grid-gap: $space--sm;
+    align-items: center;
+    padding: $space--md $space--sm;
+
+    label {
+
+    }
+
+    span {
+      padding: $space--sm;
+    }
+  }
+
+  &__controls {
+    @extend %flex-center-row;
+    justify-content: flex-end;
+    
+    &__button {
+      @extend %button--primary;
+      border-radius: 100%;
+      margin-right: $space--sm;
+    }
+  }
+}

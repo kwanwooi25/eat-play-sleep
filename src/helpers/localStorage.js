@@ -30,6 +30,20 @@ export const addGuestBaby = baby => {
   setGuestBabies(babies);
   return getGuestBabies();
 }
+export const editGuestBaby = baby => {
+  const babies = getGuestBabies();
+  const updated = babies.filter(({ id }) => id !== baby.id).push(baby);
+  setGuestBabies(updated);
+  return getGuestBabies();
+}
+export const deleteGuestBaby = baby => {
+  const babies = getGuestBabies();
+  const updated = babies.filter(({ id }) => id !== baby.id);
+  setGuestBabies(updated);
+
+  const activities = getGuestActivitiesAll().filter(({ baby_id }) => baby_id !== baby.id);
+  setGuestActivities(activities);
+}
 
 /** Guest's babies' activities */
 const activityOptions = {

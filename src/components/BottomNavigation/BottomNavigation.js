@@ -9,7 +9,7 @@ import Icon from '@material-ui/core/Icon';
 const BOTTOM_NAV_ITEMS = [
   { label: 'home', icon: 'home' },
   { label: 'logs', icon: 'list' },
-  { label: 'charts', icon: 'pie_chart' },
+  { label: 'stats', icon: 'insert_chart' },
   { label: 'settings', icon: 'settings' },
 ];
 
@@ -26,7 +26,7 @@ const BottomNavigation = ({
       {BOTTOM_NAV_ITEMS.map(({ label, icon }) => {
         
         const isActive = pathname === label;
-        const shouldDisableNavLink = ['logs', 'charts'].includes(label) && !isBabyExists;
+        const shouldDisableNavLink = ['logs', 'stats'].includes(label) && !isBabyExists;
         const buttonClassName = isActive ? 'bottom-nav__button--active' : 'bottom-nav__button';
         const navLinkClassName = shouldDisableNavLink ? 'disabled-navlink' : '';
 

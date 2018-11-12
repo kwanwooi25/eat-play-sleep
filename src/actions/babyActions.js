@@ -5,7 +5,9 @@ import {
 } from './types';
 import {
   getGuestBabies,
-  addGuestBaby
+  addGuestBaby,
+  editGuestBaby,
+  deleteGuestBaby,
 } from '../helpers/localStorage';
 import { getActivities, updateActivitiesInProgress } from './activityActions';
 
@@ -32,8 +34,24 @@ export const getBabies = user => async dispatch => {
 }
 
 export const addBaby = (user, baby) => async dispatch => {
+  baby.birthday.hour(24);
   if (user.provider === 'local') addGuestBaby(baby);
-  else await axios.post(`${API_HOST}/api/babies/add`, baby);
+  else await axios.post(`${API_HOST}/api/babies`, baby);
+
+  dispatch(getBabies(user));
+}
+
+export const editBaby = (user, baby) => async dispatch => {
+  baby.birthday.hour(24);
+  if (user.provider === 'local') editGuestBaby(baby);
+  else await axios.put(`${API_HOST}/api/babies`, baby);
+
+  dispatch(getBabies(user));
+}
+
+export const deleteBaby = (user, baby) => async dispatch => {
+  if (user.provider === 'local') deleteGuestBaby(baby);
+  else await axios.delete(`${API_HOST}/api/babies?babyID=${baby.id}`);
 
   dispatch(getBabies(user));
 }

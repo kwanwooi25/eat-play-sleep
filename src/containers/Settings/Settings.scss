@@ -1,0 +1,8 @@
+.settings {
+
+  &__baby-profile,
+  &__app-settings {
+    @extend %box;
+    margin: $space--sm;
+  }
+}

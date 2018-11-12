@@ -27,8 +27,8 @@ class TabSummary extends Component {
       const averageFeedingsPerDay = totalCount / daysCount;
       const averageDurationPerBreastFeeding = 
         this.transformDurationToString(breast.totalDuration / breast.totalCount);
-      const averageAmountPerBottleFeeding = bottle.totalAmount / bottle.totalCount;
-      const averageAmountPerBabyfoodFeeding = babyfood.totalAmount / babyfood.totalCount;
+      const averageAmountPerBottleFeeding = bottle.totalAmount / bottle.totalCount || 0;
+      const averageAmountPerBabyfoodFeeding = babyfood.totalAmount / babyfood.totalCount || 0;
 
       summaryContents = [
         {

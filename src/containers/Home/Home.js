@@ -5,15 +5,14 @@ import { withTranslate } from 'react-redux-multilingual';
 import moment from 'moment';
 
 /** Material UI */
-import Icon from '@material-ui/core/Icon';
 import Slide from '@material-ui/core/Slide';
 import Dialog from '@material-ui/core/Dialog';
 import Snackbar from '@material-ui/core/Snackbar';
 
 /** Components */
-import ActivityButton from '../../components/ActivityButton/ActivityButton';
+import ActivityButtons from '../../components/ActivityButtons/ActivityButtons';
 import Activity from '../Activity/Activity';
-import NewBabyDialog from '../../components/NewBabyDialog/NewBabyDialog';
+import NoBaby from '../../components/NoBaby/NoBaby';
 import CustomDialog from '../../components/CustomDialog/CustomDialog';
 
 /** Actions */
@@ -24,39 +23,14 @@ import validate from '../../helpers/validateActivityBeforeSave';
 
 const Transition = props => <Slide direction="left" {...props} />;
 
-const ACTIVITY_BUTTONS = [
-  'breast',
-  'bottle',
-  'pump',
-  'babyfood',
-  'diaper',
-  'sleep',
-  'growth'
-];
-
 class Home extends Component {
   state = {
-    isNewBabyDialogOpen: false,
     isActivityDialogOpen: false,
     isConfirmModalOpen: false,
     isSnackbarOpen: false,
     snackbarMessage: '',
     snackbarType: '',
     activity: null
-  }
-
-  handleAddBabyButton = () => {
-    this.setState({ isNewBabyDialogOpen: true });
-  }
-
-  handleNewBabyDialogClose = baby => {
-    const { auth, addBaby } = this.props;
-    this.setState({ isNewBabyDialogOpen: false });
-
-    if (baby) {
-      baby.guardians = [ auth.currentUser.id ];
-      addBaby(auth.currentUser, baby);
-    }
   }
 
   handleActivityButtonClick = name => {
@@ -78,16 +52,11 @@ class Home extends Component {
       name: activityName,
       type: '',
       time_start: moment(),
-      time_end: null,
       paused: false,
       amount: 0,
-      amount_unit: 'ml',
       height: 0,
-      height_unit: 'cm',
       weight: 0,
-      weight_unit: 'kg',
       head: 0,
-      head_unit: 'cm',
       memo: ''
     };
 
@@ -144,8 +113,6 @@ class Home extends Component {
     } else {
       this.showSnackbar(translate(error), 'error');
     }
-
-    
   }
 
   handleActivityInProgress = () => {
@@ -187,26 +154,8 @@ class Home extends Component {
     });
   }
 
-  renderActivityButtons = (activities, activitiesInProgress, lastActivities) => {
-    return activities.map(name => {
-      const activityInProgress = activitiesInProgress
-        .filter(activity => activity.name === name);
-
-      return (
-        <ActivityButton
-          key={name}
-          name={name}
-          lastActivity={lastActivities && lastActivities[name]}
-          activityInProgress={activityInProgress && activityInProgress[0]}
-          onClick={this.handleActivityButtonClick}
-        />
-      )
-    })
-  }
-
   render() {
     let {
-      isNewBabyDialogOpen,
       isActivityDialogOpen,
       isConfirmModalOpen,
       isSnackbarOpen,
@@ -215,31 +164,17 @@ class Home extends Component {
       activity
     } = this.state;
     const { babies, activities, translate } = this.props;
-    const { lastActivities, activitiesInProgress } = activities;
 
     return (
       <div className="home">
         {babies.currentBaby ? (
-          <div className="activity-buttons">
-            {this.renderActivityButtons(ACTIVITY_BUTTONS, activitiesInProgress, lastActivities)}
-          </div>
+          <ActivityButtons
+            activities={activities}
+            onActivityButtonClick={this.handleActivityButtonClick}
+          />
         ) : (
-          <div className="no-baby">
-            <button
-              className="no-baby__button"
-              onClick={this.handleAddBabyButton}
-            >
-              <Icon fontSize="large">add</Icon>
-            </button>
-            <p>{translate('noBabyMessage_line1')}</p>
-            <p>{translate('noBabyMessage_line2')}</p>
-          </div>
+          <NoBaby />
         )}
-
-        <NewBabyDialog
-          open={isNewBabyDialogOpen}
-          onClose={this.handleNewBabyDialogClose}
-        />
 
         <Dialog
           open={isActivityDialogOpen}

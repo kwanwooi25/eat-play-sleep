@@ -157,6 +157,8 @@ class CustomDateTimePicker extends Component {
       date,
     } = this.state;
     const {
+      label,
+      labelAlign = 'column',
       value = moment(),
       translate,
       className = '',
@@ -169,30 +171,33 @@ class CustomDateTimePicker extends Component {
 
     return (
       <div className="custom-date-time-picker-container">
-        <div className={`custom-date-time-picker ${className}`}>
-          <button
-            className="custom-date-time-picker__picker-button"
-            onClick={this.openPicker}
-          >
-            {datePicker && (
-              <span className="custom-date-time-picker__picker-button__date">
-                {moment(value).format(translate('dateFormat'))}
-              </span>
-            )}
-            {timePicker && (
-              <span className="custom-date-time-picker__picker-button__time">
-                {moment(value).format(translate('timeFormat'))}
-              </span>
-            )}
-          </button>
-          {showNowButton && (
+        <div className={`custom-date-time-picker ${className} label-align--${labelAlign}`}>
+        {label && <label>{label}</label>}
+          <div className="custom-date-time-picker__picker-button-container">
             <button
-              className="custom-date-time-picker__now-button"
-              onClick={this.handleNowButtonClick}
+              className="custom-date-time-picker__picker-button"
+              onClick={this.openPicker}
             >
-              {translate('nowLabel')}
+              {datePicker && (
+                <span className="custom-date-time-picker__picker-button__date">
+                  {moment(value).format(translate('dateFormat'))}
+                </span>
+              )}
+              {timePicker && (
+                <span className="custom-date-time-picker__picker-button__time">
+                  {moment(value).format(translate('timeFormat'))}
+                </span>
+              )}
             </button>
-          )}
+            {showNowButton && (
+              <button
+                className="custom-date-time-picker__now-button"
+                onClick={this.handleNowButtonClick}
+              >
+                {translate('nowLabel')}
+              </button>
+            )}
+          </div>
         </div>
         
         <Dialog

@@ -4,31 +4,3 @@
   padding: $space--sm;
   height: 100%;
 }
-
-.no-baby {
-  @extend %flex-center-column;
-
-  &__button {
-    @extend %button--primary;
-    margin: $space--lg;
-    padding: $space--sm;
-    border-radius: 100%;
-  }
-
-  p {
-    text-align: center;
-    margin: 0;
-    margin-bottom: $space--sm;
-  }
-}
-
-.activity-buttons {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: $space--md;
-  align-items: center;
-  justify-items: center;
-}

@@ -18,7 +18,7 @@ const TopNavigation = ({ translate }) => {
         const className = isActive ? 'top-nav__button--active' : 'top-nav__button';
         
         return (
-          <NavLink key={name} to={`/charts/${name}`}>
+          <NavLink key={name} to={`/stats/${name}`}>
             <button className={className}>
               <SVGIcon name={name} className="top-nav__button__icon" />
               <span className="top-nav__button__label">

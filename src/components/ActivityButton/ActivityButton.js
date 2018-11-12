@@ -59,7 +59,7 @@ class ActivityButton extends React.Component {
           <button
             key={`${name}_${side}`}
             className={`activity-button__buttons__button ${name}_${side} ${isActive ? 'active' : ''}`}
-            onClick={() => { onClick(`${name}_${side}`) }}
+            onClick={() => onClick(`${name}_${side}`)}
           >
             <SVGIcon name={`${name}_${side}`} isActive={isActive} />
           </button>
@@ -69,7 +69,7 @@ class ActivityButton extends React.Component {
       return (
         <button
           className={`activity-button__buttons__button ${name} ${isActive ? 'active' : ''}`}
-          onClick={() => { onClick(name) }}
+          onClick={() => onClick(name)}
         >
           <SVGIcon name={name} isActive={isActive} />
         </button>

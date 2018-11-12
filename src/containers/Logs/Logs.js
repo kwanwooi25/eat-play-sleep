@@ -12,6 +12,7 @@ import Log from '../../components/Log/Log';
 import EditActivityDialog from '../../components/EditActivityDialog/EditActivityDialog';
 import CustomDialog from '../../components/CustomDialog/CustomDialog';
 import CustomSelector from '../../components/CustomSelector/CustomSelector';
+import NoData from '../../components/NoData/NoData';
 
 /** Actions */
 import * as actions from '../../actions';
@@ -181,11 +182,9 @@ class Logs extends Component {
             multiChoice={true}
           />
         </div>
-        {all.length === 0 ? (
-          <div className="no-logs">
-            {translate('noLogs')}
-          </div>
-        ) : this.renderLog(all)}
+        {all.length === 0
+          ? <NoData icon="list" message={translate('noLogs')} />
+          : this.renderLog(all)}
 
         <EditActivityDialog
           open={isEditActivityDialogOpen}

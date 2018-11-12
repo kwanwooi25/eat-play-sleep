@@ -1,6 +1,7 @@
 import moment from 'moment';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withTranslate } from 'react-redux-multilingual';
 
 /** Components */
 import TabSummary from '../../components/TabSummary/TabSummary';
@@ -9,6 +10,7 @@ import FeedChart from '../../components/FeedChart/FeedChart';
 import DurationChart from '../../components/DurationChart/DurationChart';
 import DiaperChart from '../../components/DiaperChart/DiaperChart';
 import GrowthChart from '../../components/GrowthChart/GrowthChart';
+import NoData from '../../components/NoData/NoData';
 
 /** Actions */
 import * as actions from '../../actions';
@@ -61,6 +63,7 @@ class ActivityTrend extends Component {
 
   render() {
     const {
+      translate,
       activityName,
       babies: { currentBaby },
       activities: { trend },
@@ -68,44 +71,54 @@ class ActivityTrend extends Component {
     const { range } = this.state;
 
     const { breast, bottle, babyfood, sleep, diaper, growth } = trend;
-    const renderFeed = Boolean(breast && bottle && babyfood);
-    const renderSleep = Boolean(sleep);
-    const renderDiaper = Boolean(diaper);
-    const renderGrowth = Boolean(growth);
+    let shouldRender = true;
 
-    return (
-      <div className="activity-trend">
-      {activityName !== 'growth' && (
-        <div className="activity-trend__controls">
-          <TabSummary
-            activityName={activityName}
-            trend={trend}
-          />
-          <MenuSelector
-            buttonClassName="activity-trend__controls__button"
-            menuSelected={range}
-            menuItems={RANGE_SELECT_ITEMS}
-            onChange={this.handleRangeSelectChange}
-          />
+    if (activityName === 'feed') {
+      shouldRender =
+        shouldRender && 
+        (
+          (breast && breast.totalCount) ||
+          (bottle && bottle.totalCount) ||
+          (babyfood && babyfood.totalCount)
+        );
+    } else {
+      shouldRender = 
+        shouldRender &&
+        trend[activityName] &&
+        trend[activityName].totalCount;
+    }
+
+    if (shouldRender) {
+      return (
+        <div className="activity-trend">
+          {activityName !== 'growth' && (
+            <div className="activity-trend__controls">
+              <TabSummary activityName={activityName} trend={trend} />
+              <MenuSelector
+                buttonClassName="activity-trend__controls__button"
+                menuSelected={range}
+                menuItems={RANGE_SELECT_ITEMS}
+                onChange={this.handleRangeSelectChange}
+              />
+            </div>
+          )}
+  
+          <div className="activity-trend__chart">
+            {activityName === 'feed' && (
+              <FeedChart breast={breast} bottle={bottle} babyfood={babyfood} />
+            )}
+            {activityName === 'sleep' && <DurationChart source={sleep} />}
+            {activityName === 'diaper' && <DiaperChart source={diaper} />}
+            {activityName === 'growth' && (
+              <GrowthChart source={growth} baby={currentBaby} />
+            )}
+          </div>
         </div>
-      )}
+      )
+    } else {
+      return <NoData icon="insert_chart" message={translate('noDataForChart')} />
+    }
 
-      <div className="activity-trend__chart">
-        {activityName === 'feed' && renderFeed && (
-          <FeedChart breast={breast} bottle={bottle} babyfood={babyfood} />
-        )}
-        {activityName === 'sleep' && renderSleep && (
-          <DurationChart source={sleep} />
-        )}
-        {activityName === 'diaper' && renderDiaper && (
-          <DiaperChart source={diaper} />
-        )}
-        {activityName === 'growth' && renderGrowth && (
-          <GrowthChart source={growth} baby={currentBaby} />
-        )}
-      </div>
-    </div>
-    )
   }
 }
 
@@ -113,4 +126,4 @@ const mapStateToProps = ({ auth, babies, activities }) => {
   return { auth, babies, activities };
 }
 
-export default connect(mapStateToProps, actions)(ActivityTrend);
+export default withTranslate(connect(mapStateToProps, actions)(ActivityTrend))

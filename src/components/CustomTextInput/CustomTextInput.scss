@@ -1,20 +1,63 @@
 .custom-text-input {
-  @extend %flex-center-column;
-  width: 100%;
+  margin-bottom: $space--sm;
 
-  label {
-    align-self: flex-start;
-    padding: $space--xs;
+  &.label-align--column {
+    @extend %flex-center-column;
+
+    label {
+      align-self: flex-start;
+    }
   }
 
-  input,
-  textarea {
-    @extend %input;
+  &.label-align--row {
+    display: grid;
+    grid-template-columns: 2fr 5fr;
+    grid-gap: $space--sm;
+    align-items: center;
+  }
+
+
+  &__input {
+    @extend %flex-center-column;
     width: 100%;
+    flex: 1;
+
+    input,
+    textarea {
+      @extend %input;
+      width: 100%;
+    }
+
+    textarea {
+      resize: none;
+      overflow: hidden;
+    }
+
+    &__error {
+      align-self: flex-start;
+      font-size: $font-size--xsmall;
+      color: $color-error;
+      margin-top: $space--xs;
+    }
   }
 
-  textarea {
-    resize: none;
-    overflow: hidden;
+  &.error {
+    label {
+      color: $color-error;
+    }
+  }
+
+  &.error &__input {
+    input,
+    textarea {
+      background-color: $color-error--xxlight;
+      border-color: $color-error;
+      color: $color-error;
+    }
+    
+    input:focus,
+    textarea:focus {
+      background-color: transparent;
+    }
   }
 }

@@ -10,17 +10,4 @@
       padding-bottom: $space--xs;
     }
   }
-
-  &__form {
-    background: white;
-    padding: $space--sm;
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    grid-gap: $space--xs;
-    align-items: center;
-
-    &__input {
-      @extend %input;
-    }
-  }
 }

@@ -23,18 +23,25 @@ class CustomTextInput extends Component {
       label,
       className = '',
       multiline = false,
+      error = '',
+      labelAlign = 'column', // 'column', 'row'
       ...props
     } = this.props;
 
+    let elementClassName = `custom-text-input ${className} label-align--${labelAlign}`;
+    if (error) elementClassName += ' error';
+
     return (
-      <div className={`custom-text-input ${className}`}>
-        <label htmlFor={id}>{label}</label>
-        {multiline ? (
-          <textarea id={id} rows={1} {...props} />
-        ) : (
-          <input id={id} {...props} />
-        )}
-        
+      <div className={elementClassName}>
+        {label && <label htmlFor={id}>{label}</label>}
+        <div className="custom-text-input__input">
+          {multiline ? (
+            <textarea id={id} rows={1} {...props} />
+          ) : (
+            <input id={id} {...props} />
+          )}
+          {error && <p className="custom-text-input__input__error">{error}</p>}
+        </div>
       </div>
     )
   }

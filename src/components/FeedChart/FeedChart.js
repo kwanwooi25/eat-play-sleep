@@ -128,6 +128,10 @@ class FeedChart extends Component {
       babyfood,
     } = this.props;
 
+    const renderBreastData = breast && breast.totalCount > 0;
+    const renderBottleData = bottle && bottle.totalCount > 0;
+    const renderBabyfoodData = babyfood && babyfood.totalCount > 0;
+
     const breastData = this.transformData(breast);
     const bottleData = this.transformData(bottle);
     const babyfoodData = this.transformData(babyfood);
@@ -140,7 +144,7 @@ class FeedChart extends Component {
         >
           <VictoryAxis
             tickCount={7}
-            tickValues={breast.keys}
+            tickValues={breast && breast.keys}
             tickFormat={x => parseInt(x.split('-')[1])}
           />
           <VictoryAxis
@@ -170,82 +174,89 @@ class FeedChart extends Component {
             ]}
           />
           <VictoryStack>
-            <VictoryBar
-              data={bottleData}
-              x="date"
-              y="amount"
-              color={DATA_FILL_COLOR['bottle']}
-              barRatio={0.9}
-              labels={() => null}
-              labelComponent={<VictoryLabel dy={30}/>}
-              style={{
-                labels: {
-                  fill: LABEL_COLOR['bottle'],
-                  fontSize: 20,
-                  stroke: LABEL_COLOR['bottle'],
-                  strokeWidth: 1
-                }
-              }}
-              events={[{
-                target: "data",
-                eventHandlers: {
-                  onMouseOver: () => this.onBarChartMouseOver('bottle'),
-                  onMouseOut: this.onChartMouseOut,
-                }
-              }]}
-            />
-            <VictoryBar
-              data={babyfoodData}
-              x="date"
-              y="amount"
-              color={DATA_FILL_COLOR['babyfood']}
-              barRatio={0.9}
-              labels={() => null}
-              labelComponent={<VictoryLabel dy={30}/>}
-              style={{
-                labels: {
-                  fill: LABEL_COLOR['babyfood'],
-                  fontSize: 20,
-                  stroke: LABEL_COLOR['babyfood'],
-                  strokeWidth: 1
-                }
-              }}
-              events={[{
-                target: "data",
-                eventHandlers: {
-                  onMouseOver: () => this.onBarChartMouseOver('babyfood'),
-                  onMouseOut: this.onChartMouseOut,
-                }
-              }]}
-            />
+            {renderBottleData && (
+              <VictoryBar
+                data={bottleData}
+                x="date"
+                y="amount"
+                color={DATA_FILL_COLOR['bottle']}
+                barRatio={0.9}
+                labels={() => null}
+                labelComponent={<VictoryLabel dy={30}/>}
+                style={{
+                  labels: {
+                    fill: LABEL_COLOR['bottle'],
+                    fontSize: 20,
+                    stroke: LABEL_COLOR['bottle'],
+                    strokeWidth: 1
+                  }
+                }}
+                events={[{
+                  target: "data",
+                  eventHandlers: {
+                    onMouseOver: () => this.onBarChartMouseOver('bottle'),
+                    onMouseOut: this.onChartMouseOut,
+                  }
+                }]}
+              />
+            )}
+            {renderBabyfoodData && (
+              <VictoryBar
+                data={babyfoodData}
+                x="date"
+                y="amount"
+                color={DATA_FILL_COLOR['babyfood']}
+                barRatio={0.9}
+                labels={() => null}
+                labelComponent={<VictoryLabel dy={30}/>}
+                style={{
+                  labels: {
+                    fill: LABEL_COLOR['babyfood'],
+                    fontSize: 20,
+                    stroke: LABEL_COLOR['babyfood'],
+                    strokeWidth: 1
+                  }
+                }}
+                events={[{
+                  target: "data",
+                  eventHandlers: {
+                    onMouseOver: () => this.onBarChartMouseOver('babyfood'),
+                    onMouseOut: this.onChartMouseOut,
+                  }
+                }]}
+              />
+            )}
           </VictoryStack>
-          <VictoryGroup
-            data={breastData}
-            x="date"
-            y="duration"
-            color={DATA_FILL_COLOR['breast']}
-          >
-            <VictoryLine />
-            <VictoryScatter
-              size={5}
-              labels={() => null}
-              style={{
-                labels: {
-                  fill: LABEL_COLOR['breast'],
-                  fontSize: 20,
-                  stroke: LABEL_COLOR['breast'],
-                  strokeWidth: 1
-                }
-              }}
-              events={[{
-                target: "data",
-                eventHandlers: {
-                  onMouseOver: this.onBreastChartMouseOver,
-                  onMouseOut: this.onChartMouseOut,
-                }
-              }]}
-            />
-          </VictoryGroup>
+
+          {renderBreastData && (
+            <VictoryGroup
+              data={breastData}
+              x="date"
+              y="duration"
+              color={DATA_FILL_COLOR['breast']}
+            >
+              <VictoryLine />
+              <VictoryScatter
+                size={5}
+                labels={() => null}
+                style={{
+                  labels: {
+                    fill: LABEL_COLOR['breast'],
+                    fontSize: 20,
+                    stroke: LABEL_COLOR['breast'],
+                    strokeWidth: 1
+                  }
+                }}
+                events={[{
+                  target: "data",
+                  eventHandlers: {
+                    onMouseOver: this.onBreastChartMouseOver,
+                    onMouseOut: this.onChartMouseOut,
+                  }
+                }]}
+              />
+            </VictoryGroup>
+          )}
         </VictoryChart>
       </div>
     )

@@ -6,11 +6,10 @@ import TopNavigation from '../../components/TopNavigation/TopNavigation';
 import BottomNavigation from '../../components/BottomNavigation/BottomNavigation';
 
 const MainContainer = ({ route, children }) => {
-  console.log(route);
   return (
     <main className={`main route-${route}`}>
       <Header />
-      {route === 'charts' && <TopNavigation />}
+      {route === 'stats' && <TopNavigation />}
       <div className="page-content">
         {children}
       </div>

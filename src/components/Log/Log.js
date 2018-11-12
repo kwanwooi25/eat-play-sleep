@@ -31,7 +31,6 @@ class Log extends React.Component {
       time_start,
       duration_total,
       amount,
-      amount_unit,
       type,
     } = activity;
 
@@ -59,7 +58,7 @@ class Log extends React.Component {
           </span>
           <div className="log__content__info">
             {shouldRenderDuration ? timeString : ''}
-            {shouldRenderAmount ? `${amount} ${amount_unit}` : ''}
+            {shouldRenderAmount ? `${amount} ml` : ''}
             {shouldRenderType ? translate(type) : '' }
           </div>
           <span className="log__content__time">

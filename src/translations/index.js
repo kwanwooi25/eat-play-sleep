@@ -32,6 +32,7 @@ export default {
       justBefore: 'less than a minute ago',
       noRecord: 'No Record',
       inProgress: 'In Progress',
+      noData: 'No Data',
       /** Login */
       login: 'Login',
       logout: 'Logout',
@@ -46,18 +47,23 @@ export default {
       babyAge: '{age} days old',
       homeLabel: 'Home',
       logsLabel: 'Logs',
-      chartsLabel: 'Charts',
+      statsLabel: 'Stats',
       settingsLabel: 'Settings',
       /** NewBabyDialog */
       newBabyDialogTitle: 'New Baby',
       babyNameLabel: 'Name',
       babyGenderLabel: 'Gender',
+      babyBirthdayLabel: 'Birthday',
+      relationshipLabel: 'Relation',
+      nameError: "Enter the baby's name.",
+      genderError: "Choose the baby's gender.",
+      birthdayError: "Choose the baby's birthday.",
+      relationshipError: "Choose relationship to the baby.",
       boy: 'Boy',
       girl: 'Girl',
-      babyBirthdayLabel: 'Birthday',
-      nameError: "Enter the baby's name",
-      genderError: "Choose the baby's gender",
-      birthdayError: "Choose the baby's birthday",
+      mom: 'Mom',
+      dad: 'Dad',
+      relative: 'Relative',
       /** Home */
       noBabyMessage_line1: "You have no babies yet.",
       noBabyMessage_line2: "Click to add your first baby!",
@@ -113,6 +119,7 @@ export default {
       one_week: '1 Week',
       two_weeks: '2 Weeks',
       one_month: '1 Month',
+      noDataForChart: 'Not enough data to draw chart',
       /** TabSummary */
       averageFeedingsPerDay: 'Avg. Feedings / Day',
       averageDurationPerBreastFeeding: 'Avg. Duration / Feeding',
@@ -123,6 +130,9 @@ export default {
       averageDiapersPerDay: 'Avg. Diapers / Day',
       averagePeePerDay: 'Avg. Pee / Day',
       averagePooPerDay: 'Avg. Poo / Day',
+      /** BabyProfile */
+      deleteBabyTitle: 'Delete Baby',
+      deleteBabyMessage: 'All data will be deleted and cannot be restored. Do you really want to continue?',
     }
   },
   ko: {
@@ -158,6 +168,7 @@ export default {
       justBefore: '1분 미만 전',
       noRecord: '기록 없음',
       inProgress: '진행중',
+      noData: 'No Data',
       /** Login */
       login: '로그인',
       logout: '로그아웃',
@@ -172,18 +183,23 @@ export default {
       babyAge: '생후 {age}일',
       homeLabel: '홈',
       logsLabel: '기록',
-      chartsLabel: '차트',
+      statsLabel: '통계',
       settingsLabel: '설정',
       /** NewBabyDialog */
       newBabyDialogTitle: '아이 추가',
       babyNameLabel: '이름',
       babyGenderLabel: '성별',
+      babyBirthdayLabel: '생일',
+      relationshipLabel: '관계',
+      nameError: "이름을 입력하세요.",
+      genderError: "성별을 선택하세요.",
+      birthdayError: "생일을 선택하세요.",
+      relationshipError: "아이와의 관계를 선택하세요.",
       boy: '남자',
       girl: '여자',
-      babyBirthdayLabel: '생일',
-      nameError: "이름을 입력하세요",
-      genderError: "성별을 선택하세요",
-      birthdayError: "생일을 선택하세요",
+      mom: '엄마',
+      dad: '아빠',
+      relative: '친척',
       /** Home */
       noBabyMessage_line1: "아이가 등록되지 않았습니다.",
       noBabyMessage_line2: "버튼을 눌러 첫번째 아이를 추가해주세요!",
@@ -239,6 +255,7 @@ export default {
       one_week: '일주일',
       two_weeks: '이주일',
       one_month: '한달',
+      noDataForChart: '차트 생성을 위한 데이터가 부족합니다.',
       /** TabSummary */
       averageFeedingsPerDay: '하루 평균 수유 횟수',
       averageDurationPerBreastFeeding: '1회 평균 모유 수유 시간',
@@ -249,6 +266,9 @@ export default {
       averageDiapersPerDay: '하루 평균 기저귀 교환',
       averagePeePerDay: '하루 평균 소변 횟수',
       averagePooPerDay: '하루 평균 대변 횟수',
+      /** BabyProfile */
+      deleteBabyTitle: '아이 삭제',
+      deleteBabyMessage: '아이와 관련된 모든 데이터가 삭제되며, 되돌릴 수 없습니다. 계속하시겠습니까?',
     }
   }
 }

@@ -13,6 +13,7 @@ import Home from './Home/Home';
 import Logs from './Logs/Logs';
 import ActivitySummary from './ActivitySummary/ActivitySummary';
 import ActivityTrend from './ActivityTrend/ActivityTrend';
+import Settings from './Settings/Settings';
 
 /** Stylesheet */
 import './App.scss';
@@ -49,46 +50,54 @@ const PRIVATE_ROUTES = [
     )
   },
   {
-    path: '/charts',
-    component: () => <Redirect to='/charts/summary' />
+    path: '/stats',
+    component: () => <Redirect to='/stats/summary' />
   },
   {
-    path: '/charts/summary',
+    path: '/stats/summary',
     component: () => (
-      <MainContainer route='charts'>
+      <MainContainer route='stats'>
         <ActivitySummary />
       </MainContainer>
     )
   },
   {
-    path: '/charts/feed',
+    path: '/stats/feed',
     component: () => (
-      <MainContainer route='charts'>
+      <MainContainer route='stats'>
         <ActivityTrend activityName="feed" />
       </MainContainer>
     )
   },
   {
-    path: '/charts/sleep',
+    path: '/stats/sleep',
     component: () => (
-      <MainContainer route='charts'>
+      <MainContainer route='stats'>
         <ActivityTrend activityName="sleep" />
       </MainContainer>
     )
   },
   {
-    path: '/charts/diaper',
+    path: '/stats/diaper',
     component: () => (
-      <MainContainer route='charts'>
+      <MainContainer route='stats'>
         <ActivityTrend activityName="diaper" />
       </MainContainer>
     )
   },
   {
-    path: '/charts/growth',
+    path: '/stats/growth',
     component: () => (
-      <MainContainer route='charts'>
+      <MainContainer route='stats'>
         <ActivityTrend activityName="growth" />
+      </MainContainer>
+    )
+  },
+  {
+    path: '/settings',
+    component: () => (
+      <MainContainer route='settings'>
+        <Settings />
       </MainContainer>
     )
   },

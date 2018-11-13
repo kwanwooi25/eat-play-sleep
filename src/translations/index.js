@@ -120,6 +120,7 @@ export default {
       two_weeks: '2 Weeks',
       one_month: '1 Month',
       noDataForChart: 'Not enough data to draw chart',
+      WHOstandard: 'WHO Child Growth Standard Range',
       /** TabSummary */
       averageFeedingsPerDay: 'Avg. Feedings / Day',
       averageDurationPerBreastFeeding: 'Avg. Duration / Feeding',
@@ -131,8 +132,18 @@ export default {
       averagePeePerDay: 'Avg. Pee / Day',
       averagePooPerDay: 'Avg. Poo / Day',
       /** BabyProfile */
+      babyProfileTitle: 'Baby Profile',
+      addBabyTitle: 'Add New Baby',
+      editBabyTitle: 'Edit Baby',
       deleteBabyTitle: 'Delete Baby',
       deleteBabyMessage: 'All data will be deleted and cannot be restored. Do you really want to continue?',
+      /** AppSettings */
+      appSettingsTitle: 'App Settings',
+      displayActivities: 'Display Activities',
+      displayLanguage: 'Language',
+      displayUnits: 'Units',
+      en: 'English',
+      ko: 'Korean',
     }
   },
   ko: {
@@ -213,9 +224,9 @@ export default {
       breast_milk: '유축 모유',
       formula_milk: '분유',
       menu: '메뉴',
-      pee: '쉬야',
-      poo: '응가',
-      peepoo: '쉬야 & 응가',
+      pee: '소변',
+      poo: '대변',
+      peepoo: '둘다',
       memo: '메모',
       amount: '분량',
       height: '키',
@@ -227,7 +238,7 @@ export default {
       error_NoAmount: '분량을 입력하세요.',
       error_NoType_bottle: '모유/분유를 선택하세요.',
       error_NoType_babyfood: '메뉴를 입력하세요.',
-      error_NoType_diaper: "다음 중 하나를 선택하세요: '쉬야', '응가', '쉬야 & 응가'",
+      error_NoType_diaper: "다음 중 하나를 선택하세요: '소변', '대변', '둘다'",
       error_NoHeight: '키를 입력하세요.',
       error_NoWeight: '몸무게를 입력하세요.',
       error_NoHead: '머리둘레를 입력하세요.',
@@ -256,6 +267,7 @@ export default {
       two_weeks: '이주일',
       one_month: '한달',
       noDataForChart: '차트 생성을 위한 데이터가 부족합니다.',
+      WHOstandard: 'WHO 소아 성장 표준치 범위',
       /** TabSummary */
       averageFeedingsPerDay: '하루 평균 수유 횟수',
       averageDurationPerBreastFeeding: '1회 평균 모유 수유 시간',
@@ -267,8 +279,18 @@ export default {
       averagePeePerDay: '하루 평균 소변 횟수',
       averagePooPerDay: '하루 평균 대변 횟수',
       /** BabyProfile */
+      babyProfileTitle: '아이 정보',
+      addBabyTitle: '아이 추가',
+      editBabyTitle: '아이 수정',
       deleteBabyTitle: '아이 삭제',
       deleteBabyMessage: '아이와 관련된 모든 데이터가 삭제되며, 되돌릴 수 없습니다. 계속하시겠습니까?',
+      /** AppSettings */
+      appSettingsTitle: '앱 설정',
+      displayActivities: '표시할 활동 내역',
+      displayLanguage: '언어',
+      displayUnits: '단위',
+      en: '영어',
+      ko: '한국어',
     }
   }
 }

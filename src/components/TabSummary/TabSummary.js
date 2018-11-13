@@ -16,38 +16,62 @@ class TabSummary extends Component {
     
     return durationString.trim();
   }
-  generateSummaryContents = activityName => {
+
+  generateSummaryContents = (activityName, shouldRender) => {
     const { translate, trend } = this.props;
     const { breast, bottle, babyfood, sleep, diaper } = trend;
+
+    let shouldRenderBreast = true;
+    let shouldRenderBottle = true;
+    let shouldRenderBabyfood = true;
+
+    if (shouldRender) {
+      shouldRenderBreast = shouldRender.includes('breast');
+      shouldRenderBottle = shouldRender.includes('bottle');
+      shouldRenderBabyfood = shouldRender.includes('babyfood');
+    }
+    
     let summaryContents = [];
 
     if (activityName === 'feed' && breast && bottle && babyfood) {
       const daysCount = breast.keys.length;
-      const totalCount = breast.totalCount + bottle.totalCount + babyfood.totalCount;
+
+      let totalCount = 0;
+      if (shouldRenderBreast) totalCount += breast.totalCount;
+      if (shouldRenderBottle) totalCount += bottle.totalCount;
+      if (shouldRenderBabyfood) totalCount += babyfood.totalCount;
+
       const averageFeedingsPerDay = totalCount / daysCount;
       const averageDurationPerBreastFeeding = 
         this.transformDurationToString(breast.totalDuration / breast.totalCount);
       const averageAmountPerBottleFeeding = bottle.totalAmount / bottle.totalCount || 0;
       const averageAmountPerBabyfoodFeeding = babyfood.totalAmount / babyfood.totalCount || 0;
 
-      summaryContents = [
-        {
-          title: translate('averageFeedingsPerDay'),
-          content: translate('count', { count: averageFeedingsPerDay.toFixed(1) }),
-        },
-        {
+      summaryContents.push({
+        title: translate('averageFeedingsPerDay'),
+        content: translate('count', { count: averageFeedingsPerDay.toFixed(1) }),
+      });
+
+      if (shouldRenderBreast) {
+        summaryContents.push({
           title: translate('averageDurationPerBreastFeeding'),
           content: averageDurationPerBreastFeeding,
-        },
-        {
+        });
+      }
+
+      if (shouldRenderBottle) {
+        summaryContents.push({
           title: translate('averageAmountPerBottleFeeding'),
           content: `${averageAmountPerBottleFeeding.toFixed(1)} ml`,
-        },
-        {
+        });
+      }
+
+      if (shouldRenderBabyfood) {
+        summaryContents.push({
           title: translate('averageAmountPerBabyfoodFeeding'),
           content: `${averageAmountPerBabyfoodFeeding.toFixed(1)} ml`,
-        },
-      ];
+        })
+      }
 
     } else if (activityName === 'sleep' && sleep) {
       const daysCount = sleep.keys.length;
@@ -104,8 +128,9 @@ class TabSummary extends Component {
   }
 
   render() {
+    const { activityName, displayActivities } = this.props;
     const summaryContents =
-      this.generateSummaryContents(this.props.activityName);
+      this.generateSummaryContents(activityName, displayActivities);
 
     return (
       <div className="tab-summary">

@@ -8,16 +8,17 @@ import * as actions from '../../actions';
 
 const Header = ({
   translate,
-  babies,
+  auth: { currentUser },
+  babies: { currentBaby },
   logoutUser
 }) => {
   let babyName = '';
   let babyAge = '';
 
-  if (babies.currentBaby) {
+  if (currentBaby) {
     const today = moment();
-    const birthday = moment(babies.currentBaby.birthday);
-    babyName = babies.currentBaby.name;
+    const birthday = moment(currentBaby.birthday);
+    babyName = currentBaby.name;
     babyAge = today.diff(birthday, 'days');
   }
 
@@ -33,7 +34,7 @@ const Header = ({
       </div>
       <button
         className="main-header__button"
-        onClick={logoutUser}
+        onClick={() => logoutUser(currentUser)}
       >
         {translate('logout')}
       </button>
@@ -41,8 +42,8 @@ const Header = ({
   )
 }
 
-const mapStateToProps = ({ babies }) => {
-  return { babies }
+const mapStateToProps = ({ auth, babies }) => {
+  return { auth, babies }
 }
 
 export default withTranslate(connect(mapStateToProps, actions)(Header));

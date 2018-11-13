@@ -12,14 +12,20 @@ const ACTIVITY_BUTTONS = [
 ];
 
 const ActivityButtons = ({
+  userSettings,
   activities,
   onActivityButtonClick,
 }) => {
   const { lastActivities, activitiesInProgress } = activities;
+  const { displayActivities } = userSettings;
+  let buttonsToRender = ACTIVITY_BUTTONS;
+  if (displayActivities) {
+    buttonsToRender = ACTIVITY_BUTTONS.filter(name => displayActivities.includes(name));
+  }
 
   return (
-    <div className="activity-buttons">
-      {ACTIVITY_BUTTONS.map(name => {
+    <div className={`activity-buttons ${buttonsToRender.join(' ')}`}>
+      {buttonsToRender.map(name => {
         const activityInProgress = activitiesInProgress
           .filter(activity => activity.name === name);
 

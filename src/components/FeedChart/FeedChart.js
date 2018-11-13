@@ -126,15 +126,32 @@ class FeedChart extends Component {
       breast,
       bottle,
       babyfood,
+      displayActivities,
     } = this.props;
 
-    const renderBreastData = breast && breast.totalCount > 0;
-    const renderBottleData = bottle && bottle.totalCount > 0;
-    const renderBabyfoodData = babyfood && babyfood.totalCount > 0;
+    let shouldRenderBreastData = breast && breast.totalCount > 0;
+    let shouldRenderBottleData = bottle && bottle.totalCount > 0;
+    let shouldRenderBabyfoodData = babyfood && babyfood.totalCount > 0;
+    if (displayActivities) {
+      shouldRenderBreastData = shouldRenderBreastData && displayActivities.includes('breast');
+      shouldRenderBottleData = shouldRenderBottleData && displayActivities.includes('bottle');
+      shouldRenderBabyfoodData = shouldRenderBabyfoodData && displayActivities.includes('babyfood');
+    }
 
     const breastData = this.transformData(breast);
     const bottleData = this.transformData(bottle);
     const babyfoodData = this.transformData(babyfood);
+
+    const legendData = [];
+    if (shouldRenderBreastData) {
+      legendData.push({ name: translate('breast'), symbol: { fill: DATA_FILL_COLOR['breast'] } });
+    }
+    if (shouldRenderBottleData) {
+      legendData.push({ name: translate('bottle'), symbol: { fill: DATA_FILL_COLOR['bottle'] } });
+    }
+    if (shouldRenderBabyfoodData) {
+      legendData.push({ name: translate('babyfood'), symbol: { fill: DATA_FILL_COLOR['babyfood'] } });
+    }
 
     return (
       <div className="feed-chart">
@@ -167,14 +184,10 @@ class FeedChart extends Component {
             orientation="horizontal"
             gutter={25}
             style={{ border: { stroke: "black" } }}
-            data={[
-              { name: translate('breast'), symbol: { fill: DATA_FILL_COLOR['breast'] } },
-              { name: translate('bottle'), symbol: { fill: DATA_FILL_COLOR['bottle'] } },
-              { name: translate('babyfood'), symbol: { fill: DATA_FILL_COLOR['babyfood'] } },
-            ]}
+            data={legendData}
           />
           <VictoryStack>
-            {renderBottleData && (
+            {shouldRenderBottleData && (
               <VictoryBar
                 data={bottleData}
                 x="date"
@@ -200,7 +213,7 @@ class FeedChart extends Component {
                 }]}
               />
             )}
-            {renderBabyfoodData && (
+            {shouldRenderBabyfoodData && (
               <VictoryBar
                 data={babyfoodData}
                 x="date"
@@ -228,7 +241,7 @@ class FeedChart extends Component {
             )}
           </VictoryStack>
 
-          {renderBreastData && (
+          {shouldRenderBreastData && (
             <VictoryGroup
               data={breastData}
               x="date"

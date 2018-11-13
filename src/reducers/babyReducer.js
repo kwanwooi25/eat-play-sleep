@@ -13,8 +13,8 @@ export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case GET_BABIES:
       return {
-        all: action.payload,
-        currentBaby: action.payload[0],
+        all: action.payload.all,
+        currentBaby: action.payload.currentBaby,
         error: ''
       };
     

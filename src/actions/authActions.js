@@ -13,11 +13,16 @@ import {
 import {
   getBabies
 } from './babyActions';
+import { IntlActions } from 'react-redux-multilingual';
+
+const API_HOST = process.env.REACT_APP_API_HOST || 'http://localhost:5000';
 
 export const getCurrentUser = () => async dispatch => {
   /** Guest */
   const guest = getGuestUser();
   if (guest && guest.isLoggedIn) {
+    const userLanguage = guest.settings.displayLanguage;
+    if (userLanguage) dispatch(IntlActions.setLocale(userLanguage));
     dispatch(getBabies(guest));
     return dispatch({ type: GET_CURRENT_USER, payload: guest });
   }
@@ -27,6 +32,8 @@ export const getCurrentUser = () => async dispatch => {
   const { success, error, data } = res.data;
   
   if (success) {
+    const userLanguage = data.settings.displayLanguage;
+    if (userLanguage) dispatch(IntlActions.setLocale(userLanguage));
     dispatch(getBabies(data));
     dispatch({ type: GET_CURRENT_USER, payload: data });
   } else {
@@ -52,6 +59,7 @@ export const loginAsGuest = () => dispatch => {
       isLoggedIn: true,
       id: 'localuser',
       provider: 'local',
+      settings: {},
     };
   }
 
@@ -62,12 +70,19 @@ export const loginAsGuest = () => dispatch => {
   dispatch({ type: LOGIN_AS_GUEST, payload: user });
 }
 
-export const logoutUser = () => async dispatch => {
+export const logoutUser = user => async dispatch => {
   dispatch({ type: LOGOUT_USER });
   
   // logout guest user
-  logoutGuestUser();
+  if (user.provider === 'local') logoutGuestUser();
 
   // logout user
-  await axios.get('/auth/logout');
+  else await axios.get('/auth/logout');
+}
+
+export const updateUser = user => async dispatch => {
+  if (user.provider === 'local') setGuestUser(user);
+  else await axios.put(`${API_HOST}/api/users`, user);
+
+  dispatch(getCurrentUser());
 }

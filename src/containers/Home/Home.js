@@ -163,12 +163,18 @@ class Home extends Component {
       snackbarType,
       activity
     } = this.state;
-    const { babies, activities, translate } = this.props;
+    const {
+      auth: { currentUser: { settings } },
+      babies,
+      activities,
+      translate
+    } = this.props;
 
     return (
       <div className="home">
         {babies.currentBaby ? (
           <ActivityButtons
+            userSettings={settings}
             activities={activities}
             onActivityButtonClick={this.handleActivityButtonClick}
           />

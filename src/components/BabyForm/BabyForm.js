@@ -76,6 +76,7 @@ class BabyForm extends Component {
     const {
       translate,
       labelAlign,
+      buttonsClassName,
     } = this.props;
     const {
       name,
@@ -128,6 +129,7 @@ class BabyForm extends Component {
         </div>
         <DialogButtonGroup
           variant='confirm'
+          className={buttonsClassName}
           cancelLabel={translate('cancel')}
           confirmLabel={translate('save')}
           onCancel={this.handleCancel}

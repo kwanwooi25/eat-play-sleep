@@ -65,6 +65,7 @@ class ActivityTrend extends Component {
     const {
       translate,
       activityName,
+      auth: { currentUser : { settings: { displayActivities } } },
       babies: { currentBaby },
       activities: { trend },
     } = this.props;
@@ -93,7 +94,11 @@ class ActivityTrend extends Component {
         <div className="activity-trend">
           {activityName !== 'growth' && (
             <div className="activity-trend__controls">
-              <TabSummary activityName={activityName} trend={trend} />
+              <TabSummary
+                activityName={activityName}
+                trend={trend}
+                displayActivities={displayActivities}
+              />
               <MenuSelector
                 buttonClassName="activity-trend__controls__button"
                 menuSelected={range}
@@ -105,7 +110,12 @@ class ActivityTrend extends Component {
   
           <div className="activity-trend__chart">
             {activityName === 'feed' && (
-              <FeedChart breast={breast} bottle={bottle} babyfood={babyfood} />
+              <FeedChart
+                breast={breast}
+                bottle={bottle}
+                babyfood={babyfood}
+                displayActivities={displayActivities}
+              />
             )}
             {activityName === 'sleep' && <DurationChart source={sleep} />}
             {activityName === 'diaper' && <DiaperChart source={diaper} />}

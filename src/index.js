@@ -15,9 +15,7 @@ import translations from './translations';
 /** Material UI */
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
-/** Material UI Picker */
-import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
-import MomentUtils from 'material-ui-pickers/utils/moment-utils';
+/** moment js */
 import moment from 'moment';
 import 'moment/locale/ko';
 
@@ -54,9 +52,7 @@ ReactDOM.render(
   <Provider store={store}>
     <IntlProvider translations={translations}>
       <MuiThemeProvider theme={theme}>
-        <MuiPickersUtilsProvider utils={MomentUtils} moment={moment} locale={locale}>
-          <App/>
-        </MuiPickersUtilsProvider>
+        <App/>
       </MuiThemeProvider>
     </IntlProvider>
   </Provider>,

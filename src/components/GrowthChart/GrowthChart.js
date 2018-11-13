@@ -13,6 +13,7 @@ import {
   VictoryAxis,
   VictoryTheme,
   VictoryScatter,
+  VictoryLegend,
 } from 'victory';
 
 /** Helper functions */
@@ -127,6 +128,15 @@ class GrowthChart extends Component {
                   dependentAxis
                   tickFormat={x => `${comma(x)}${unit}`}
                 />
+                <VictoryLegend
+                  x={20} y={10}
+                  orientation="horizontal"
+                  gutter={25}
+                  data={[{
+                    name: translate('WHOstandard'),
+                    symbol: { fill: DATA_FILL_COLOR['standard'] }
+                  }]}
+                />
                 <VictoryArea
                   data={standardsData[name]}
                   x="month"
@@ -150,7 +160,7 @@ class GrowthChart extends Component {
                     x="month"
                     y={name}
                     size={5}
-                    labels={() => null}
+                    labels={v => v[name]}
                     style={{
                       data: { fill: DATA_FILL_COLOR[name] },
                       labels: {

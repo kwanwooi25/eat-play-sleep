@@ -123,9 +123,13 @@ class Logs extends Component {
     });
   }
 
-  renderLog = data => {
+  renderLog = (data, shouldDisplay) => {
     const { translate } = this.props;
     const mappedByDates = {};
+
+    if (shouldDisplay) {
+      data = data.filter(({ name }) => shouldDisplay.includes(name));
+    }
 
     data.forEach(activity => {
       const date = moment(activity.time_start).format('YYYYMMDD');
@@ -169,14 +173,23 @@ class Logs extends Component {
       snackbarType,
       snackbarMessage
     } = this.state;
-    const { translate, activities } = this.props;
+    const {
+      translate,
+      auth: { currentUser : { settings: { displayActivities } } },
+      activities
+    } = this.props;
     const { all, currentActivity } = activities;
+
+    let toggleOptions = DISPLAY_TOGGLE_OPTIONS;
+    if (displayActivities) {
+      toggleOptions = DISPLAY_TOGGLE_OPTIONS.filter(name => displayActivities.includes(name));
+    }
 
     return (
       <div className="logs">
         <div className="logs__display-options">
           <CustomSelector
-            options={DISPLAY_TOGGLE_OPTIONS}
+            options={toggleOptions}
             value={show}
             onChange={this.handleDisplayOptionClick}
             multiChoice={true}
@@ -184,7 +197,7 @@ class Logs extends Component {
         </div>
         {all.length === 0
           ? <NoData icon="list" message={translate('noLogs')} />
-          : this.renderLog(all)}
+          : this.renderLog(all, displayActivities)}
 
         <EditActivityDialog
           open={isEditActivityDialogOpen}

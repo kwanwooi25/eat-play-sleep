@@ -39,10 +39,14 @@ class ActivitySummary extends Component {
     this.setState({ date }, () => this.getSummary(this.state.date));
   }
 
-  renderSummary = summary => {
+  renderSummary = (summary, shouldRender) => {
     const { translate } = this.props;
+    let keys = Object.keys(summary);
+    if (shouldRender) {
+      keys = keys.filter(name => shouldRender.includes(name));
+    }
 
-    return Object.keys(summary).map(name => {
+    return keys.map(name => {
       const { count, amount, amount_unit, duration, pee, poo } = summary[name];
 
       // generate duration string
@@ -99,6 +103,7 @@ class ActivitySummary extends Component {
   render() {
     const {
       translate,
+      auth: { currentUser : { settings: { displayActivities } } },
       activities: { summaryByDate }
     } = this.props;
     const { date } = this.state;
@@ -130,7 +135,7 @@ class ActivitySummary extends Component {
           </button>
         </div>
         <div className="activity-summary__info">
-          {this.renderSummary(summaryByDate)}
+          {this.renderSummary(summaryByDate, displayActivities)}
         </div>
       </div>
     )

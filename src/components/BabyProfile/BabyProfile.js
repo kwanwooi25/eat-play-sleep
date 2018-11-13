@@ -6,17 +6,21 @@ import { withTranslate } from 'react-redux-multilingual';
 /** Components */
 import BabyForm from '../BabyForm/BabyForm';
 import CustomDialog from '../CustomDialog/CustomDialog';
+import SVGIcon from '../SVGIcon/SVGIcon';
 
 /** Material UI Components */
 import Icon from '@material-ui/core/Icon';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 /** Actions */
 import * as actions from '../../actions';
 
 class BabyProfile extends Component {
   state = {
-    editMode: false,
+    mode: 'view',
     isConfirmDialogOpen: false,
+    babySelectAnchorEl: null,
   }
 
   openConfirmDialog = () => this.setState({ isConfirmDialogOpen: true });
@@ -27,11 +31,13 @@ class BabyProfile extends Component {
     if (result) deleteBaby(user, baby);
   }
 
-  enterEditMode = () => this.setState({ editMode: true });
+  enterEditMode = () => this.setState({ mode: 'edit' });
 
-  handleCancel = () => this.setState({ editMode: false });
+  enterNewMode = () => this.setState({ mode: 'new' });
 
-  handleSave = data => {
+  handleCancel = () => this.setState({ mode: 'view' });
+
+  handleSaveEdit = data => {
     const { baby, user, editBaby } = this.props;
     const { name, gender, birthday } = data;
     const guardians = baby.guardians.map(({ id, relationship }) => {
@@ -41,19 +47,101 @@ class BabyProfile extends Component {
 
     const updatedBaby = { id: baby.id, name, gender, birthday, guardians };
     editBaby(user, updatedBaby);
-    this.setState({ editMode: false });
+    this.setState({ mode: 'view' });
+  }
+
+  handleSaveNew = data => {
+    const { user, addBaby } = this.props;
+    const { name, gender, birthday, relationship } = data;
+    const baby = {
+      name,
+      gender,
+      birthday,
+      guardians: [{ id: user.id, relationship }]
+    };
+
+    addBaby(user, baby);
+    this.setState({ mode: 'view' });
+  }
+
+  openBabySelect = e => this.setState({ babySelectAnchorEl: e.target });
+
+  handleBabyChange = value => {
+    const { user, updateUser } = this.props;
+    user.settings.currentBabyId = value;
+    if (value) updateUser(user);
+    this.setState({ babySelectAnchorEl: null });
+  }
+
+  renderBabies = babies => {
+    return babies.map(({ id, name }) => {
+      return (
+        <MenuItem key={id} onClick={() => this.handleBabyChange(id)}>
+          {name}
+        </MenuItem>
+      )
+    })
   }
 
   render() {
-    const { editMode, isConfirmDialogOpen } = this.state;
-    const { translate, user, baby } = this.props;
+    const { mode, isConfirmDialogOpen, babySelectAnchorEl } = this.state;
+    const { translate, user, baby, all } = this.props;
 
     const { name, gender, birthday } = baby;
     const { relationship } = baby.guardians.find(({ id }) => id === user.id);
 
     return (
       <div className="baby-profile">
-        {editMode ? (
+        <div className="baby-profile__header">
+          <h3 className="baby-profile__header__title">
+            {
+              mode === 'edit' ? translate('editBabyTitle') :
+                mode === 'new' ? translate('addBabyTitle') :
+                  translate('babyProfileTitle')
+            }
+          </h3>
+          {mode === 'view' && (
+            <div className="baby-profile__header__controls">
+              {all.length >= 2 && (
+                <div className="baby-profile__header__baby-select">
+                  <button
+                    className="baby-profile__header__controls__button"
+                    onClick={this.openBabySelect}
+                  >
+                    <SVGIcon name="swap_baby" />
+                  </button>
+                  <Menu
+                    anchorEl={babySelectAnchorEl}
+                    open={Boolean(babySelectAnchorEl)}
+                    onClose={() => this.handleBabyChange(false)}
+                  >
+                    {this.renderBabies(all)}
+                  </Menu>
+                </div>
+              )}
+              <button
+                className="baby-profile__header__controls__button"
+                onClick={this.enterNewMode}
+              >
+                <SVGIcon name="add_baby" />
+              </button>
+              <button
+                className="baby-profile__header__controls__button"
+                onClick={this.enterEditMode}
+              >
+                <Icon color="inherit">edit</Icon>
+              </button>
+              <button
+                className="baby-profile__header__controls__button"
+                onClick={this.openConfirmDialog}
+              >
+                <Icon color="inherit">delete</Icon>
+              </button>
+            </div>
+          )}
+          
+        </div>
+        {mode === 'edit' ? (
           <BabyForm
             name={name}
             gender={gender}
@@ -61,7 +149,15 @@ class BabyProfile extends Component {
             relationship={relationship}
             labelAlign="row"
             onCancel={this.handleCancel}
-            onSave={this.handleSave}
+            onSave={this.handleSaveEdit}
+            buttonsClassName="baby-profile__form__buttons"
+          />
+        ) : mode === 'new' ? (
+          <BabyForm
+            labelAlign="row"
+            onCancel={this.handleCancel}
+            onSave={this.handleSaveNew}
+            buttonsClassName="baby-profile__form__buttons"
           />
         ) : (
           <div className="baby-profile__info">
@@ -73,23 +169,6 @@ class BabyProfile extends Component {
             <span>{moment(birthday).format(translate('dateFormatLong'))}</span>
             <label>{translate('relationshipLabel')}</label>
             <span>{translate(relationship)}</span>
-          </div>
-        )}
-
-        {editMode === false && (
-          <div className="baby-profile__controls">
-            <button
-              className="baby-profile__controls__button"
-              onClick={this.enterEditMode}
-            >
-              <Icon color="inherit">edit</Icon>
-            </button>
-            <button
-              className="baby-profile__controls__button"
-              onClick={this.openConfirmDialog}
-            >
-              <Icon color="inherit">delete</Icon>
-            </button>
           </div>
         )}
 

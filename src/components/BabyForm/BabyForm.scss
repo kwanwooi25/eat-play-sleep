@@ -1,3 +1,7 @@
-.baby-form__inputs {
-  padding: $space--sm;
+.baby-form {
+  width: 100%;
+  
+  &__inputs {
+    padding: $space--sm;
+  }
 }

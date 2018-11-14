@@ -67,13 +67,17 @@ class TimeInput extends Component {
       label,
       labelAlign = 'row', // 'row', 'column'
       hourController = false,
-      readonly = false
+      readonly = false,
+      small = false,
     } = this.props;
 
+    const containerClassName =
+      `time-input-container ${className} label-align--${labelAlign}`;
+
     return (
-      <div className={`time-input-container ${className} label-align--${labelAlign}`}>
+      <div className={containerClassName}>
         {label && <label>{label}</label>}
-        <div className={`time-input ${readonly ? 'readonly' : ''}`}>
+        <div className={`time-input ${readonly ? 'readonly' : ''} ${small ? 'small' : ''}`}>
           <div className="time-input__spinner">
             {hourController && (
               <div className="time-input__spinner__hour-wrapper">

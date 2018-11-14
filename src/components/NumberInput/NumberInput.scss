@@ -4,6 +4,7 @@
   border-top: 2px solid $color-primary;
   border-bottom: 2px solid $color-primary;
   overflow: hidden;
+  min-width: 15rem;
 
   &-container {
     margin-bottom: $space--sm;
@@ -55,6 +56,10 @@
         scroll-snap-align: center;
       }
     }
+
+    &__decimal {
+      font-size: $font-size--medium;
+    }
   }
 
   &__point {
@@ -64,7 +69,13 @@
   }
 
   &__unit {
+    @extend %flex-center-column;
+    width: 3rem;
+    height: 3rem;
+    background: $color-primary--xxlight;
+    border-radius: 100%;
     font-size: $font-size--medium;
-    padding: $space--md;
+    padding: $space--sm;
+    margin: $space--xs;
   }
 }

@@ -16,8 +16,8 @@ import {
 } from 'victory';
 
 /** Helper functions */
-import { comma } from '../../helpers/comma';
 import secondsToHMS from '../../helpers/secondsToHMS';
+import { mlToOz } from '../../helpers/unitChange';
 
 const DATA_FILL_COLOR = {
   breast: '#FFC107',
@@ -37,7 +37,7 @@ const LABEL_COLOR = {
 
 class FeedChart extends Component {
 
-  transformData = source => {
+  transformData = (source, unit) => {
     let data = [];
 
     if (source) {
@@ -47,7 +47,10 @@ class FeedChart extends Component {
             return { date: key, duration: source[key].duration / 5 };
           case 'bottle':
           case 'babyfood':
-            return { date: key, amount: source[key].amount };
+            if (unit === 'oz') {
+              return { date: key, amount: parseFloat(mlToOz(source[key].amount).toFixed(2)) };
+            }
+            return { date: key, amount: parseInt(source[key].amount.toFixed(0)) };
           default:
             return {};
         }    
@@ -86,6 +89,7 @@ class FeedChart extends Component {
   }
   
   onBarChartMouseOver = name => {
+    const { displayUnits } = this.props;
     return [
       {
         target: "data",
@@ -107,7 +111,7 @@ class FeedChart extends Component {
         target: "labels",
         mutation: props => {
           const { amount } = props.datum;
-          return { text: `${comma(amount)}ml` };
+          return { text: `${amount}${displayUnits.volume}` };
         }
       }
     ];
@@ -127,6 +131,7 @@ class FeedChart extends Component {
       bottle,
       babyfood,
       displayActivities,
+      displayUnits,
     } = this.props;
 
     let shouldRenderBreastData = breast && breast.totalCount > 0;
@@ -138,9 +143,9 @@ class FeedChart extends Component {
       shouldRenderBabyfoodData = shouldRenderBabyfoodData && displayActivities.includes('babyfood');
     }
 
-    const breastData = this.transformData(breast);
-    const bottleData = this.transformData(bottle);
-    const babyfoodData = this.transformData(babyfood);
+    const breastData = this.transformData(breast, displayUnits.volume);
+    const bottleData = this.transformData(bottle, displayUnits.volume);
+    const babyfoodData = this.transformData(babyfood, displayUnits.volume);
 
     const legendData = [];
     if (shouldRenderBreastData) {
@@ -168,7 +173,7 @@ class FeedChart extends Component {
             label={translate('amount')}
             dependentAxis
             tickCount={4}
-            tickFormat={x => `${comma(x)}ml`}
+            tickFormat={x => `${x}${displayUnits.volume}`}
             style={{ axisLabel: { padding: -15 } }}
           />
           <VictoryAxis

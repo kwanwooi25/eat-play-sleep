@@ -169,9 +169,11 @@ class CustomDateTimePicker extends Component {
       max,
     } = this.props;
 
+    const pickerClassName = `custom-date-time-picker label-align--${labelAlign} ${className}`;
+
     return (
       <div className="custom-date-time-picker-container">
-        <div className={`custom-date-time-picker ${className} label-align--${labelAlign}`}>
+        <div className={pickerClassName}>
         {label && <label>{label}</label>}
           <div className="custom-date-time-picker__picker-button-container">
             <button

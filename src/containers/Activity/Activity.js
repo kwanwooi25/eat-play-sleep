@@ -85,7 +85,11 @@ class Activity extends Component {
   }
 
   renderContent = () => {
-    const { translate, activity } = this.props;
+    const {
+      translate,
+      activity,
+      auth: { currentUser : { settings: { displayUnits } } },
+    } = this.props;
     const { name } = activity;
     const {
       time_start,
@@ -120,10 +124,12 @@ class Activity extends Component {
         {shouldRenderAmountInput && (
           <NumberInput
             value={amount}
-            unit="ml"
+            unit={displayUnits.volume || 'ml'}
+            showHundred={displayUnits.volume === 'ml'}
+            hundredMax={5}
+            tenMax={displayUnits.volume === 'oz' ? 2 : 9}
+            showDecimal={displayUnits.volume === 'oz'}
             onChange={value => this.handleNumberInputChange('amount', value)}
-            onMinus={() => { this.handleNumberInputButtonClick('amount', 'minus') }}
-            onPlus={() => { this.handleNumberInputButtonClick('amount', 'plus') }}
           />
         )}
         {shouldRenderCustomSelector && (
@@ -147,8 +153,11 @@ class Activity extends Component {
           <NumberInput
             label={translate('height')}
             value={height}
-            unit="cm"
-            isDecimal={true}
+            unit={displayUnits.length || 'cm'}
+            showHundred={displayUnits.length === 'cm'}
+            hundredMax={1}
+            tenMax={displayUnits.length === 'in' ? 5 : 3}
+            showDecimal
             onChange={value => this.handleNumberInputChange('height', value)}
           />
         )}
@@ -156,8 +165,10 @@ class Activity extends Component {
           <NumberInput
             label={translate('weight')}
             value={weight}
-            unit="kg"
-            isDecimal={true}
+            unit={displayUnits.weight || 'kg'}
+            showHundred={false}
+            tenMax={displayUnits.weight === 'lb' ? 7 : 3}
+            showDecimal
             onChange={value => this.handleNumberInputChange('weight', value)}
           />
         )}
@@ -165,8 +176,10 @@ class Activity extends Component {
           <NumberInput
             label={translate('head')}
             value={head}
-            unit="cm"
-            isDecimal={true}
+            unit={displayUnits.length || 'cm'}
+            showHundred={false}
+            tenMax={displayUnits.length === 'cm' ? 5 : 3}
+            showDecimal
             onChange={value => this.handleNumberInputChange('head', value)}
           />
         )}
@@ -226,4 +239,8 @@ class Activity extends Component {
   }
 }
 
-export default withTranslate(connect(null, actions)(Activity));
+const mapStateToProps = ({ auth }) => {
+  return { auth };
+}
+
+export default withTranslate(connect(mapStateToProps, actions)(Activity));

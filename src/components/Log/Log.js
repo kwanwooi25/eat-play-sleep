@@ -12,6 +12,7 @@ import SVGIcon from '../SVGIcon/SVGIcon';
 
 /** Helper functions */
 import parseSeconds from '../../helpers/parseSeconds';
+import { mlToOz } from '../../helpers/unitChange';
 
 class Log extends React.Component {
   state = { anchorEl: null }
@@ -25,7 +26,7 @@ class Log extends React.Component {
 
   render() {
     const { anchorEl } = this.state;
-    const { activity, translate } = this.props;
+    const { activity, translate, amountUnit } = this.props;
     const {
       name,
       time_start,
@@ -47,6 +48,12 @@ class Log extends React.Component {
     if (totalTime.s) second = `${translate('second', { s: totalTime.s })}`;
     const timeString = `${hour} ${minute} ${second}`.trim();
 
+    let amountString = '';
+    if (shouldRenderAmount) {
+      if (amountUnit === 'oz') amountString = `${mlToOz(amount).toFixed(2)} oz`;
+      else amountString = `${amount.toFixed(1)} ml`;
+    }
+
     return (
       <div className="log">
         <div className={`log__icon ${name}`}>
@@ -58,7 +65,7 @@ class Log extends React.Component {
           </span>
           <div className="log__content__info">
             {shouldRenderDuration ? timeString : ''}
-            {shouldRenderAmount ? `${amount} ml` : ''}
+            {shouldRenderAmount ? amountString : ''}
             {shouldRenderType ? translate(type) : '' }
           </div>
           <span className="log__content__time">

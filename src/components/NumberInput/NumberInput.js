@@ -1,15 +1,22 @@
 import React, { Component } from 'react';
+import { ozToMl, mlToOz, inToCm, cmToIn, lbToKg, kgToLb } from '../../helpers/unitChange';
 
 class NumberInput extends Component {
   constructor(props) {
     super(props);
 
-    const { value } = props;
+    let { value, unit } = props;
+    let decimalModifier = 10;
+
+    if (unit === 'oz') value = mlToOz(value);
+    if (unit === 'in') value = cmToIn(value);
+    if (unit === 'lb') value = kgToLb(value);
+    if (unit === 'oz' || unit === 'in' || unit === 'lb') decimalModifier = 100;
 
     const hundred = Math.floor(value / 100) || 0;
     const ten = Math.floor((value - (hundred * 100)) / 10) || 0;
     const one = Math.floor(value - (hundred * 100) - (ten * 10)) || 0;
-    const decimal = value - (hundred * 100) - (ten * 10) - one || 0;
+    const decimal = (value - (hundred * 100) - (ten * 10) - one) * decimalModifier || 0;
 
     this.state = { hundred, ten, one, decimal };
   }
@@ -19,14 +26,11 @@ class NumberInput extends Component {
     const { hundred, ten, one, decimal } = this.state;
 
     if (value) {
-      const scrollHeight = this.hundredSpinner.children[0].scrollHeight;
-      this.hundredSpinner.scrollTo({ top: hundred * scrollHeight });
-      this.tenSpinner.scrollTo({ top: ten * scrollHeight });
+      const scrollHeight = this.oneSpinner.children[0].scrollHeight;
+      if (this.hundredSpinner) this.hundredSpinner.scrollTo({ top: hundred * scrollHeight });
+      if (this.tenSpinner) this.tenSpinner.scrollTo({ top: ten * scrollHeight });
       this.oneSpinner.scrollTo({ top: one * scrollHeight });
-      
-      if (this.decimalSpinner) {
-        this.decimalSpinner.scrollTo({ top: decimal * scrollHeight });
-      }
+      if (this.decimalSpinner) this.decimalSpinner.scrollTo({ top: decimal * scrollHeight });
     }
   }
 
@@ -34,18 +38,30 @@ class NumberInput extends Component {
     const currentScrollPosition = e.target.scrollTop;
     const childScrollHeight = e.target.children[0].scrollHeight;
     let selected = Math.round(currentScrollPosition / childScrollHeight);
+    const value = Number(e.target.children[selected].textContent);
 
-    this.setState({ [name]: selected }, () => {
+    this.setState({ [name]: value }, () => {
       this.handleChange();
     });
   }
 
   handleChange = () => {
     const { hundred, ten, one, decimal } = this.state;
-    const { isDecimal, onChange } = this.props;
+    const { showDecimal, onChange, unit } = this.props;
 
     let value = (hundred * 100) + (ten * 10) + one;
-    if (isDecimal) value += (decimal * 0.1);
+    if (showDecimal) {
+      if (unit === 'oz' || unit === 'in' || unit === 'lb') {
+        value += (decimal / 100);
+      } else {
+        value += (decimal / 10);
+      }
+    }
+
+    if (unit === 'oz') value = ozToMl(value);
+    else if (unit === 'in') value = inToCm(value);
+    else if (unit === 'lb') value = lbToKg(value);
+
     onChange(value);
   }
 
@@ -58,37 +74,68 @@ class NumberInput extends Component {
       label,
       labelAlign = 'row', // 'row', 'column'
       unit,
-      isDecimal,
+      showDecimal,
+      showHundred = true,
+      hundredMax = 9,
+      showTen = true,
+      tenMax = 9,
+      small = false,
     } = this.props;
 
-    let numbers = [];
-    for (let i = 0; i <= 9; i++) numbers.push(i);
+    const numbers = {
+      hundred: [],
+      ten: [],
+      one: [],
+      decimal: [],
+    };
+    let spinners = [];
+
+    if (showHundred) {
+      spinners.push('hundred');
+      for (let i = 0; i <= hundredMax; i++) numbers.hundred.push(i);
+    }
+    if (showTen) {
+      spinners.push('ten');
+      for (let i = 0; i <= tenMax; i++) numbers.ten.push(i);
+    }
+    spinners.push('one');
+    for (let i = 0; i <= 9; i++) numbers.one.push(i);
+    if (showDecimal) {
+      if (unit === 'oz' || unit === 'in' || unit === 'lb') {
+        for (let i = 0; i <= 75; i += 25) numbers.decimal.push(i);
+      } else {
+        for (let i = 0; i <= 9; i++) numbers.decimal.push(i);
+      }
+    }
+
+    const containerClassName =
+      `number-input-container ${className} label-align--${labelAlign} ${small ? 'small' : ''}`
 
     return (
-      <div className={`number-input-container ${className} label-align--${labelAlign}`}>
+      <div className={containerClassName}>
         {label && <label>{label}</label>}
         <div className="number-input">
           <div className="number-input__spinner">
-            {['hundred', 'ten', 'one'].map(name => (
+            {spinners.map(name => (
               <div key={name} className={`number-input__spinner__${name}-wrapper`}>
                 <ul
                   ref={ref => this[`${name}Spinner`] = ref}
                   className={`number-input__spinner__${name}`}
                   onScroll={e => this.handleSpinnerScroll(e, name)}
                 >
-                  {this.renderNumbers(numbers, name)}
+                  {this.renderNumbers(numbers[name], name)}
                 </ul>
               </div>
             ))}
-            {isDecimal && <span className="number-input__point">.</span>}
-            {isDecimal && (
+            {showDecimal && <span className="number-input__point">.</span>}
+            {showDecimal && (
               <div className="number-input__spinner__decimal-wrapper">
                 <ul
                   ref={ref => this.decimalSpinner = ref}
                   className="number-input__spinner__decimal"
                   onScroll={e => this.handleSpinnerScroll(e, 'decimal')}
                 >
-                  {this.renderNumbers(numbers, 'decimal')}
+                  {this.renderNumbers(numbers['decimal'], 'decimal')}
                 </ul>
               </div>
             )}

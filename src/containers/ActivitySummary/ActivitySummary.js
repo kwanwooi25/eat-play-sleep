@@ -9,6 +9,7 @@ import SVGIcon from '../../components/SVGIcon/SVGIcon';
 /** Helper functions */
 import parseSeconds from '../../helpers/parseSeconds';
 import { comma } from '../../helpers/comma';
+import { mlToOz } from '../../helpers/unitChange';
 
 /** Actions */
 import * as actions from '../../actions';
@@ -39,15 +40,16 @@ class ActivitySummary extends Component {
     this.setState({ date }, () => this.getSummary(this.state.date));
   }
 
-  renderSummary = (summary, shouldRender) => {
+  renderSummary = (summary, settings) => {
     const { translate } = this.props;
+    const { displayActivities, displayUnits } = settings;
     let keys = Object.keys(summary);
-    if (shouldRender) {
-      keys = keys.filter(name => shouldRender.includes(name));
+    if (displayActivities) {
+      keys = keys.filter(name => displayActivities.includes(name));
     }
 
     return keys.map(name => {
-      const { count, amount, amount_unit, duration, pee, poo } = summary[name];
+      const { count, amount, duration, pee, poo } = summary[name];
 
       // generate duration string
       let durationString = '';
@@ -60,7 +62,14 @@ class ActivitySummary extends Component {
       }
 
       // generate amount string
-      const amountString = `${comma(amount)} ${amount_unit}`;
+      let amountString = '';
+      if (amount) {
+        if (displayUnits.volume === 'oz') {
+          amountString = `${mlToOz(amount).toFixed(2)} oz`;
+        } else {
+          amountString = `${comma(amount.toFixed(0))} ml`
+        }
+      }
 
       // generate pee-poo string
       const peeString = `${translate('pee')}: ${translate('count', { count: pee })}`;
@@ -103,7 +112,7 @@ class ActivitySummary extends Component {
   render() {
     const {
       translate,
-      auth: { currentUser : { settings: { displayActivities } } },
+      auth: { currentUser : { settings } },
       activities: { summaryByDate }
     } = this.props;
     const { date } = this.state;
@@ -135,7 +144,7 @@ class ActivitySummary extends Component {
           </button>
         </div>
         <div className="activity-summary__info">
-          {this.renderSummary(summaryByDate, displayActivities)}
+          {this.renderSummary(summaryByDate, settings)}
         </div>
       </div>
     )

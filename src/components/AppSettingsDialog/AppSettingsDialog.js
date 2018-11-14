@@ -19,8 +19,12 @@ const ACTIVITY_OPTIONS = [
   'sleep',
   'growth',
 ];
-
 const LANGUAGE_OPTIONS = [ 'ko', 'en' ];
+const UNITS = {
+  volume: [{ value: 'ml', label: 'ML' }, { value: 'oz', label: 'OZ' }],
+  length: [{ value: 'cm', label: 'CM' }, { value: 'in', label: 'IN' }],
+  weight: [{ value: 'kg', label: 'KG' }, { value: 'lb', label: 'LB' }],
+};
 
 const Transition = props => <Slide direction="left" {...props} />;
 
@@ -30,19 +34,23 @@ class AppSettingsDialog extends Component {
 
     const displayActivities = props.displayActivities || ACTIVITY_OPTIONS;
     const displayLanguage = props.displayLanguage || 'en';
+    const displayUnits = props.displayUnits || { volume: 'ml', length: 'cm', weight: 'kg' };
 
     this.state = {
       displayActivities,
       displayLanguage,
+      displayUnits,
     }
   }
   componentWillReceiveProps(props) {
     const displayActivities = props.displayActivities || ACTIVITY_OPTIONS;
     const displayLanguage = props.displayLanguage || 'en';
+    const displayUnits = props.displayUnits || { volume: 'ml', length: 'cm', weight: 'kg' };
 
     this.setState({
       displayActivities,
       displayLanguage,
+      displayUnits,
     })
   }
 
@@ -68,7 +76,15 @@ class AppSettingsDialog extends Component {
     this.setState({ displayActivities });
   }
 
-  handleLanguageChange = e => this.setState({ displayLanguage: e.target.value });
+  handleLanguageChange = e => this.setState({ [e.target.name]: e.target.value });
+
+  handleUnitChange = e => {
+    const { name, value } = e.target;
+    const { displayUnits } = this.state;
+    displayUnits[name] = value;
+
+    this.setState({ displayUnits });
+  }
 
   render() {
     const {
@@ -80,6 +96,7 @@ class AppSettingsDialog extends Component {
     const {
       displayActivities,
       displayLanguage,
+      displayUnits,
     } = this.state;
 
     const languageRadioOptions = 
@@ -99,7 +116,7 @@ class AppSettingsDialog extends Component {
           </div>
   
           {settingsLabel === 'displayActivities' && (
-            <div className="display-activities-selector">
+            <div className="app-settings-dialog__display-activities">
               <CustomSelector
                 options={ACTIVITY_OPTIONS}
                 value={displayActivities}
@@ -110,13 +127,31 @@ class AppSettingsDialog extends Component {
           )}
 
           {settingsLabel === 'displayLanguage' && (
-            <div className="display-language-selector">
+            <div className="app-settings-dialog__display-language">
               <CustomRadioGroup
-                name="language"
+                name="displayLanguage"
                 options={languageRadioOptions}
                 value={displayLanguage}
                 onChange={this.handleLanguageChange}
               />
+            </div>
+          )}
+
+          {settingsLabel === 'displayUnits' && (
+            <div className="app-settings-dialog__display-units">
+              {Object.keys(UNITS).map(key => {
+                return (
+                  <CustomRadioGroup
+                    key={key}
+                    name={key}
+                    label={translate(`${key}Unit`)}
+                    labelAlign="row"
+                    options={UNITS[key]}
+                    value={displayUnits[key]}
+                    onChange={this.handleUnitChange}
+                  />
+                )
+              })}
             </div>
           )}
   

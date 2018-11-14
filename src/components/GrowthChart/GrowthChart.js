@@ -18,6 +18,7 @@ import {
 
 /** Helper functions */
 import { comma } from '../../helpers/comma';
+import { cmToIn, kgToLb } from '../../helpers/unitChange';
 
 const DATA_FILL_COLOR = {
   standard: '#B2DFDB',
@@ -41,6 +42,7 @@ const LABEL_COLOR = {
 class GrowthChart extends Component {
 
   getStandardsData = (gender, age) => {
+    const { displayUnits } = this.props;
     const standards = gender === 'boy' ? boysStandards : girlsStandards;
 
     const standardsData = {};
@@ -50,6 +52,30 @@ class GrowthChart extends Component {
       standardsData[key] = standards[key]
         .filter(({ month }) => 
           (age - 2 <= month && month <= age + 2));
+
+      if ((key === 'height'|| key === 'head') && displayUnits.length === 'in') {
+        standardsData[key] = standardsData[key].map(data => {
+          return {
+            month: data.month,
+            third: cmToIn(data.third),
+            fifteenth: cmToIn(data.fifteenth),
+            median: cmToIn(data.median),
+            eightyfifth: cmToIn(data.eightyfifth),
+            ninetyseventh: cmToIn(data.ninetyseventh),
+          }
+        });
+      } else if (key === 'weight' && displayUnits.weight === 'lb') {
+        standardsData[key] = standardsData[key].map(data => {
+          return {
+            month: data.month,
+            third: kgToLb(data.third),
+            fifteenth: kgToLb(data.fifteenth),
+            median: kgToLb(data.median),
+            eightyfifth: kgToLb(data.eightyfifth),
+            ninetyseventh: kgToLb(data.ninetyseventh),
+          }
+        });
+      }
 
       const min = standardsData[key][0].third;
       const max = standardsData[key][standardsData[key].length - 1].ninetyseventh;
@@ -76,8 +102,6 @@ class GrowthChart extends Component {
   }
   
   onChartMouseOver = name => {
-    const unit = name === 'weight' ? 'kg' : 'cm';
-
     return [
       {
         target: "data",
@@ -95,30 +119,32 @@ class GrowthChart extends Component {
             );
           return Object.assign({}, props, { style: newStyle });
         }
-      }, {
-        target: "labels",
-        mutation: props => ({ text: `${comma(props.datum[name])}${unit}` }),
       }
     ];
   }
   
-  onChartMouseOut = () => {
-    return [
-      { target: "data", mutation: () => null },
-      { target: "labels", mutation: () => null }
-    ];
-  }
+  onChartMouseOut = () => [{ target: "data", mutation: () => null }];
 
   render() {
-    const { translate, source, baby } = this.props;
+    const { translate, source, baby, displayUnits } = this.props;
     const ageInMonth = moment().diff(moment(baby.birthday), 'months');
     const { standardsData, minMax } = this.getStandardsData(baby.gender, ageInMonth);
     const lastMeasure = this.getLastMeasure(source);
 
+    if (displayUnits.length === 'in') {
+      lastMeasure.height = cmToIn(lastMeasure.height);
+      lastMeasure.head = cmToIn(lastMeasure.head);
+    }
+    if (displayUnits.weight === 'lb') lastMeasure.weight = kgToLb(lastMeasure.weight);
+
     return (
       <div className="growth-chart">
         {Object.keys(standardsData).map(name => {
-          const unit = name === 'weight' ? 'kg' : 'cm';
+          const unit =
+            (name === 'height' || name === 'head') ?
+              displayUnits.length :
+              name === 'weight' && displayUnits.weight;
+
           return (
             <div key={name} className="growth-chart__item" >
               <div>{translate(name)}</div>
@@ -155,7 +181,7 @@ class GrowthChart extends Component {
                   <VictoryScatter
                     data={[{
                       month: ageInMonth,
-                      [name]: lastMeasure[name],
+                      [name]: parseFloat(lastMeasure[name].toFixed(2)),
                     }]}
                     x="month"
                     y={name}

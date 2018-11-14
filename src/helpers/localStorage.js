@@ -108,9 +108,9 @@ export const getGuestActivitySummaryByDate = (babyID, range) => {
 
   const summary = {
     breast: { count: 0, duration: 0 },
-    bottle: { count: 0, amount: 0, amount_unit: 'ml' },
-    babyfood: { count: 0, amount: 0, amount_unit: 'ml' },
-    pump: { count: 0, amount: 0, amount_unit: 'ml' },
+    bottle: { count: 0, amount: 0 },
+    babyfood: { count: 0, amount: 0 },
+    pump: { count: 0, amount: 0 },
     diaper: { count: 0, pee: 0, poo: 0 },
     sleep: { count: 0, duration: 0 },
   };

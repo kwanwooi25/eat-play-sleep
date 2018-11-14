@@ -11,6 +11,12 @@ import AppSettingsDialog from '../../components/AppSettingsDialog/AppSettingsDia
 /** Actions */
 import * as actions from '../../actions';
 
+const APP_SETTINGS = [
+  'displayActivities',
+  'displayLanguage',
+  'displayUnits'
+];
+
 class Settings extends Component {
   state = {
     isAppSettingsDialogOpen: false,
@@ -71,39 +77,22 @@ class Settings extends Component {
             <h3>{translate('appSettingsTitle')}</h3>
           </div>
           <div className="settings__app-settings__buttons">
-            <button
-              className="settings__app-settings__buttons__button"
-              onClick={() => this.openAppSettingsDialog('displayActivities')}
-            >
-              <div className="settings__app-settings__buttons__button__label">
-                {translate('displayActivities')}
-              </div>
-              <div className="settings__app-settings__buttons__button__icon">
-                <SVGIcon name="arrow_right" />
-              </div>
-            </button>
-            <button
-              className="settings__app-settings__buttons__button"
-              onClick={() => this.openAppSettingsDialog('displayLanguage')}
-            >
-              <div className="settings__app-settings__buttons__button__label">
-                {translate('displayLanguage')}
-              </div>
-              <div className="settings__app-settings__buttons__button__icon">
-                <SVGIcon name="arrow_right" />
-              </div>
-            </button>
-            <button
-              className="settings__app-settings__buttons__button"
-              onClick={() => this.openAppSettingsDialog('displayUnits')}
-            >
-              <div className="settings__app-settings__buttons__button__label">
-                {translate('displayUnits')}
-              </div>
-              <div className="settings__app-settings__buttons__button__icon">
-                <SVGIcon name="arrow_right" />
-              </div>
-            </button>
+            {APP_SETTINGS.map(name => {
+              return (
+                <button
+                  key={name}
+                  className="settings__app-settings__buttons__button"
+                  onClick={() => this.openAppSettingsDialog(name)}
+                >
+                  <div className="settings__app-settings__buttons__button__label">
+                    {translate(name)}
+                  </div>
+                  <div className="settings__app-settings__buttons__button__icon">
+                    <SVGIcon name="arrow_right" />
+                  </div>
+                </button>
+              )
+            })}
           </div>
         </div>
 
@@ -113,6 +102,7 @@ class Settings extends Component {
           settingsLabel={settingsLabel}
           displayActivities={currentUser.settings.displayActivities}
           displayLanguage={currentUser.settings.displayLanguage}
+          displayUnits={currentUser.settings.displayUnits}
         />
       </div>
     )

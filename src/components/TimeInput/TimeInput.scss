@@ -24,6 +24,24 @@
     }
   }
 
+  &.small &__spinner__hour,
+  &.small &__spinner__minute,
+  &.small &__spinner__second {
+    height: 3rem;
+    font-size: $font-size--large;
+    margin-left: -0.75rem;
+  }
+
+  &.small &__spinner__hour-wrapper,
+  &.small &__spinner__minute-wrapper,
+  &.small &__spinner__second-wrapper {
+    width: 3rem;
+  }
+
+  &.small &__colon {
+    margin-left: 0;
+  }
+
   &__spinner {
     @extend %flex-center-row;
     align-items: center;

@@ -59,11 +59,11 @@ class EditActivityDialog extends Component {
       open,
       onClose,
       activity,
+      displayUnits,
     } = this.props;
 
     const {
       time_start,
-      time_end,
       type,
       amount,
       height,
@@ -82,7 +82,6 @@ class EditActivityDialog extends Component {
     const shouldRenderHeightInput = ['growth'].includes(name);
     const shouldRenderWeightInput = ['growth'].includes(name);
     const shouldRenderHeadInput = ['growth'].includes(name);
-    const hasCalendarMinMax = ['bottle', 'sleep'].includes(name);
   
     return (
       <Dialog
@@ -90,6 +89,7 @@ class EditActivityDialog extends Component {
         onClose={() => { onClose(false) }}
         TransitionComponent={Transition}
         keepMounted
+        scroll="body"
       >
         <div className="edit-activity-dialog">
           <div className="edit-activity-dialog__title">
@@ -100,23 +100,33 @@ class EditActivityDialog extends Component {
               className="edit-activity-dialog__form__element__date-time-picker"
               value={time_start}
               onChange={date => this.handleDateTimeChange('time_start', date)}
-              max={hasCalendarMinMax && time_end}
             />
             {shouldRenderSidesDuration && (
               <div className="edit-activity-dialog__form__element">
-                {['left', 'right', 'total'].map(side => {
-                  const name = `duration_${side}`;
-                  return (
-                    <TimeInput
-                      key={side}
-                      label={translate(side)}
-                      labelAlign="column"
-                      value={this.state[name]}
-                      onChange={value => this.handleDurationChange(name, value)}
-                      readonly={side === 'total'}
-                    />
-                  )
-                })}
+                <div className="edit-activity-dialog__form__element__row">
+                  {['left', 'right'].map(side => {
+                    const name = `duration_${side}`;
+                    return (
+                      <TimeInput
+                        key={side}
+                        label={translate(side)}
+                        labelAlign="column"
+                        value={this.state[name]}
+                        onChange={value => this.handleDurationChange(name, value)}
+                        small
+                      />
+                    )
+                  })}
+                </div>
+                <TimeInput
+                  key={'total'}
+                  label={translate('total')}
+                  labelAlign="column"
+                  value={this.state.duration_total}
+                  onChange={value => this.handleDurationChange('duration_total', value)}
+                  readonly
+                  small
+                />
               </div>
             )}
             {shouldRenderDuration && (
@@ -131,7 +141,11 @@ class EditActivityDialog extends Component {
                 label={translate('amount')}
                 labelAlign="column"
                 value={amount}
-                unit="ml"
+                unit={displayUnits.volume || 'ml'}
+                showHundred={displayUnits.volume === 'ml'}
+                hundredMax={5}
+                tenMax={displayUnits.volume === 'oz' ? 2 : 9}
+                showDecimal={displayUnits.volume === 'oz'}
                 onChange={value => this.handleNumberInputChange('amount', value)}
               />
             )}
@@ -151,13 +165,17 @@ class EditActivityDialog extends Component {
                 value={type}
                 onChange={this.handleInputChange}
               />
-            )}{shouldRenderHeightInput && (
+            )}
+            {shouldRenderHeightInput && (
               <NumberInput
                 label={translate('height')}
                 labelAlign="column"
                 value={height}
-                unit="cm"
-                isDecimal={true}
+                unit={displayUnits.length || 'cm'}
+                showHundred={displayUnits.length === 'cm'}
+                hundredMax={1}
+                tenMax={displayUnits.length === 'in' ? 5 : 3}
+                showDecimal
                 onChange={value => this.handleNumberInputChange('height', value)}
               />
             )}
@@ -166,8 +184,10 @@ class EditActivityDialog extends Component {
                 label={translate('weight')}
                 labelAlign="column"
                 value={weight}
-                unit="kg"
-                isDecimal={true}
+                unit={displayUnits.weight || 'kg'}
+                showHundred={false}
+                tenMax={displayUnits.weight === 'lb' ? 7 : 3}
+                showDecimal
                 onChange={value => this.handleNumberInputChange('weight', value)}
               />
             )}
@@ -176,8 +196,10 @@ class EditActivityDialog extends Component {
                 label={translate('head')}
                 labelAlign="column"
                 value={head}
-                unit="cm"
-                isDecimal={true}
+                unit={displayUnits.length || 'cm'}
+                showHundred={false}
+                tenMax={displayUnits.length === 'cm' ? 5 : 3}
+                showDecimal
                 onChange={value => this.handleNumberInputChange('head', value)}
               />
             )}

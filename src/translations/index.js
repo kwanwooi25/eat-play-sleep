@@ -144,6 +144,9 @@ export default {
       displayUnits: 'Units',
       en: 'English',
       ko: 'Korean',
+      volumeUnit: 'Volume',
+      lengthUnit: 'Length',
+      weightUnit: 'Weight',
     }
   },
   ko: {
@@ -256,7 +259,7 @@ export default {
       successActivityRemove: '삭제되었습니다 : {title}',
       /** Charts */
       summaryLabel: '요약',
-      feedLabel: '수유/식사',
+      feedLabel: '수유',
       sleepLabel: '수면',
       diaperLabel: '기저귀',
       growthLabel: '성장',
@@ -291,6 +294,9 @@ export default {
       displayUnits: '단위',
       en: '영어',
       ko: '한국어',
+      volumeUnit: '부피',
+      lengthUnit: '길이',
+      weightUnit: '무게',
     }
   }
 }

@@ -3,6 +3,7 @@ import { withTranslate } from 'react-redux-multilingual';
 
 /** Helper functions */
 import parseSeconds from '../../helpers/parseSeconds';
+import { mlToOz } from '../../helpers/unitChange';
 
 class TabSummary extends Component {
   transformDurationToString = seconds => {
@@ -17,7 +18,7 @@ class TabSummary extends Component {
     return durationString.trim();
   }
 
-  generateSummaryContents = (activityName, shouldRender) => {
+  generateSummaryContents = (activityName, displayActivities, displayUnits) => {
     const { translate, trend } = this.props;
     const { breast, bottle, babyfood, sleep, diaper } = trend;
 
@@ -25,10 +26,10 @@ class TabSummary extends Component {
     let shouldRenderBottle = true;
     let shouldRenderBabyfood = true;
 
-    if (shouldRender) {
-      shouldRenderBreast = shouldRender.includes('breast');
-      shouldRenderBottle = shouldRender.includes('bottle');
-      shouldRenderBabyfood = shouldRender.includes('babyfood');
+    if (displayActivities) {
+      shouldRenderBreast = displayActivities.includes('breast');
+      shouldRenderBottle = displayActivities.includes('bottle');
+      shouldRenderBabyfood = displayActivities.includes('babyfood');
     }
     
     let summaryContents = [];
@@ -47,6 +48,20 @@ class TabSummary extends Component {
       const averageAmountPerBottleFeeding = bottle.totalAmount / bottle.totalCount || 0;
       const averageAmountPerBabyfoodFeeding = babyfood.totalAmount / babyfood.totalCount || 0;
 
+      let averageAmountPerBottleFeedingString = '';
+      let averageAmountPerBabyfoodFeedingString = '';
+      if (displayUnits.volume === 'oz') {
+        averageAmountPerBottleFeedingString =
+          `${mlToOz(averageAmountPerBottleFeeding).toFixed(2)} oz`;
+        averageAmountPerBabyfoodFeedingString =
+          `${mlToOz(averageAmountPerBabyfoodFeeding).toFixed(2)} oz`;
+      } else {
+        averageAmountPerBottleFeedingString =
+          `${averageAmountPerBottleFeeding.toFixed(1)} ml`;
+        averageAmountPerBabyfoodFeedingString =
+          `${averageAmountPerBabyfoodFeeding.toFixed(1)} ml`;
+      }
+
       summaryContents.push({
         title: translate('averageFeedingsPerDay'),
         content: translate('count', { count: averageFeedingsPerDay.toFixed(1) }),
@@ -62,14 +77,14 @@ class TabSummary extends Component {
       if (shouldRenderBottle) {
         summaryContents.push({
           title: translate('averageAmountPerBottleFeeding'),
-          content: `${averageAmountPerBottleFeeding.toFixed(1)} ml`,
+          content: averageAmountPerBottleFeedingString,
         });
       }
 
       if (shouldRenderBabyfood) {
         summaryContents.push({
           title: translate('averageAmountPerBabyfoodFeeding'),
-          content: `${averageAmountPerBabyfoodFeeding.toFixed(1)} ml`,
+          content: averageAmountPerBabyfoodFeedingString,
         })
       }
 
@@ -128,9 +143,9 @@ class TabSummary extends Component {
   }
 
   render() {
-    const { activityName, displayActivities } = this.props;
+    const { activityName, displayActivities, displayUnits } = this.props;
     const summaryContents =
-      this.generateSummaryContents(activityName, displayActivities);
+      this.generateSummaryContents(activityName, displayActivities, displayUnits);
 
     return (
       <div className="tab-summary">

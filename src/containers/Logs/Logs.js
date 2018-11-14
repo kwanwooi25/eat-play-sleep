@@ -124,7 +124,10 @@ class Logs extends Component {
   }
 
   renderLog = (data, shouldDisplay) => {
-    const { translate } = this.props;
+    const {
+      translate,
+      auth: { currentUser: { settings: { displayUnits } } },
+    } = this.props;
     const mappedByDates = {};
 
     if (shouldDisplay) {
@@ -155,6 +158,7 @@ class Logs extends Component {
               <Log
                 key={activity.id}
                 activity={activity}
+                amountUnit={displayUnits.volume}
                 onMenuClick={this.handleMenuClick}
               />
             ))}
@@ -175,7 +179,7 @@ class Logs extends Component {
     } = this.state;
     const {
       translate,
-      auth: { currentUser : { settings: { displayActivities } } },
+      auth: { currentUser : { settings: { displayActivities, displayUnits } } },
       activities
     } = this.props;
     const { all, currentActivity } = activities;
@@ -203,6 +207,7 @@ class Logs extends Component {
           open={isEditActivityDialogOpen}
           onClose={this.handleEditActivityDialogClose}
           activity={currentActivity}
+          displayUnits={displayUnits}
         />
 
         <CustomDialog

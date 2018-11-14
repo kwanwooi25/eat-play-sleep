@@ -19,6 +19,8 @@
     width: 100%;
 
     &__element {
+      @extend %flex-center-column;
+
       &__date-time-picker {
         margin-top: 0;
         
@@ -26,6 +28,12 @@
         .custom-date-time-picker__now-button {
           font-size: $font-size--small;
         }
+      }
+
+      &__row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: $space--md;
       }
     }
 

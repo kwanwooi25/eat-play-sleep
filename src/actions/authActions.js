@@ -28,8 +28,10 @@ export const getCurrentUser = () => async dispatch => {
   }
 
   /** Oauth */
-  const res = await axios.get('/auth/current_user');
+  const res = await axios.get(`${API_HOST}/auth/current_user`);
   const { success, error, data } = res.data;
+
+  console.log(res.data);
   
   if (success) {
     const userLanguage = data.settings.displayLanguage;
@@ -77,7 +79,7 @@ export const logoutUser = user => async dispatch => {
   if (user.provider === 'local') logoutGuestUser();
 
   // logout user
-  else await axios.get('/auth/logout');
+  else await axios.get(`${API_HOST}/auth/logout`);
 }
 
 export const updateUser = user => async dispatch => {

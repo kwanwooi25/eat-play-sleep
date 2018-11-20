@@ -5,6 +5,7 @@ import {
 } from './types';
 import { getCurrentUser } from './authActions';
 import {
+  getUserToken,
   getGuestBabies,
   addGuestBaby,
   editGuestBaby,
@@ -12,7 +13,7 @@ import {
 } from '../helpers/localStorage';
 import { getActivities, updateActivitiesInProgress } from './activityActions';
 
-const API_HOST = process.env.REACT_APP_API_HOST || 'http://localhost:5000';
+const API_HOST = process.env.REACT_APP_API_HOST;
 
 export const getBabies = user => async dispatch => {
   const { id, provider } = user;
@@ -21,7 +22,11 @@ export const getBabies = user => async dispatch => {
   if (provider === 'local') {
     all = getGuestBabies() || [];
   } else {
-    const res = await axios.get(`${API_HOST}/api/babies?userID=${id}`);
+    const userToken = getUserToken();
+    const res = await axios.get(
+      `${API_HOST}/api/baby?userID=${id}`,
+      { headers: { 'x-oauth-token': userToken } }
+    );
     const { success, error, data } = res.data;
     if (error) return dispatch({ type: GET_BABIES_FAILED, payload: error });
     if (success) all = data;
@@ -38,21 +43,41 @@ export const getBabies = user => async dispatch => {
 
 export const addBaby = (user, baby) => async dispatch => {
   if (user.provider === 'local') addGuestBaby(baby);
-  else await axios.post(`${API_HOST}/api/babies`, baby);
+  else {
+    const userToken = getUserToken();
+    await axios.post(
+      `${API_HOST}/api/baby`,
+      baby,
+      { headers: { 'x-oauth-token': userToken } }
+    );
+  }
 
   dispatch(getCurrentUser());
 }
 
 export const editBaby = (user, baby) => async dispatch => {
   if (user.provider === 'local') editGuestBaby(baby);
-  else await axios.put(`${API_HOST}/api/babies`, baby);
+  else {
+    const userToken = getUserToken();
+    await axios.put(
+      `${API_HOST}/api/baby`,
+      baby,
+      { headers: { 'x-oauth-token': userToken } }
+    );
+  }
 
   dispatch(getBabies(user));
 }
 
 export const deleteBaby = (user, baby) => async dispatch => {
   if (user.provider === 'local') deleteGuestBaby(baby);
-  else await axios.delete(`${API_HOST}/api/babies?babyID=${baby.id}`);
+  else {
+    const userToken = getUserToken();
+    await axios.delete(
+      `${API_HOST}/api/baby?babyID=${baby.id}`,
+      { headers: { 'x-oauth-token': userToken } }
+    );
+  }
 
   dispatch(getBabies(user));
 }

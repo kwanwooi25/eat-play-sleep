@@ -6,6 +6,9 @@ import {
   LOGOUT_USER,
 } from './types';
 import {
+  getUserToken,
+  setUserToken,
+  removeUserToken,
   getGuestUser,
   setGuestUser,
   logoutGuestUser,
@@ -15,7 +18,7 @@ import {
 } from './babyActions';
 import { IntlActions } from 'react-redux-multilingual';
 
-const API_HOST = process.env.REACT_APP_API_HOST || 'http://localhost:5000';
+const API_HOST = process.env.REACT_APP_API_HOST;
 
 export const getCurrentUser = () => async dispatch => {
   /** Guest */
@@ -28,10 +31,12 @@ export const getCurrentUser = () => async dispatch => {
   }
 
   /** Oauth */
-  const res = await axios.get(`${API_HOST}/auth/current_user`);
+  const userToken = getUserToken();
+  const res = await axios.get(
+    `${API_HOST}/auth/current_user`,
+    { headers: { 'x-oauth-token': userToken } }
+  );
   const { success, error, data } = res.data;
-
-  console.log(res.data);
   
   if (success) {
     const userLanguage = data.settings.displayLanguage;
@@ -72,6 +77,12 @@ export const loginAsGuest = () => dispatch => {
   dispatch({ type: LOGIN_AS_GUEST, payload: user });
 }
 
+export const loginUser = token => async dispatch => {
+  setUserToken(token);
+
+  dispatch(getCurrentUser());
+}
+
 export const logoutUser = user => async dispatch => {
   dispatch({ type: LOGOUT_USER });
   
@@ -79,12 +90,12 @@ export const logoutUser = user => async dispatch => {
   if (user.provider === 'local') logoutGuestUser();
 
   // logout user
-  else await axios.get(`${API_HOST}/auth/logout`);
+  else removeUserToken();
 }
 
 export const updateUser = user => async dispatch => {
   if (user.provider === 'local') setGuestUser(user);
-  else await axios.put(`${API_HOST}/api/users`, user);
+  else await axios.put(`${API_HOST}/api/user`, user);
 
   dispatch(getCurrentUser());
 }

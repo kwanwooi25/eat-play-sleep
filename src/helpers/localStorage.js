@@ -1,10 +1,16 @@
 import moment from 'moment';
 
+const USER_TOKEN = 'eps_user_token';
 const GUEST_USER = 'eps_guest_user';
 const GUEST_BABIES = 'eps_guest_babies';
 const GUEST_BABY_ID = 'eps_guest_baby_id';
 const GUEST_ACTIVITIES = 'eps_guest_activities';
 const GUEST_ACTIVITY_ID = 'eps_guest_activity_id';
+
+/** Oauth User Token */
+export const getUserToken = () => localStorage.getItem(USER_TOKEN);
+export const setUserToken = token => localStorage.setItem(USER_TOKEN, token);
+export const removeUserToken = () => localStorage.removeItem(USER_TOKEN);
 
 /** Guest User Info */
 export const getGuestUser = () => JSON.parse(localStorage.getItem(GUEST_USER));

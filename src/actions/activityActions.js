@@ -12,6 +12,7 @@ import {
   ACTIVITY_ERROR,
 } from './types';
 import {
+  getUserToken,
   getGuestActivities,
   getGuestActivityById,
   getGuestActivitySummaryByDate,
@@ -22,7 +23,7 @@ import {
 } from '../helpers/localStorage';
 import Timer from '../helpers/Timer';
 
-const API_HOST = process.env.REACT_APP_API_HOST || 'http://localhost:5000';
+const API_HOST = process.env.REACT_APP_API_HOST;
 
 export const getActivities = (user, babyID, options) => async dispatch => {
   const { provider } = user;
@@ -37,8 +38,10 @@ export const getActivities = (user, babyID, options) => async dispatch => {
   if (provider === 'local') {
     all = getGuestActivities(babyID, options) || [];
   } else {
+    const userToken = getUserToken();
     const res = await axios.get(
-      `${API_HOST}/api/activities?babyID=${babyID}&options=${JSON.stringify(options)}`
+      `${API_HOST}/api/activity/all?babyID=${babyID}&options=${JSON.stringify(options)}`,
+      { headers: { 'x-oauth-token': userToken } }
     );
     const { success, error, data } = res.data;
     if (error) return dispatch({ type: ACTIVITY_ERROR, payload: error });
@@ -66,7 +69,11 @@ export const getActivityById = (user, activityID) => async dispatch => {
   if (provider === 'local') {
     activity = getGuestActivityById(activityID);
   } else {
-    const res = await axios.get(`${API_HOST}/api/activity?activityID=${activityID}`);
+    const userToken = getUserToken();
+    const res = await axios.get(
+      `${API_HOST}/api/activity?activityID=${activityID}`,
+      { headers: { 'x-oauth-token': userToken } }
+    );
     const { success, error, data } = res.data;
     if (error) return dispatch({ ACTIVITY_ERROR, payload: error });
     if (success) activity = data;
@@ -86,8 +93,10 @@ export const getActivitySummaryByDate = (user, babyID, date) => async dispatch =
   if (provider === 'local') {
     summary = getGuestActivitySummaryByDate(babyID, range);
   } else {
+    const userToken = getUserToken();
     const res = await axios.get(
-      `${API_HOST}/api/activity_summary?babyID=${babyID}&range=${JSON.stringify(range)}`
+      `${API_HOST}/api/activity/summary?babyID=${babyID}&range=${JSON.stringify(range)}`,
+      { headers: { 'x-oauth-token': userToken } }
     );
     const { success, error, data } = res.data;
     if (error) return dispatch({ ACTIVITY_ERROR, payload: error });
@@ -104,8 +113,10 @@ export const getActivityTrendByName = (user, babyID, options) => async dispatch 
   if (provider === 'local') {
     trendByName = getGuestActivityTrendByName(babyID, options);
   } else {
+    const userToken = getUserToken();
     const res = await axios.get(
-      `${API_HOST}/api/activity_trend?babyID=${babyID}&options=${JSON.stringify(options)}`
+      `${API_HOST}/api/activity/trend?babyID=${babyID}&options=${JSON.stringify(options)}`,
+      { headers: { 'x-oauth-token': userToken } }
     );
     const { success, error, data } = res.data;
     if (error) return dispatch({ ACTIVITY_ERROR, payload: error });
@@ -175,21 +186,41 @@ export const saveActivity = (user, activity) => async dispatch => {
 
   const activityToSave = formActivityToSave(activity);
   if (user.provider === 'local') addGuestActivity(activityToSave);
-  else await axios.post(`${API_HOST}/api/activity`, activityToSave);
+  else {
+    const userToken = getUserToken();
+    await axios.post(
+      `${API_HOST}/api/activity`,
+      activityToSave,
+      { headers: { 'x-oauth-token': userToken } }
+    );
+  }
 
   dispatch(getActivities(user, activityToSave.baby_id));
 }
 
 export const updateActivity = (user, activity) => async dispatch => {
   if (user.provider === 'local') updateGuestActivity(activity);
-  else await axios.put(`${API_HOST}/api/activity`, activity);
+  else {
+    const userToken = getUserToken();
+    await axios.put(
+      `${API_HOST}/api/activity`,
+      activity,
+      { headers: { 'x-oauth-token': userToken } }
+    );
+  }
 
   dispatch(getActivities(user, activity.baby_id));
 }
 
 export const removeActivity = (user, activity) => async dispatch => {
   if (user.provider === 'local') removeGuestActivity(activity.id);
-  else await axios.delete(`${API_HOST}/api/activity?activityID=${activity.id}`);
+  else {
+    const userToken = getUserToken();
+    await axios.delete(
+      `${API_HOST}/api/activity?activityID=${activity.id}`,
+      { headers: { 'x-oauth-token': userToken } }
+    );
+  }
 
   dispatch(getActivities(user, activity.baby_id));
 }
@@ -205,13 +236,9 @@ const formActivityToSave = activity => {
     rightTimer,
     timer,
     amount,
-    amount_unit,
     height,
-    height_unit,
     weight,
-    weight_unit,
     head,
-    head_unit,
     memo
   } = activity;
 
@@ -233,13 +260,9 @@ const formActivityToSave = activity => {
     duration_right,
     duration_total,
     amount,
-    amount_unit,
     height,
-    height_unit,
     weight,
-    weight_unit,
     head,
-    head_unit,
     memo
   };
 }

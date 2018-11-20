@@ -13,13 +13,21 @@ import CustomDialog from '../../components/CustomDialog/CustomDialog';
 /** Actions */
 import * as actions from '../../actions';
 
-const API_HOST = process.env.REACT_APP_API_HOST || 'http://localhost:5000';
+const API_HOST = process.env.REACT_APP_API_HOST;
 
 const OAUTH_PROVIDERS = [ 'google', 'facebook', 'kakao', 'naver' ];
 
 class Login extends Component {
   state = {
     isConfirmModalOpen: false
+  }
+
+  componentWillMount() {
+    if (window.location.search) {
+      const token = window.location.search.split('=')[1];
+      this.props.loginUser(token);
+    }
+    window.history.pushState(null, '', window.location.href.split('?')[0]);
   }
 
   handleGuestLogin = () => {

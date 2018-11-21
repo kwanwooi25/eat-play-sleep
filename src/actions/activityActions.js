@@ -5,6 +5,7 @@ import {
   GET_ACTIVITY_BY_ID,
   GET_ACTIVITY_SUMMARY_BY_DATE,
   GET_ACTIVITY_TREND_BY_NAME,
+  UPDATE_CURRENT_ACTIVITY,
   RESET_CURRENT_ACTIVITY,
   START_ACTIVITY,
   UPDATE_ACTIVITY_IN_PROGRESS,
@@ -22,6 +23,7 @@ import {
   removeGuestActivity,
 } from '../helpers/localStorage';
 import Timer from '../helpers/Timer';
+import formTrendData from '../helpers/formTrendData';
 
 const API_HOST = process.env.REACT_APP_API_HOST;
 
@@ -75,7 +77,7 @@ export const getActivityById = (user, activityID) => async dispatch => {
       { headers: { 'x-oauth-token': userToken } }
     );
     const { success, error, data } = res.data;
-    if (error) return dispatch({ ACTIVITY_ERROR, payload: error });
+    if (error) return dispatch({ type: ACTIVITY_ERROR, payload: error });
     if (success) activity = data;
   }
 
@@ -99,7 +101,7 @@ export const getActivitySummaryByDate = (user, babyID, date) => async dispatch =
       { headers: { 'x-oauth-token': userToken } }
     );
     const { success, error, data } = res.data;
-    if (error) return dispatch({ ACTIVITY_ERROR, payload: error });
+    if (error) return dispatch({ type: ACTIVITY_ERROR, payload: error });
     if (success) summary = data;
   }
 
@@ -119,13 +121,17 @@ export const getActivityTrendByName = (user, babyID, options) => async dispatch 
       { headers: { 'x-oauth-token': userToken } }
     );
     const { success, error, data } = res.data;
-    if (error) return dispatch({ ACTIVITY_ERROR, payload: error });
-    if (success) trendByName = data;
+    if (error) return dispatch({ type: ACTIVITY_ERROR, payload: error });
+    if (success) trendByName = formTrendData(data, options);
   }
 
   const payload = { name: options.name, trendByName };
 
   dispatch({ type: GET_ACTIVITY_TREND_BY_NAME, payload });
+}
+
+export const updateCurrentActivity = activity => dispatch => {
+  dispatch({ type: UPDATE_CURRENT_ACTIVITY, payload: activity });
 }
 
 export const resetCurrentActivity = () => dispatch => {

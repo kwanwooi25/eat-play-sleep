@@ -22,8 +22,25 @@
   margin-bottom: $space--sm;
 
   &:hover {
-    border-color: $color-primary--light;
+    border-color: $color-primary--xlight;
+    background: $color-primary--xxlight;
     cursor: pointer;
+  }
+
+  &.expand {
+    border-color: $color-primary--xlight;
+  }
+
+  &.expand &__content__info {
+    max-height: 0;
+    transition: 0.15s max-height;
+    transition-delay: 0s;
+  }
+
+  &.expand &__details {
+    max-height: 100vh;
+    transition: 0.5s max-height;
+    transition-delay: 0.15s;
   }
 
   &__icon {
@@ -52,7 +69,12 @@
 
     &__info {
       font-size: $font-size--small;
+      align-self: end;
       justify-self: end;
+      max-height: 100%;
+      overflow: hidden;
+      transition: 0.25s max-height;
+      transition-delay: 0.15s;
     }
 
     &__time {
@@ -77,10 +99,17 @@
   &__details {
     max-height: 0;
     overflow: hidden;
-    transition: 0.5s max-height;
+    transition: 0.25s max-height;
 
-    &.expanded {
-      max-height: 100vh;
+    &__row {
+      @extend %flex-center-row;
+      justify-content: space-between;
+      font-size: $font-size--small;
+      padding-top: $space--xs;
+    }
+
+    &__value {
+      text-align: right;
     }
   }
 

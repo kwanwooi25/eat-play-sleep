@@ -17,6 +17,9 @@ import NoData from '../../components/NoData/NoData';
 /** Actions */
 import * as actions from '../../actions';
 
+/** Helper functions */
+import validate from '../../helpers/validateActivityBeforeSave';
+
 const DISPLAY_TOGGLE_OPTIONS = [
   'breast',
   'bottle',
@@ -68,6 +71,10 @@ class Logs extends Component {
     this.setState({ isEditActivityDialogOpen: true });
   }
 
+  handleEditActivityDialogChange = activity => {
+    this.props.updateCurrentActivity(activity);
+  }
+
   handleEditActivityDialogClose = (result, data) => {
     const {
       translate,
@@ -77,13 +84,21 @@ class Logs extends Component {
     } = this.props;
 
     if (result) {
-      updateActivity(currentUser, data);
-      const title = translate(data.name);
-      this.showSnackbar(translate('successActivityUpdate', { title }), 'success');
+      const { isValid, error } = validate(data);
+      
+      if (isValid) {
+        updateActivity(currentUser, data);
+        resetCurrentActivity();
+        const title = translate(data.name);
+        this.showSnackbar(translate('successActivityUpdate', { title }), 'success');
+        this.setState({ isEditActivityDialogOpen: false });
+      } else {
+        this.showSnackbar(translate(error), 'error');
+      }
+    } else {
+      resetCurrentActivity();
+      this.setState({ isEditActivityDialogOpen: false });
     }
-
-    resetCurrentActivity();
-    this.setState({ isEditActivityDialogOpen: false });
   }
 
   openConfirmDialog = () => this.setState({ isConfirmModalOpen: true });
@@ -158,7 +173,7 @@ class Logs extends Component {
               <Log
                 key={activity.id}
                 activity={activity}
-                amountUnit={displayUnits.volume}
+                displayUnits={displayUnits}
                 onMenuClick={this.handleMenuClick}
               />
             ))}
@@ -206,6 +221,7 @@ class Logs extends Component {
         <EditActivityDialog
           open={isEditActivityDialogOpen}
           onClose={this.handleEditActivityDialogClose}
+          onChange={this.handleEditActivityDialogChange}
           activity={currentActivity}
           displayUnits={displayUnits}
         />

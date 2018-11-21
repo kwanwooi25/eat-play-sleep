@@ -91,14 +91,25 @@ class GrowthChart extends Component {
   }
 
   getLastMeasure = source => {
-    const babyData = source.keys
+    let lastMeasure = {
+      height: 0,
+      weight: 0,
+      head: 0,
+    };
+
+    source.keys
       .map(key => {
         if (source[key].count !== 0) return source[key];
         return undefined;
       })
-      .filter(value => value);
+      .filter(value => value)
+      .forEach(({ height, weight, head }) => {
+        if (height !== 0) lastMeasure.height = height;
+        if (weight !== 0) lastMeasure.weight = weight;
+        if (head !== 0) lastMeasure.head = head;
+      });
 
-    return babyData && babyData[babyData.length - 1];
+    return (lastMeasure);
   }
   
   onChartMouseOver = name => {
@@ -145,6 +156,8 @@ class GrowthChart extends Component {
               displayUnits.length :
               name === 'weight' && displayUnits.weight;
 
+          if (lastMeasure[name] === 0) return undefined;
+          
           return (
             <div key={name} className="growth-chart__item" >
               <div>{translate(name)}</div>
@@ -177,7 +190,7 @@ class GrowthChart extends Component {
                     },
                   }}
                 />
-                {lastMeasure && (
+                {lastMeasure[name] && (
                   <VictoryScatter
                     data={[{
                       month: ageInMonth,

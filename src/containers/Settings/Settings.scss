@@ -36,6 +36,15 @@
       }
     }
   }
+
+  &__logout {
+    @extend %flex-center-column;
+    padding: $space--sm;
+
+    button {
+      @extend %button--error;
+    }
+  }
 }
 
 .display-activities-selector {

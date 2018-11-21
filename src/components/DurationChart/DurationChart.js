@@ -69,7 +69,7 @@ class DurationChart extends Component {
 
     const { keys, name } = source;
 
-    const data = keys.map(key => ({ data: key, duration: source[key].duration }));
+    const data = keys.map(key => ({ date: key, duration: source[key].duration }));
 
     return (
       <div className="duration-chart">

@@ -1,5 +1,6 @@
 .custom-text-input {
   margin-bottom: $space--sm;
+  width: 100%;
 
   &.label-align--column {
     @extend %flex-center-column;

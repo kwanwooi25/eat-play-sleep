@@ -1,9 +1,8 @@
 .time-input {
-  @extend %flex-center-row;
+  @extend %flex-center-column;
   justify-content: space-between;
-  border-top: 2px solid $color-primary;
-  border-bottom: 2px solid $color-primary;
   overflow: hidden;
+  align-self: center;
 
   &-container {
     margin-bottom: $space--sm;
@@ -24,12 +23,50 @@
     }
   }
 
+  &__buttons {
+    @extend %flex-center-row;
+    width: 100%;
+
+    &__group {
+      @extend %flex-center-row;
+      width: 100%;
+
+      button {
+        @extend %button;
+        flex: 1;
+        border-radius: 0;
+        color: $color-primary--light;
+        font-size: $font-size--xsmall;
+        padding: $space--xs;
+  
+        svg {
+          width: 1rem;
+          height: 1rem;
+          fill: $color-primary--xlight;
+        }
+      }
+    }
+
+  }
+
   &.small &__spinner__hour,
   &.small &__spinner__minute,
   &.small &__spinner__second {
     height: 3rem;
     font-size: $font-size--large;
     margin-left: -0.75rem;
+
+    li {
+      height: 2rem;
+
+      &:first-child {
+        margin-top: 0.5rem;
+      }
+
+      &:last-child {
+        margin-bottom: 0.5rem;
+      }
+    }
   }
 
   &.small &__spinner__hour-wrapper,
@@ -45,6 +82,8 @@
   &__spinner {
     @extend %flex-center-row;
     align-items: center;
+    border-top: 1px solid $color-primary--xlight;
+    border-bottom: 1px solid $color-primary--xlight;
 
     &__hour,
     &__minute,
@@ -69,8 +108,21 @@
 
       li {
         @extend %flex-center-column;
-        height: 100%;
+        color: $color-primary--xlight;
+        height: 2.5rem;
         scroll-snap-align: center;
+
+        &:first-child {
+          margin-top: 0.75rem;
+        }
+
+        &:last-child {
+          margin-bottom: 0.75rem;
+        }
+
+        &.selected {
+          color: $color-primary;
+        }
       }
     }
   }

@@ -3,6 +3,7 @@ import {
   GET_ACTIVITY_BY_ID,
   GET_ACTIVITY_SUMMARY_BY_DATE,
   GET_ACTIVITY_TREND_BY_NAME,
+  UPDATE_CURRENT_ACTIVITY,
   RESET_CURRENT_ACTIVITY,
   START_ACTIVITY,
   UPDATE_ACTIVITY_IN_PROGRESS,
@@ -27,6 +28,7 @@ export default (state = INITIAL_STATE, action) => {
       return Object.assign({}, state, { all, lastActivities });
 
     case GET_ACTIVITY_BY_ID:
+    case UPDATE_CURRENT_ACTIVITY:
       return Object.assign({}, state, { currentActivity: action.payload });
 
     case GET_ACTIVITY_SUMMARY_BY_DATE:

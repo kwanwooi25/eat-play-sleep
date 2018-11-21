@@ -8,9 +8,7 @@ import * as actions from '../../actions';
 
 const Header = ({
   translate,
-  auth: { currentUser },
   babies: { currentBaby },
-  logoutUser
 }) => {
   let babyName = '';
   let babyAge = '';
@@ -32,12 +30,6 @@ const Header = ({
           </span>
         )}
       </div>
-      <button
-        className="main-header__button"
-        onClick={() => logoutUser(currentUser)}
-      >
-        {translate('logout')}
-      </button>
     </header>
   )
 }

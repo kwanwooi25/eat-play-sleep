@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import SVGIcon from '../SVGIcon/SVGIcon';
 import { ozToMl, mlToOz, inToCm, cmToIn, lbToKg, kgToLb } from '../../helpers/unitChange';
 
 class NumberInput extends Component {
@@ -39,10 +40,22 @@ class NumberInput extends Component {
     const childScrollHeight = e.target.children[0].scrollHeight;
     let selected = Math.round(currentScrollPosition / childScrollHeight);
     const value = Number(e.target.children[selected].textContent);
+    
+    for (let element of e.target.children) element.classList.remove('selected');
+    e.target.children[selected].classList.add('selected');
 
-    this.setState({ [name]: value }, () => {
-      this.handleChange();
-    });
+    this.setState({ [name]: value }, () => this.handleChange());
+  }
+
+  handleButtonClick = (change, digit) => {
+    const spinner = this[`${digit}Spinner`];
+    const currentScrollPosition = spinner.scrollTop;
+    const childScrollHeight = spinner.children[0].scrollHeight;
+    let current = Math.round(currentScrollPosition / childScrollHeight);
+    if (change === 'minus') current -= 1;
+    else if (change === 'plus') current += 1;
+
+    spinner.scrollTo({ top: current * childScrollHeight, behavior: 'smooth' });
   }
 
   handleChange = () => {
@@ -66,7 +79,14 @@ class NumberInput extends Component {
   }
 
   renderNumbers = (numbers, name) =>
-    numbers.map(number => <li key={`${number}-${name}`}>{number}</li>);
+    numbers.map(number => (
+      <li
+        key={`${number}-${name}`}
+        className={`${number === 0 ? 'selected' : ''}`}
+      >
+        {number}
+      </li>
+    ));
 
   render() {
     const {
@@ -89,18 +109,24 @@ class NumberInput extends Component {
       decimal: [],
     };
     let spinners = [];
+    let buttons = [];
 
     if (showHundred) {
       spinners.push('hundred');
+      buttons.push('hundred');
       for (let i = 0; i <= hundredMax; i++) numbers.hundred.push(i);
     }
     if (showTen) {
       spinners.push('ten');
+      buttons.push('ten');
       for (let i = 0; i <= tenMax; i++) numbers.ten.push(i);
     }
     spinners.push('one');
+    buttons.push('one');
     for (let i = 0; i <= 9; i++) numbers.one.push(i);
+
     if (showDecimal) {
+      buttons.push('decimal');
       if (unit === 'oz' || unit === 'in' || unit === 'lb') {
         for (let i = 0; i <= 75; i += 25) numbers.decimal.push(i);
       } else {
@@ -108,41 +134,62 @@ class NumberInput extends Component {
       }
     }
 
-    const containerClassName =
-      `number-input-container ${className} label-align--${labelAlign} ${small ? 'small' : ''}`
+    let containerClassName = `number-input-container ${className}`;
+    if (label) containerClassName += ` label-align--${labelAlign}`;
+    if (small) containerClassName += ' small';
 
     return (
       <div className={containerClassName}>
         {label && <label>{label}</label>}
-        <div className="number-input">
-          <div className="number-input__spinner">
-            {spinners.map(name => (
-              <div key={name} className={`number-input__spinner__${name}-wrapper`}>
-                <ul
-                  ref={ref => this[`${name}Spinner`] = ref}
-                  className={`number-input__spinner__${name}`}
-                  onScroll={e => this.handleSpinnerScroll(e, name)}
+        <div className="number-input-outer">
+          <div className="number-input">
+            <div className="number-input__buttons plus">
+              {buttons.map(name => (
+                <button
+                  key={name}
+                  onClick={() => this.handleButtonClick('plus', name)}
                 >
-                  {this.renderNumbers(numbers[name], name)}
-                </ul>
-              </div>
-            ))}
-            {showDecimal && <span className="number-input__point">.</span>}
-            {showDecimal && (
-              <div className="number-input__spinner__decimal-wrapper">
-                <ul
-                  ref={ref => this.decimalSpinner = ref}
-                  className="number-input__spinner__decimal"
-                  onScroll={e => this.handleSpinnerScroll(e, 'decimal')}
+                  <SVGIcon name="arrow_up" />
+                </button>
+              ))}
+            </div>
+            <div className="number-input__spinner">
+              {spinners.map(name => (
+                <div key={name} className={`number-input__spinner__${name}-wrapper`}>
+                  <ul
+                    ref={ref => this[`${name}Spinner`] = ref}
+                    className={`number-input__spinner__${name}`}
+                    onScroll={e => this.handleSpinnerScroll(e, name)}
+                  >
+                    {this.renderNumbers(numbers[name], name)}
+                  </ul>
+                </div>
+              ))}
+              {showDecimal && <span className="number-input__point">.</span>}
+              {showDecimal && (
+                <div className="number-input__spinner__decimal-wrapper">
+                  <ul
+                    ref={ref => this.decimalSpinner = ref}
+                    className="number-input__spinner__decimal"
+                    onScroll={e => this.handleSpinnerScroll(e, 'decimal')}
+                  >
+                    {this.renderNumbers(numbers['decimal'], 'decimal')}
+                  </ul>
+                </div>
+              )}
+            </div>
+            <div className="number-input__buttons minus">
+              {buttons.map(name => (
+                <button
+                  key={name}
+                  onClick={() => this.handleButtonClick('minus', name)}
                 >
-                  {this.renderNumbers(numbers['decimal'], 'decimal')}
-                </ul>
-              </div>
-            )}
+                  <SVGIcon name="arrow_down" />
+                </button>
+              ))}
+            </div>
           </div>
-          <div className="number-input__unit">
-            {unit}
-          </div>
+          <div className="number-input__unit">{unit}</div>
         </div>
       </div>
     )

@@ -62,7 +62,7 @@ class DiaperChart extends Component {
     const { keys } = source;
 
     const data = keys.map(key => 
-      ({ data: key, pee: source[key].pee, poo: source[key].poo })
+      ({ date: key, pee: source[key].pee, poo: source[key].poo })
     );
 
     return (

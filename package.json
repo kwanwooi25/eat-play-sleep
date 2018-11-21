@@ -2,7 +2,6 @@
   "name": "eat-play-sleep",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://http://ec2-54-180-106-93.ap-northeast-2.compute.amazonaws.com",
   "dependencies": {
     "@material-ui/core": "^3.2.2",
     "axios": "^0.18.0",

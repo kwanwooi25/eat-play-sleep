@@ -124,7 +124,7 @@ class Activity extends Component {
         {shouldRenderAmountInput && (
           <NumberInput
             value={amount}
-            unit={displayUnits.volume || 'ml'}
+            unit={displayUnits.volume}
             showHundred={displayUnits.volume === 'ml'}
             hundredMax={5}
             tenMax={displayUnits.volume === 'oz' ? 2 : 9}
@@ -153,10 +153,10 @@ class Activity extends Component {
           <NumberInput
             label={translate('height')}
             value={height}
-            unit={displayUnits.length || 'cm'}
+            unit={displayUnits.length}
             showHundred={displayUnits.length === 'cm'}
             hundredMax={1}
-            tenMax={displayUnits.length === 'in' ? 5 : 3}
+            tenMax={displayUnits.length === 'in' ? 5 : 9}
             showDecimal
             onChange={value => this.handleNumberInputChange('height', value)}
           />
@@ -165,7 +165,7 @@ class Activity extends Component {
           <NumberInput
             label={translate('weight')}
             value={weight}
-            unit={displayUnits.weight || 'kg'}
+            unit={displayUnits.weight}
             showHundred={false}
             tenMax={displayUnits.weight === 'lb' ? 7 : 3}
             showDecimal
@@ -176,7 +176,7 @@ class Activity extends Component {
           <NumberInput
             label={translate('head')}
             value={head}
-            unit={displayUnits.length || 'cm'}
+            unit={displayUnits.length}
             showHundred={false}
             tenMax={displayUnits.length === 'cm' ? 5 : 3}
             showDecimal

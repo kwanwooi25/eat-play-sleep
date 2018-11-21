@@ -1,16 +1,16 @@
 .number-input {
-  @extend %flex-center-row;
+  @extend %flex-center-column;
   justify-content: space-between;
-  border-top: 2px solid $color-primary;
-  border-bottom: 2px solid $color-primary;
   overflow: hidden;
-  min-width: 15rem;
+  // min-width: 12rem;
 
   &-container {
     margin-bottom: $space--sm;
+    width: 100%;
 
     &.label-align--row {
       @extend %flex-center-row;
+      justify-content: space-between;
 
       label {
         font-size: $font-size--small;
@@ -25,9 +25,38 @@
     }
   }
 
+  &-outer {
+    @extend %flex-center-row;
+    align-self: flex-end;
+  }
+
+  &__buttons {
+    @extend %flex-center-row;
+    width: 100%;
+
+    button {
+      @extend %button;
+      flex: 1;
+      border-radius: 0;
+      color: $color-primary--light;
+      font-size: $font-size--xsmall;
+      padding: $space--xs;
+
+      svg {
+        width: 1rem;
+        height: 1rem;
+        fill: $color-primary--xlight;
+      }
+    }
+  }
+
   &__spinner {
     @extend %flex-center-row;
     align-items: baseline;
+    width: 100%;
+
+    border-top: 1px solid $color-primary--xxlight;
+    border-bottom: 1px solid $color-primary--xxlight;
 
     &__hundred,
     &__ten,
@@ -42,6 +71,7 @@
       list-style: none;
       padding: 0;
       margin: 0;
+      margin-left: -$space--sm;
 
       scroll-snap-type: y mandatory;
 
@@ -52,8 +82,21 @@
 
       li {
         @extend %flex-center-column;
-        height: 100%;
+        color: $color-primary--xlight;
+        height: 2.5rem;
         scroll-snap-align: center;
+
+        &:first-child {
+          margin-top: 0.75rem;
+        }
+
+        &:last-child {
+          margin-bottom: 0.75rem;
+        }
+
+        &.selected {
+          color: $color-primary;
+        }
       }
     }
 
@@ -63,9 +106,9 @@
   }
 
   &__point {
+    @extend %flex-center-column;
+    align-self: stretch;
     font-weight: $font-weight--bold;
-    margin-left: $space--sm;
-    margin-right: -$space--sm;
   }
 
   &__unit {

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import SVGIcon from '../SVGIcon/SVGIcon';
 
 class TimeInput extends Component {
   state = { hour: 0, minute: 0, second: 0 };
@@ -30,13 +31,29 @@ class TimeInput extends Component {
   }
 
   handleSpinnerScroll = (e, name) => {
-    const currentScrollPosition = e.target.scrollTop;
+    const currentScrollPosition = e.target.scrollTop - e.target.children[0].scrollTop;
     const childScrollHeight = e.target.children[0].scrollHeight;
     let selected = Math.round(currentScrollPosition / childScrollHeight);
+
+    for (let element of e.target.children) element.classList.remove('selected');
+    e.target.children[selected].classList.add('selected');
 
     this.setState({ [name]: selected }, () => {
       this.handleChange();
     });
+  }
+
+  handleButtonClick = (change, name) => {
+    const spinner = this[`${name}Spinner`];
+    const currentScrollPosition = spinner.scrollTop;
+    const childScrollHeight = spinner.children[0].scrollHeight;
+    let current = Math.round(currentScrollPosition / childScrollHeight);
+    if (change === 'minus-ten') current -= 10;
+    else if (change === 'minus-one') current -= 1;
+    else if (change === 'plus-one') current += 1;
+    else if (change === 'plus-ten') current += 10;
+
+    spinner.scrollTo({ top: current * childScrollHeight, behavior: 'smooth' });
   }
 
   handleChange = () => {
@@ -52,10 +69,13 @@ class TimeInput extends Component {
     let numbers = [];
     const max = name === 'hour' ? 12 : 59;
 
-    for (let i = 0; i < max; i++) numbers.push(i);
+    for (let i = 0; i <= max; i++) numbers.push(i);
 
     return numbers.map(number => (
-      <li key={`${number}-${name}`}>
+      <li
+        key={`${number}-${name}`}
+        className={`${number === 0 ? 'selected' : ''}`}
+      >
         {('00'+number).slice(-2)}
       </li>
     ));
@@ -74,10 +94,28 @@ class TimeInput extends Component {
     const containerClassName =
       `time-input-container ${className} label-align--${labelAlign}`;
 
+    let buttons = [];
+    if (hourController) buttons.push('hour');
+    buttons.push('minute', 'second');
+
     return (
       <div className={containerClassName}>
         {label && <label>{label}</label>}
         <div className={`time-input ${readonly ? 'readonly' : ''} ${small ? 'small' : ''}`}>
+          {readonly === false && (
+            <div className="time-input__buttons">
+              {buttons.map(name => (
+                <div className="time-input__buttons__group" key={name}>
+                  <button onClick={() => this.handleButtonClick('plus-ten', name)}>
+                    <SVGIcon name="arrow_up_double" />
+                  </button>
+                  <button onClick={() => this.handleButtonClick('plus-one', name)}>
+                    <SVGIcon name="arrow_up" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
           <div className="time-input__spinner">
             {hourController && (
               <div className="time-input__spinner__hour-wrapper">
@@ -111,85 +149,24 @@ class TimeInput extends Component {
               </ul>
             </div>
           </div>
+          {readonly === false && (
+            <div className="time-input__buttons">
+              {buttons.map(name => (
+                <div className="time-input__buttons__group" key={name}>
+                  <button onClick={() => this.handleButtonClick('minus-ten', name)}>
+                    <SVGIcon name="arrow_down_double" />
+                  </button>
+                  <button onClick={() => this.handleButtonClick('minus-one', name)}>
+                    <SVGIcon name="arrow_down" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     )
   }
 }
-
-// const TimeInput = ({
-//   className = '',
-//   label,
-//   labelAlign = 'row', // 'row', 'column'
-//   value,
-//   hourController = false,
-//   onHourMinus,
-//   onHourPlus,
-//   onMinuteMinus,
-//   onMinutePlus,
-//   onSecondMinus,
-//   onSecondPlus,
-//   readonly = false
-// }) => {
-//   return (
-//     <div className={`time-input-container ${className} label-align--${labelAlign}`}>
-//       {label && <label>{label}</label>}
-//       <div className="time-input">
-//         <div className="time-input__value">
-//           {value}
-//         </div>
-
-//         {readonly === false && (
-//           <div className="time-input__controllers">
-//             {hourController && (
-//               <div className="time-input__buttons">
-//                 <button
-//                   className="time-input__buttons__button"
-//                   onClick={onHourPlus}
-//                 >
-//                   <Icon color="inherit">add</Icon>
-//                 </button>
-//                 <button
-//                   className="time-input__buttons__button"
-//                   onClick={onHourMinus}
-//                 >
-//                   <Icon color="inherit">remove</Icon>
-//                 </button>
-//               </div>
-//             )}
-//             <div className="time-input__buttons">
-//               <button
-//                 className="time-input__buttons__button"
-//                 onClick={onMinutePlus}
-//               >
-//                 <Icon color="inherit">add</Icon>
-//               </button>
-//               <button
-//                 className="time-input__buttons__button"
-//                 onClick={onMinuteMinus}
-//               >
-//                 <Icon color="inherit">remove</Icon>
-//               </button>
-//             </div>
-//             <div className="time-input__buttons">
-//               <button
-//                 className="time-input__buttons__button"
-//                 onClick={onSecondPlus}
-//               >
-//                 <Icon color="inherit">add</Icon>
-//               </button>
-//               <button
-//                 className="time-input__buttons__button"
-//                 onClick={onSecondMinus}
-//               >
-//                 <Icon color="inherit">remove</Icon>
-//               </button>
-//             </div>
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   )
-// }
 
 export default TimeInput;

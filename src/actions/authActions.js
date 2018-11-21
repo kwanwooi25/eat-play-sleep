@@ -19,33 +19,59 @@ import {
 import { IntlActions } from 'react-redux-multilingual';
 
 const API_HOST = process.env.REACT_APP_API_HOST;
+const SETTINGS_DEFAULT = {
+  displayActivities: [
+    'breast',
+    'bottle',
+    'pump',
+    'babyfood',
+    'diaper',
+    'sleep',
+    'growth',
+  ],
+  displayUnits: {
+    volume: 'ml',
+    length: 'cm',
+    weight: 'kg'
+  },
+  displayLanguage: 'ko',
+};
+
+const injectSettings = user => {
+  Object.keys(SETTINGS_DEFAULT).forEach(key => {
+    if (!user.settings[key]) {
+      user.settings[key] = SETTINGS_DEFAULT[key];
+    }
+  });
+
+  return user;
+}
 
 export const getCurrentUser = () => async dispatch => {
-  /** Guest */
+  let user = {};
+
+  /** Guest User */
   const guest = getGuestUser();
-  if (guest && guest.isLoggedIn) {
-    const userLanguage = guest.settings.displayLanguage;
-    if (userLanguage) dispatch(IntlActions.setLocale(userLanguage));
-    dispatch(getBabies(guest));
-    return dispatch({ type: GET_CURRENT_USER, payload: guest });
+  if (guest && guest.isLoggedIn) user = guest;
+
+  /** Oauth User */
+  else {
+    const userToken = getUserToken();
+    const res = await axios.get(
+      `${API_HOST}/auth/current_user`,
+      { headers: { 'x-oauth-token': userToken } }
+    );
+    const { success, error, data } = res.data;
+
+    if (success) user = data;
+    else return dispatch({ type: AUTH_ERROR, payload: error });
   }
 
-  /** Oauth */
-  const userToken = getUserToken();
-  const res = await axios.get(
-    `${API_HOST}/auth/current_user`,
-    { headers: { 'x-oauth-token': userToken } }
-  );
-  const { success, error, data } = res.data;
+  user = injectSettings(user);
   
-  if (success) {
-    const userLanguage = data.settings.displayLanguage;
-    if (userLanguage) dispatch(IntlActions.setLocale(userLanguage));
-    dispatch(getBabies(data));
-    dispatch({ type: GET_CURRENT_USER, payload: data });
-  } else {
-    dispatch({ type: AUTH_ERROR, payload: error });
-  } 
+  dispatch(IntlActions.setLocale(user.settings.displayLanguage));  
+  dispatch({ type: GET_CURRENT_USER, payload: user });
+  dispatch(getBabies(user));
 }
 
 export const loginAsGuest = () => dispatch => {
@@ -83,19 +109,22 @@ export const loginUser = token => async dispatch => {
   dispatch(getCurrentUser());
 }
 
-export const logoutUser = user => async dispatch => {
+export const logoutUser = () => async dispatch => {
   dispatch({ type: LOGOUT_USER });
-  
-  // logout guest user
-  if (user.provider === 'local') logoutGuestUser();
-
-  // logout user
-  else removeUserToken();
+  logoutGuestUser();
+  removeUserToken();
 }
 
 export const updateUser = user => async dispatch => {
   if (user.provider === 'local') setGuestUser(user);
-  else await axios.put(`${API_HOST}/api/user`, user);
+  else {
+    const userToken = getUserToken();
+    await axios.put(
+      `${API_HOST}/api/user`,
+      user,
+      { headers: { 'x-oauth-token': userToken } }
+    );
+  }
 
   dispatch(getCurrentUser());
 }

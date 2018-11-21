@@ -37,6 +37,16 @@
   }
 }
 
+%button--error {
+  @extend %button;
+  background: $color-error--xxlight;
+  color: $color-error--dark;
+
+  &:hover {
+    background: $color-error--xlight;
+  }
+}
+
 %input {
   border: 2px solid $color-grey--light;
   border-radius: $border-radius;

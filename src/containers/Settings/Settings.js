@@ -14,7 +14,7 @@ import * as actions from '../../actions';
 const APP_SETTINGS = [
   'displayActivities',
   'displayLanguage',
-  'displayUnits'
+  'displayUnits',
 ];
 
 class Settings extends Component {
@@ -53,6 +53,7 @@ class Settings extends Component {
       translate,
       auth: { currentUser },
       babies: { currentBaby, all },
+      logoutUser,
     } = this.props;
     const {
       isAppSettingsDialogOpen,
@@ -94,6 +95,9 @@ class Settings extends Component {
               )
             })}
           </div>
+        </div>
+        <div className="settings__logout">
+          <button onClick={logoutUser}>{translate('logout')}</button>
         </div>
 
         <AppSettingsDialog

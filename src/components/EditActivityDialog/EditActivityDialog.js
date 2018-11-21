@@ -5,13 +5,13 @@ import { withTranslate } from 'react-redux-multilingual';
 /** Material UI */
 import Dialog from '@material-ui/core/Dialog';
 import Slide from '@material-ui/core/Slide';
+
+/** Components */
 import CustomDateTimePicker from '../CustomDateTimePicker/CustomDateTimePicker';
 import NumberInput from '../NumberInput/NumberInput';
 import TimeInput from '../TimeInput/TimeInput';
 import CustomSelector from '../CustomSelector/CustomSelector';
 import CustomTextInput from '../CustomTextInput/CustomTextInput';
-
-/** Components */
 import DialogButtonGroup from '../DialogButtonGroup/DialogButtonGroup';
 
 const Transition = props => <Slide direction="up" {...props} />;
@@ -28,17 +28,22 @@ class EditActivityDialog extends Component {
     this.setState(props.activity);
   }
 
+  handleChange = () => this.props.onChange(this.state);
+
   handleDateTimeChange = (name, date) => {
-    this.setState({ [name]: date });
+    this.setState({ [name]: date }, () => this.handleChange());
   }
 
   setDateTimeToNow = name => {
-    this.setState({ [name]: moment() });
+    this.setState({ [name]: moment() }, () => this.handleChange());
   }
 
-  handleInputChange = e => {
-    const { name, value } = e.target;
-    this.setState({ [name]: value });
+  handleInputChange = ({ target }) => {
+    this.setState({ [target.name]: target.value }, () => this.handleChange());
+  }
+  
+  handleNumberInputChange = (name, value) => {
+    this.setState({ [name]: value }, () => this.handleChange());
   }
 
   handleDurationChange = (name, value) => {
@@ -46,12 +51,12 @@ class EditActivityDialog extends Component {
       if (name !== 'duration_total') {
         this.setState({
           duration_total: this.state.duration_left + this.state.duration_right
-        });
+        }, () => this.handleChange());
+      } else {
+        this.handleChange();
       }
     });
   }
-
-  handleNumberInputChange = (name, value) => this.setState({ [name]: value });
 
   render() {
     const {
@@ -124,6 +129,7 @@ class EditActivityDialog extends Component {
                   labelAlign="column"
                   value={this.state.duration_total}
                   onChange={value => this.handleDurationChange('duration_total', value)}
+                  hourController
                   readonly
                   small
                 />
@@ -141,7 +147,7 @@ class EditActivityDialog extends Component {
                 label={translate('amount')}
                 labelAlign="column"
                 value={amount}
-                unit={displayUnits.volume || 'ml'}
+                unit={displayUnits.volume}
                 showHundred={displayUnits.volume === 'ml'}
                 hundredMax={5}
                 tenMax={displayUnits.volume === 'oz' ? 2 : 9}
@@ -171,10 +177,10 @@ class EditActivityDialog extends Component {
                 label={translate('height')}
                 labelAlign="column"
                 value={height}
-                unit={displayUnits.length || 'cm'}
+                unit={displayUnits.length}
                 showHundred={displayUnits.length === 'cm'}
                 hundredMax={1}
-                tenMax={displayUnits.length === 'in' ? 5 : 3}
+                tenMax={displayUnits.length === 'in' ? 5 : 9}
                 showDecimal
                 onChange={value => this.handleNumberInputChange('height', value)}
               />
@@ -184,7 +190,7 @@ class EditActivityDialog extends Component {
                 label={translate('weight')}
                 labelAlign="column"
                 value={weight}
-                unit={displayUnits.weight || 'kg'}
+                unit={displayUnits.weight}
                 showHundred={false}
                 tenMax={displayUnits.weight === 'lb' ? 7 : 3}
                 showDecimal
@@ -196,7 +202,7 @@ class EditActivityDialog extends Component {
                 label={translate('head')}
                 labelAlign="column"
                 value={head}
-                unit={displayUnits.length || 'cm'}
+                unit={displayUnits.length}
                 showHundred={false}
                 tenMax={displayUnits.length === 'cm' ? 5 : 3}
                 showDecimal

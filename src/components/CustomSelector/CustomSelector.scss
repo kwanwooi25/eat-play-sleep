@@ -17,6 +17,11 @@
   }
 
   &__options {
+    max-width: 100%;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
     &__option {
       display: inline-block;
       margin: $space--xs;
@@ -86,9 +91,9 @@
         }
 
         &:checked ~ .custom-selector__options__option__icon {
-          height: 50%;
-          width: 50%;
-          margin: 10% 25%;
+          height: 45%;
+          width: 45%;
+          margin: 10% 27.5%;
         }
 
         &:checked ~ .custom-selector__options__option__title {
@@ -118,11 +123,13 @@
         bottom: 0;
         font-size: $font-size--xsmall;
         width: 100%;
+        padding: 0 10%;
         height: 0;
         color: white;
-        overflow: hidden;
         z-index: 2;
         text-align: center;
+        word-wrap: break-word;
+        overflow: hidden;
       }
       
       &.small {

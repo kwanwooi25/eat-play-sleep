@@ -78,7 +78,7 @@ class ActivityButton extends React.Component {
   }
 
   render() {
-    const { name, activityInProgress, onClick } = this.props;
+    const { name, activityInProgress, onClick, translate } = this.props;
     const { lastActivityTime } = this.state;
     const isActive = Boolean(activityInProgress);
     const hasSides = name === 'breast' || name === 'pump';
@@ -86,6 +86,9 @@ class ActivityButton extends React.Component {
 
     return (
       <div className={`activity-button ${name} ${hasSides ? 'two-sided' : ''}`}>
+        <div className="activity-button__title">
+          {translate(name)}
+        </div>
         <div className="activity-button__buttons">
           {this.renderButtons(name, isActive, hasSides, currentSide, onClick)}
         </div>

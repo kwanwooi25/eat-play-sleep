@@ -4,14 +4,18 @@
   color: white;
   width: 100%;
   padding: $space--sm;
-
-  &__button {
-    @extend %button--primary;
-  }
 }
 
 .baby-info {
+  @extend %flex-center-row;
+  justify-content: space-between;
   flex: 1;
-  margin: 0;
-  padding-left: $space--sm;
+}
+
+.baby-name {
+  font-size: $font-size--large;
+}
+
+.baby-age {
+  font-size: $font-size--small;
 }

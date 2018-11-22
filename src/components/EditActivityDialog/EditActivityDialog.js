@@ -131,7 +131,6 @@ class EditActivityDialog extends Component {
                   onChange={value => this.handleDurationChange('duration_total', value)}
                   hourController
                   readonly
-                  small
                 />
               </div>
             )}
@@ -148,9 +147,7 @@ class EditActivityDialog extends Component {
                 labelAlign="column"
                 value={amount}
                 unit={displayUnits.volume}
-                showHundred={displayUnits.volume === 'ml'}
-                hundredMax={5}
-                tenMax={displayUnits.volume === 'oz' ? 2 : 9}
+                maxValue={displayUnits.volume === 'ml' ? 500 : 20}
                 showDecimal={displayUnits.volume === 'oz'}
                 onChange={value => this.handleNumberInputChange('amount', value)}
               />
@@ -178,9 +175,7 @@ class EditActivityDialog extends Component {
                 labelAlign="column"
                 value={height}
                 unit={displayUnits.length}
-                showHundred={displayUnits.length === 'cm'}
-                hundredMax={1}
-                tenMax={displayUnits.length === 'in' ? 5 : 9}
+                maxValue={displayUnits.length === 'cm' ? 140 : 60}
                 showDecimal
                 onChange={value => this.handleNumberInputChange('height', value)}
               />
@@ -191,8 +186,7 @@ class EditActivityDialog extends Component {
                 labelAlign="column"
                 value={weight}
                 unit={displayUnits.weight}
-                showHundred={false}
-                tenMax={displayUnits.weight === 'lb' ? 7 : 3}
+                maxValue={displayUnits.weight === 'lb' ? 70 : 40}
                 showDecimal
                 onChange={value => this.handleNumberInputChange('weight', value)}
               />
@@ -203,8 +197,7 @@ class EditActivityDialog extends Component {
                 labelAlign="column"
                 value={head}
                 unit={displayUnits.length}
-                showHundred={false}
-                tenMax={displayUnits.length === 'cm' ? 5 : 3}
+                maxValue={displayUnits.length === 'cm' ? 60 : 40}
                 showDecimal
                 onChange={value => this.handleNumberInputChange('head', value)}
               />

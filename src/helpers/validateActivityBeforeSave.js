@@ -1,7 +1,6 @@
 export default activity => {
   let isValid = true;
   let error = '';
-  console.log(activity);
 
   const {
     name,

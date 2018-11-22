@@ -26,7 +26,7 @@ const Header = ({
         {babyName && <h3 className="baby-name">{babyName}</h3>}
         {babyAge && (
           <span className="baby-age">
-            ({translate('babyAge', { age: babyAge })})
+            {translate('babyAge', { age: babyAge })}
           </span>
         )}
       </div>

@@ -40,91 +40,55 @@
         padding: $space--xs;
   
         svg {
-          width: 1rem;
-          height: 1rem;
+          width: 1.5rem;
+          height: 1.5rem;
           fill: $color-primary--xlight;
         }
       }
     }
-
   }
 
-  &.small &__spinner__hour,
-  &.small &__spinner__minute,
-  &.small &__spinner__second {
-    height: 3rem;
-    font-size: $font-size--large;
-    margin-left: -0.75rem;
-
-    li {
-      height: 2rem;
-
-      &:first-child {
-        margin-top: 0.5rem;
-      }
-
-      &:last-child {
-        margin-bottom: 0.5rem;
-      }
-    }
-  }
-
-  &.small &__spinner__hour-wrapper,
-  &.small &__spinner__minute-wrapper,
-  &.small &__spinner__second-wrapper {
-    width: 3rem;
-  }
-
-  &.small &__colon {
-    margin-left: 0;
-  }
-
-  &__spinner {
+  &__numbers {
     @extend %flex-center-row;
-    align-items: center;
-    border-top: 1px solid $color-primary--xlight;
-    border-bottom: 1px solid $color-primary--xlight;
+    align-items: stretch;
+    font-size: $font-size--xlarge;
+    font-weight: $font-weight--bold;
 
     &__hour,
     &__minute,
     &__second {
-      font-size: $font-size--xlarge;
-      font-weight: $font-weight--bold;
-      height: 4rem;
-      width: 150%;
-      overflow-y: auto;
+      @extend %flex-center-row;
+      border-top: 1px solid $color-primary--xxlight;
+      border-bottom: 1px solid $color-primary--xxlight;
+      width: 3.5rem;
+      padding: $space--xs $space--sm;
+      margin: 0 $space--xs;
+      text-align: center;
+    }
 
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      margin-left: -1rem;
+    &__hour,
+    &__minute {
+      position: relative;
 
-      scroll-snap-type: y mandatory;
-
-      &-wrapper {
-        overflow: hidden;
-        width: 4rem;
-      }
-
-      li {
-        @extend %flex-center-column;
-        color: $color-primary--xlight;
-        height: 2.5rem;
-        scroll-snap-align: center;
-
-        &:first-child {
-          margin-top: 0.75rem;
-        }
-
-        &:last-child {
-          margin-bottom: 0.75rem;
-        }
-
-        &.selected {
-          color: $color-primary;
-        }
+      &::after {
+        content: ':';
+        position: absolute;
+        right: -0.5rem;
+        margin-bottom: $space--xs;
       }
     }
+  }
+
+  &.small &__buttons__group button svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  &.small &__numbers__hour,
+  &.small &__numbers__minute,
+  &.small &__numbers__second {
+    width: 2.5rem;
+    font-size: $font-size--large;
   }
 
   &.readonly {
@@ -134,9 +98,153 @@
       overflow-y: hidden;
     }
   }
-
-  &__colon {
-    font-weight: $font-weight--bold;
-    margin-left: $space--xs;
-  }
 }
+
+// .time-input {
+//   @extend %flex-center-column;
+//   justify-content: space-between;
+//   overflow: hidden;
+//   align-self: center;
+
+//   &-container {
+//     margin-bottom: $space--sm;
+
+//     &.label-align--row {
+//       @extend %flex-center-row;
+
+//       label {
+//         font-size: $font-size--small;
+//         margin-right: $space--sm;
+//         width: 5rem;
+//       }
+//     }
+
+//     &.label-align--column {
+//       @extend %flex-center-column;
+//       align-items: flex-start;
+//     }
+//   }
+
+//   &__buttons {
+//     @extend %flex-center-row;
+//     width: 100%;
+
+//     &__group {
+//       @extend %flex-center-row;
+//       width: 100%;
+
+//       button {
+//         @extend %button;
+//         flex: 1;
+//         border-radius: 0;
+//         color: $color-primary--light;
+//         font-size: $font-size--xsmall;
+//         padding: $space--xs;
+  
+//         svg {
+//           width: 1.5rem;
+//           height: 1.5rem;
+//           fill: $color-primary--xlight;
+//         }
+//       }
+//     }
+
+//   }
+
+//   &.small &__buttons__group button svg {
+//     width: 1rem;
+//     height: 1rem;
+//   }
+
+//   &.small &__spinner__hour,
+//   &.small &__spinner__minute,
+//   &.small &__spinner__second {
+//     height: 4rem;
+//     font-size: $font-size--large;
+//     margin-left: -0.75rem;
+
+//     li {
+//       height: 2.5rem;
+
+//       &:first-child {
+//         margin-top: 0.75rem;
+//       }
+
+//       &:last-child {
+//         margin-bottom: 0.75rem;
+//       }
+//     }
+//   }
+
+//   &.small &__spinner__hour-wrapper,
+//   &.small &__spinner__minute-wrapper,
+//   &.small &__spinner__second-wrapper {
+//     width: 3rem;
+//   }
+
+//   &.small &__colon {
+//     margin-left: 0;
+//   }
+
+//   &__spinner {
+//     @extend %flex-center-row;
+//     align-items: center;
+//     border-top: 1px solid $color-primary--xlight;
+//     border-bottom: 1px solid $color-primary--xlight;
+//     width: 100%;
+
+//     &__hour,
+//     &__minute,
+//     &__second {
+//       font-size: $font-size--xlarge;
+//       font-weight: $font-weight--bold;
+//       height: 5rem;
+//       width: 150%;
+//       overflow-y: auto;
+
+//       list-style: none;
+//       padding: 0;
+//       margin: 0;
+//       margin-left: -1rem;
+
+//       scroll-snap-type: y mandatory;
+
+//       &-wrapper {
+//         overflow: hidden;
+//         width: 4rem;
+//       }
+
+//       li {
+//         @extend %flex-center-column;
+//         color: $color-primary--xlight;
+//         height: 3rem;
+//         scroll-snap-align: center;
+
+//         &:first-child {
+//           margin-top: 1rem;
+//         }
+
+//         &:last-child {
+//           margin-bottom: 1rem;
+//         }
+
+//         &.selected {
+//           color: $color-primary;
+//         }
+//       }
+//     }
+//   }
+
+//   &.readonly {
+//     .time-input__spinner__hour,
+//     .time-input__spinner__minute,
+//     .time-input__spinner__second {
+//       overflow-y: hidden;
+//     }
+//   }
+
+//   &__colon {
+//     font-weight: $font-weight--bold;
+//     margin-left: $space--xs;
+//   }
+// }

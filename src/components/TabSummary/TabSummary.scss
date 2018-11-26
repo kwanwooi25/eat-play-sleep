@@ -3,6 +3,7 @@
   @extend %flex-center-column;
   flex: 1;
   font-size: $font-size--small;
+  width: 100%;
   
   &__item {
     @extend %flex-center-row;

@@ -115,11 +115,15 @@ export default {
       today: 'Today',
       count: '{count} times',
       durationLabel: 'Duration',
+      countLabel: 'Times',
       one_week: '1 Week',
       two_weeks: '2 Weeks',
       one_month: '1 Month',
       noDataForChart: 'Not enough data to draw chart',
-      WHOstandard: 'WHO Child Growth Standard Range',
+      standard: 'Standard',
+      /** ActivityTrend */
+      forThePast: 'For the past',
+      while: '',
       /** TabSummary */
       averageFeedingsPerDay: 'Avg. Feedings / Day',
       averageDurationPerBreastFeeding: 'Avg. Duration / Feeding',
@@ -264,11 +268,15 @@ export default {
       today: '오늘',
       count: '{count} 회',
       durationLabel: '시간',
+      countLabel: '횟수',
       one_week: '일주일',
       two_weeks: '이주일',
       one_month: '한달',
       noDataForChart: '차트 생성을 위한 데이터가 부족합니다.',
-      WHOstandard: 'WHO 소아 성장 표준치 범위',
+      standard: '표준범위',
+      /** ActivityTrend */
+      forThePast: '지난',
+      while: '동안',
       /** TabSummary */
       averageFeedingsPerDay: '하루 평균 수유 횟수',
       averageDurationPerBreastFeeding: '1회 평균 모유 수유 시간',

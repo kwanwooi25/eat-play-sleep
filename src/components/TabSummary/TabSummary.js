@@ -20,22 +20,17 @@ class TabSummary extends Component {
 
   generateSummaryContents = (activityName, displayActivities, displayUnits) => {
     const { translate, trend } = this.props;
-    const { breast, bottle, babyfood, sleep, diaper } = trend;
+    const { feed, sleep, diaper } = trend;
 
-    let shouldRenderBreast = true;
-    let shouldRenderBottle = true;
-    let shouldRenderBabyfood = true;
-
-    if (displayActivities) {
-      shouldRenderBreast = displayActivities.includes('breast');
-      shouldRenderBottle = displayActivities.includes('bottle');
-      shouldRenderBabyfood = displayActivities.includes('babyfood');
-    }
+    const shouldRenderBreast = displayActivities.includes('breast');
+    const shouldRenderBottle = displayActivities.includes('bottle');
+    const shouldRenderBabyfood = displayActivities.includes('babyfood');
     
     let summaryContents = [];
 
-    if (activityName === 'feed' && breast && bottle && babyfood) {
-      const daysCount = breast.keys.length;
+    if (activityName === 'feed' && feed) {
+      const { breast, bottle, babyfood } = feed;
+      const daysCount = feed.keys.length;
 
       let totalCount = 0;
       if (shouldRenderBreast) totalCount += breast.totalCount;

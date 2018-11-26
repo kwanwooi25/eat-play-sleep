@@ -1,281 +1,202 @@
 import React, { Component } from 'react';
 import { withTranslate } from 'react-redux-multilingual';
 
-/** Victory Chart Components */
+/** Recharts */
 import {
-  VictoryChart,
-  VictoryBar,
-  VictoryLine,
-  VictoryAxis,
-  VictoryTheme,
-  VictoryStack,
-  VictoryLegend,
-  VictoryGroup,
-  VictoryScatter,
-  VictoryLabel,
-} from 'victory';
+  ComposedChart,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  CartesianGrid,
+  Bar,
+  Line
+} from 'recharts';
 
 /** Helper functions */
 import secondsToHMS from '../../helpers/secondsToHMS';
 import { mlToOz } from '../../helpers/unitChange';
+import { comma } from '../../helpers/comma';
 
 const DATA_FILL_COLOR = {
   breast: '#FFC107',
   bottle: '#3F51B5',
   babyfood: '#FF5722',
 };
-const DATA_STROKE_COLOR = {
-  breast: '#FFC107',
-  bottle: '#3F51B5',
-  babyfood: '#FF5722',
-};
-const LABEL_COLOR = {
-  breast: '#FF6F00',
-  bottle: '#1A237E',
-  babyfood: '#BF360C',
-};
+
+const XAxisTick = ({ x, y, payload }) => {
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <text
+        x={0}
+        y={0}
+        dy={8}
+        textAnchor="end"
+        fill="#666"
+        transform="rotate(-35)"
+      >
+        {payload.value}
+      </text>
+    </g>
+  )
+}
+
+const CustomToolTip = ({ active, payload, label, translate, volumeUnit }) => {
+  if (!active) return null;
+
+  return (
+    <div className="feed-chart__custom-tooltip">
+      <h3 className="feed-chart__custom-tooltip__label">{label}</h3>
+      {payload.map(({ name, value }) => {
+        const activityName = ['breast', 'bottle', 'babyfood']
+          .find(activityName => translate(activityName) === name);
+
+        if (activityName === 'breast') value = secondsToHMS(value);
+        else value = `${volumeUnit === 'oz' ? value : comma(value)}${volumeUnit}`;
+
+        return (
+          <div
+            key={name}
+            className="feed-chart__custom-tooltip__content"
+            style={{ color: DATA_FILL_COLOR[activityName] }}
+          >
+            <span className="feed-chart__custom-tooltip__content__name">
+              {name}
+            </span>
+            <span className="feed-chart__custom-tooltip__content__value">
+              {value}
+            </span>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
 
 class FeedChart extends Component {
-
-  transformData = (source, unit) => {
-    let data = [];
-
-    if (source) {
-      data = source.keys.map(key => {
-        switch (source.name) {
-          case 'breast':
-            return { date: key, duration: source[key].duration / 5 };
-          case 'bottle':
-          case 'babyfood':
-            if (unit === 'oz') {
-              return { date: key, amount: parseFloat(mlToOz(source[key].amount).toFixed(2)) };
-            }
-            return { date: key, amount: parseInt(source[key].amount.toFixed(0)) };
-          default:
-            return {};
-        }    
-      });
-    }
-
-    return data;
+  state = {
+    data: [],
+    width: 0,
+    height: 0,
   }
 
-  onBreastChartMouseOver = () => {
-    return [
-      {
-        target: "data",
-        mutation: props => {
-          const { style } = props;
-          const newStyle =
-            Object.assign(
-              {},
-              style,
-              {
-                fillOpacity: 0.7,
-                stroke: DATA_STROKE_COLOR['breast'],
-                strokeWidth: 2
-              }
-            );
-          return Object.assign({}, props, { style: newStyle });
-        }
-      }, {
-        target: "labels",
-        mutation: props => {
-          const { duration } = props.datum;
-          return { text: secondsToHMS(duration * 5) };
-        }
+  componentDidMount() {
+    /** set chart size */
+    const containerWidth = document.querySelector('.feed-chart').clientWidth;
+    this.setState({ width: containerWidth, height: containerWidth });
+  }
+
+  transformData = (source, displayUnits, translate) => {
+    const volumeUnit = displayUnits.volume;
+    const dates = source && source.keys;
+
+    /** map dates to generate chart data */
+    return dates.map(date => {
+      const { breast, bottle, babyfood } = source;
+      let breastDuration, bottleAmount, babyfoodAmount;
+
+      if (breast) breastDuration = breast[date].duration;
+      if (bottle) {
+        bottleAmount =
+          volumeUnit === 'ml' ?
+          bottle[date].amount :
+          mlToOz(bottle[date].amount).toFixed(2);
       }
-    ];
-  }
-  
-  onBarChartMouseOver = name => {
-    const { displayUnits } = this.props;
-    return [
-      {
-        target: "data",
-        mutation: props => {
-          const { style } = props;
-          const newStyle =
-            Object.assign(
-              {},
-              style,
-              {
-                fillOpacity: 0.7,
-                stroke: DATA_STROKE_COLOR[name],
-                strokeWidth: 1
-              }
-            );
-          return Object.assign({}, props, { style: newStyle });
-        }
-      }, {
-        target: "labels",
-        mutation: props => {
-          const { amount } = props.datum;
-          return { text: `${amount}${displayUnits.volume}` };
-        }
+      if (babyfood) {
+        babyfoodAmount =
+          volumeUnit === 'ml' ?
+          babyfood[date].amount :
+          mlToOz(babyfood[date].amount).toFixed(2);
       }
-    ];
-  }
-  
-  onChartMouseOut = () => {
-    return [
-      { target: "data", mutation: () => null },
-      { target: "labels", mutation: () => null }
-    ];
+
+      const data = { date };
+      if (breast) data[`${translate('breast')}`] = breastDuration;
+      if (bottle) data[`${translate('bottle')}`] = bottleAmount;
+      if (babyfood) data[`${translate('babyfood')}`] = babyfoodAmount;
+
+      return data;
+    });
   }
 
   render() {
-    const {
-      translate,
-      breast,
-      bottle,
-      babyfood,
-      displayActivities,
-      displayUnits,
-    } = this.props;
+    const { width, height } = this.state;
+    const { translate, source, displayUnits, displayActivities } = this.props;
+    const shouldRenderBreast = displayActivities.includes('breast');
+    const shouldRenderBottle = displayActivities.includes('bottle');
+    const shouldRenderBabyfood = displayActivities.includes('babyfood');
 
-    let shouldRenderBreastData = breast && breast.totalCount > 0;
-    let shouldRenderBottleData = bottle && bottle.totalCount > 0;
-    let shouldRenderBabyfoodData = babyfood && babyfood.totalCount > 0;
-    if (displayActivities) {
-      shouldRenderBreastData = shouldRenderBreastData && displayActivities.includes('breast');
-      shouldRenderBottleData = shouldRenderBottleData && displayActivities.includes('bottle');
-      shouldRenderBabyfoodData = shouldRenderBabyfoodData && displayActivities.includes('babyfood');
-    }
-
-    const breastData = this.transformData(breast, displayUnits.volume);
-    const bottleData = this.transformData(bottle, displayUnits.volume);
-    const babyfoodData = this.transformData(babyfood, displayUnits.volume);
-
-    const legendData = [];
-    if (shouldRenderBreastData) {
-      legendData.push({ name: translate('breast'), symbol: { fill: DATA_FILL_COLOR['breast'] } });
-    }
-    if (shouldRenderBottleData) {
-      legendData.push({ name: translate('bottle'), symbol: { fill: DATA_FILL_COLOR['bottle'] } });
-    }
-    if (shouldRenderBabyfoodData) {
-      legendData.push({ name: translate('babyfood'), symbol: { fill: DATA_FILL_COLOR['babyfood'] } });
-    }
+    const data = this.transformData(source, displayUnits, translate);
 
     return (
       <div className="feed-chart">
-        <VictoryChart
-          theme={VictoryTheme.material}
-          domainPadding={20}
-        >
-          <VictoryAxis
-            tickCount={7}
-            tickValues={breast && breast.keys}
-            tickFormat={x => parseInt(x.split('-')[1])}
+        <ComposedChart width={width} height={height} data={data}>
+          <XAxis
+            dataKey="date"
+            tick={<XAxisTick />}
           />
-          <VictoryAxis
-            label={translate('amount')}
-            dependentAxis
-            tickCount={4}
-            tickFormat={x => `${x}${displayUnits.volume}`}
-            style={{ axisLabel: { padding: -15 } }}
-          />
-          <VictoryAxis
-            label={translate('durationLabel')}
-            dependentAxis
-            orientation="right"
-            tickCount={4}
-            tickFormat={x => secondsToHMS(x * 5)}
-            style={{ axisLabel: { padding: -15 } }}
-          />
-          <VictoryLegend
-            x={20} y={10}
-            orientation="horizontal"
-            gutter={25}
-            style={{ border: { stroke: "black" } }}
-            data={legendData}
-          />
-          <VictoryStack>
-            {shouldRenderBottleData && (
-              <VictoryBar
-                data={bottleData}
-                x="date"
-                y="amount"
-                color={DATA_FILL_COLOR['bottle']}
-                barRatio={0.9}
-                labels={() => null}
-                labelComponent={<VictoryLabel dy={30}/>}
-                style={{
-                  labels: {
-                    fill: LABEL_COLOR['bottle'],
-                    fontSize: 20,
-                    stroke: LABEL_COLOR['bottle'],
-                    strokeWidth: 1
-                  }
-                }}
-                events={[{
-                  target: "data",
-                  eventHandlers: {
-                    onMouseOver: () => this.onBarChartMouseOver('bottle'),
-                    onMouseOut: this.onChartMouseOut,
-                  }
-                }]}
-              />
-            )}
-            {shouldRenderBabyfoodData && (
-              <VictoryBar
-                data={babyfoodData}
-                x="date"
-                y="amount"
-                color={DATA_FILL_COLOR['babyfood']}
-                barRatio={0.9}
-                labels={() => null}
-                labelComponent={<VictoryLabel dy={30}/>}
-                style={{
-                  labels: {
-                    fill: LABEL_COLOR['babyfood'],
-                    fontSize: 20,
-                    stroke: LABEL_COLOR['babyfood'],
-                    strokeWidth: 1
-                  }
-                }}
-                events={[{
-                  target: "data",
-                  eventHandlers: {
-                    onMouseOver: () => this.onBarChartMouseOver('babyfood'),
-                    onMouseOut: this.onChartMouseOut,
-                  }
-                }]}
-              />
-            )}
-          </VictoryStack>
-
-          {shouldRenderBreastData && (
-            <VictoryGroup
-              data={breastData}
-              x="date"
-              y="duration"
-              color={DATA_FILL_COLOR['breast']}
-            >
-              <VictoryLine />
-              <VictoryScatter
-                size={5}
-                labels={() => null}
-                style={{
-                  labels: {
-                    fill: LABEL_COLOR['breast'],
-                    fontSize: 20,
-                    stroke: LABEL_COLOR['breast'],
-                    strokeWidth: 1
-                  }
-                }}
-                events={[{
-                  target: "data",
-                  eventHandlers: {
-                    onMouseOver: this.onBreastChartMouseOver,
-                    onMouseOut: this.onChartMouseOut,
-                  }
-                }]}
-              />
-            </VictoryGroup>
+          {shouldRenderBreast && (
+            <YAxis
+              label={{
+                value: translate('durationLabel'),
+                angle: -90,
+                position: 'insideLeft'
+              }}
+              yAxisId="duration"
+              orientation="left"
+              tickFormatter={v => secondsToHMS(v)}
+            />
           )}
-        </VictoryChart>
+          {(shouldRenderBottle || shouldRenderBabyfood) && (
+            <YAxis
+              label={{
+                value: translate('amount'),
+                angle: shouldRenderBreast ? 90 : -90,
+                position: shouldRenderBreast ? 'insideRight' : 'insideLeft'
+              }}
+              unit={displayUnits.volume}
+              yAxisId="volume"
+              orientation={shouldRenderBreast ? "right" : "left"}
+              tickFormatter={v => comma(v)}
+            />
+          )}
+          <Tooltip
+            content={
+              <CustomToolTip
+                translate={translate}
+                volumeUnit={displayUnits.volume}
+              />
+            }
+          />
+          <Legend />
+          <CartesianGrid strokeDasharray="3 3" />
+          
+          {shouldRenderBottle && (
+            <Bar
+              dataKey={translate('bottle')}
+              barSize={20}
+              stackId="a"
+              yAxisId="volume"
+              fill={DATA_FILL_COLOR.bottle}
+            />
+          )}
+          {shouldRenderBabyfood && (
+            <Bar
+              dataKey={translate('babyfood')}
+              barSize={20}
+              stackId="a"
+              yAxisId="volume"
+              fill={DATA_FILL_COLOR.babyfood}
+            />
+          )}
+          {shouldRenderBreast && (
+            <Line
+              type="monotone"
+              yAxisId="duration"
+              dataKey={translate('breast')}
+              stroke={DATA_FILL_COLOR.breast}
+            />
+          )}
+        </ComposedChart>
       </div>
     )
   }

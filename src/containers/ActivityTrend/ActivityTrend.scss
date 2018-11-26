@@ -1,14 +1,29 @@
 .activity-trend {
   &__controls {
-    @extend %flex-center-row;
+    @extend %flex-center-column;
     justify-content: space-between;
     padding: $space--sm;
     padding-bottom: 0;
     width: 100%;
 
-    &__button {
-      margin-left: $space--xs;
+    &__range {
+      @extend %flex-center-row;
+      align-self: flex-start;
+      margin: $space--xs;
+
+      span {
+        font-size: $font-size--medium;
+      }
+
+      &__button {
+        border-radius: 0;
+        border-bottom: 2px solid $color-primary;
+        font-size: $font-size--medium;
+        padding: $space--xs $space--sm;
+        margin: $space--xs $space--sm;
+      }
     }
+
   }
 
   &__chart {

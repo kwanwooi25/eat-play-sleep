@@ -7,7 +7,7 @@ import { withTranslate } from 'react-redux-multilingual';
 import TabSummary from '../../components/TabSummary/TabSummary';
 import MenuSelector from '../../components/MenuSelector/MenuSelector';
 import FeedChart from '../../components/FeedChart/FeedChart';
-import DurationChart from '../../components/DurationChart/DurationChart';
+import SleepChart from '../../components/SleepChart/SleepChart';
 import DiaperChart from '../../components/DiaperChart/DiaperChart';
 import GrowthChart from '../../components/GrowthChart/GrowthChart';
 import NoData from '../../components/NoData/NoData';
@@ -36,20 +36,17 @@ class ActivityTrend extends Component {
     } = this.props;
     
     let from = moment().startOf('date');
-    if (range === 'one_week') from = from.subtract(6, 'days');
+    if (name === 'growth') from = from.subtract(3, 'months');
+    else if (range === 'one_week') from = from.subtract(6, 'days');
     else if (range === 'two_weeks') from = from.subtract(13, 'days');
     else if (range === 'one_month') from = from.subtract(1, 'months');
 
-    const to = moment().endOf('date');
-
-    if (name === 'feed') {
-      getActivityTrendByName(currentUser, currentBaby.id, { name: 'breast', from, to });
-      getActivityTrendByName(currentUser, currentBaby.id, { name: 'bottle', from, to });
-      getActivityTrendByName(currentUser, currentBaby.id, { name: 'babyfood', from, to });
-    } else {
-      getActivityTrendByName(currentUser, currentBaby.id, { name, from, to });
-    }
-
+    let to = moment().endOf('date');
+    if (name === 'growth') to = to.add(2, 'months');
+    
+    let names = [name];
+    if (name === 'feed') names = ['breast', 'bottle', 'babyfood'];
+    getActivityTrendByName(currentUser, currentBaby.id, { names, from, to });
   }
 
   handleRangeSelectChange = value => {
@@ -71,16 +68,17 @@ class ActivityTrend extends Component {
     } = this.props;
     const { range } = this.state;
 
-    const { breast, bottle, babyfood, sleep, diaper, growth } = trend;
-    let shouldRender = true;
+    const { feed, sleep, diaper, growth } = trend;
 
+    let shouldRender = true;
     if (activityName === 'feed') {
       shouldRender =
         shouldRender && 
+        feed &&
         (
-          (breast && breast.totalCount) ||
-          (bottle && bottle.totalCount) ||
-          (babyfood && babyfood.totalCount)
+          (feed.breast && feed.breast.totalCount) ||
+          (feed.bottle && feed.bottle.totalCount) ||
+          (feed.babyfood && feed.babyfood.totalCount)
         );
     } else {
       shouldRender = 
@@ -94,17 +92,21 @@ class ActivityTrend extends Component {
         <div className="activity-trend">
           {activityName !== 'growth' && (
             <div className="activity-trend__controls">
+              <div className="activity-trend__controls__range">
+                <span>{translate('forThePast')}</span>
+                <MenuSelector
+                  buttonClassName="activity-trend__controls__range__button"
+                  menuSelected={range}
+                  menuItems={RANGE_SELECT_ITEMS}
+                  onChange={this.handleRangeSelectChange}
+                />
+                <span>{translate('while')}</span>
+              </div>
               <TabSummary
                 activityName={activityName}
                 trend={trend}
                 displayActivities={displayActivities}
                 displayUnits={displayUnits}
-              />
-              <MenuSelector
-                buttonClassName="activity-trend__controls__button"
-                menuSelected={range}
-                menuItems={RANGE_SELECT_ITEMS}
-                onChange={this.handleRangeSelectChange}
               />
             </div>
           )}
@@ -112,14 +114,13 @@ class ActivityTrend extends Component {
           <div className="activity-trend__chart">
             {activityName === 'feed' && (
               <FeedChart
-                breast={breast}
-                bottle={bottle}
-                babyfood={babyfood}
+                source={feed}
                 displayActivities={displayActivities}
                 displayUnits={displayUnits}
               />
             )}
-            {activityName === 'sleep' && <DurationChart source={sleep} />}
+            {/* {activityName === 'sleep' && <DurationChart source={sleep} />} */}
+            {activityName === 'sleep' && <SleepChart source={sleep} />}
             {activityName === 'diaper' && <DiaperChart source={diaper} />}
             {activityName === 'growth' && (
               <GrowthChart
@@ -142,4 +143,4 @@ const mapStateToProps = ({ auth, babies, activities }) => {
   return { auth, babies, activities };
 }
 
-export default withTranslate(connect(mapStateToProps, actions)(ActivityTrend))
+export default withTranslate(connect(mapStateToProps, actions)(ActivityTrend));

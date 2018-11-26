@@ -125,7 +125,8 @@ export const getActivityTrendByName = (user, babyID, options) => async dispatch 
     if (success) trendByName = formTrendData(data, options);
   }
 
-  const payload = { name: options.name, trendByName };
+  let payload = { name: options.names[0], trendByName };
+  if (options.names.includes('breast', 'bottle', 'babyfood')) payload.name = 'feed';
 
   dispatch({ type: GET_ACTIVITY_TREND_BY_NAME, payload });
 }

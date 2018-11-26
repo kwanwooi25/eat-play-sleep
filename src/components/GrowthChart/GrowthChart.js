@@ -2,151 +2,193 @@ import moment from 'moment';
 import React, { Component } from 'react';
 import { withTranslate } from 'react-redux-multilingual';
 
+/** Recharts */
+import {
+  ComposedChart,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  CartesianGrid,
+  Area,
+  Line
+} from 'recharts';
+
 /** Growth Standards */
 import boysStandards from '../../assets/boys_standards.json';
 import girlsStandards from '../../assets/girls_standards.json';
 
-/** Victory Chart Components */
-import {
-  VictoryChart,
-  VictoryArea,
-  VictoryAxis,
-  VictoryTheme,
-  VictoryScatter,
-  VictoryLegend,
-} from 'victory';
-
 /** Helper functions */
-import { comma } from '../../helpers/comma';
 import { cmToIn, kgToLb } from '../../helpers/unitChange';
 
 const DATA_FILL_COLOR = {
-  standard: '#B2DFDB',
+  standard: '#009688',
   height: "#FF5722",
   weight: "#FF5722",
   head: "#FF5722",
 };
-const DATA_STROKE_COLOR = {
-  standard: '#B2DFDB',
-  height: "#FF5722",
-  weight: "#FF5722",
-  head: "#FF5722",
-};
-const LABEL_COLOR = {
-  standard: '#B2DFDB',
-  height: "#FF5722",
-  weight: "#FF5722",
-  head: "#FF5722",
-};
+
+const XAxisTick = ({ x, y, payload }) => {
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <text
+        x={0}
+        y={0}
+        dy={8}
+        textAnchor="end"
+        fill="#666"
+        transform="rotate(-35)"
+      >
+        {payload.value}
+      </text>
+    </g>
+  )
+}
+
+const CustomToolTip = ({ active, payload, label, translate, unit }) => {
+  if (!active) return null;
+
+  return (
+    <div className="growth-chart__item__custom-tooltip">
+      <h3 className="growth-chart__item__custom-tooltip__label">{label}</h3>
+      {payload.map(({ name, value }) => {
+        const propName = ['standard', 'height', 'weight', 'head']
+          .find(propName => translate(propName) === name);
+        
+        let formattedValue = '';
+        if (name === translate('standard')) {
+          formattedValue = `${value[0].toFixed(2)} ~ ${value[1].toFixed(2)} ${unit}`;
+        } else {
+          formattedValue = `${value.toFixed(2)} ${unit}`;
+        }
+
+        return (
+          <div
+            key={name}
+            className="growth-chart__item__custom-tooltip__content"
+            style={{ color: DATA_FILL_COLOR[propName] }}
+          >
+            <span className="growth-chart__item__custom-tooltip__content__name">
+              {name}
+            </span>
+            <span className="growth-chart__item__custom-tooltip__content__value">
+              {formattedValue}
+            </span>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
 
 class GrowthChart extends Component {
+  state = { width: 0, height: 0 };
 
-  getStandardsData = (gender, age) => {
+  componentDidMount() {
+    /** set chart size */
+    const containerWidth = document.querySelector('.growth-chart').clientWidth;
+    this.setState({ width: containerWidth, height: containerWidth });
+  }
+
+  convertUnit = (data, convertFunc) => (
+    {
+      third: convertFunc(data.third),
+      fifteenth: convertFunc(data.fifteenth),
+      median: convertFunc(data.median),
+      eightyfifth: convertFunc(data.eightyfifth),
+      ninetyseventh: convertFunc(data.ninetyseventh),
+      ...data
+    }
+  )
+
+  getStandardsData = (baby, age) => {
     const { displayUnits } = this.props;
-    const standards = gender === 'boy' ? boysStandards : girlsStandards;
+    const standards = baby.gender === 'boy' ? boysStandards : girlsStandards;
 
     const standardsData = {};
-    const minMax = {};
+    const yDomain = {};
 
     Object.keys(standards).forEach(key => {
       standardsData[key] = standards[key]
-        .filter(({ month }) => 
-          (age - 2 <= month && month <= age + 2));
+        .filter(({ month }) => (age - 2 <= month && month <= age + 1));
 
-      if ((key === 'height'|| key === 'head') && displayUnits.length === 'in') {
-        standardsData[key] = standardsData[key].map(data => {
-          return {
-            month: data.month,
-            third: cmToIn(data.third),
-            fifteenth: cmToIn(data.fifteenth),
-            median: cmToIn(data.median),
-            eightyfifth: cmToIn(data.eightyfifth),
-            ninetyseventh: cmToIn(data.ninetyseventh),
+      /** generate standards by date */
+      let expandedToDate = [];
+      standardsData[key].forEach((data, index) => {
+        for (
+          let i = moment(baby.birthday).add(data.month, 'months');
+          i <= moment(baby.birthday).add(data.month + 1, 'months');
+          i.add(1, 'days')
+        ) {
+          const startOfMonthAge = moment(baby.birthday).add(data.month, 'months');
+          const nextMonthData = standardsData[key][index + 1];
+          const date = i.format('MM-DD');
+          const diff = i.diff(startOfMonthAge, 'days');
+          const daysInMonth = startOfMonthAge.daysInMonth();
+          
+          if (nextMonthData && diff !== 0) {
+            expandedToDate.push({
+              date,
+              third:
+                data.third + ((nextMonthData.third - data.third) * diff / daysInMonth),
+              fifteenth:
+                data.fifteenth + ((nextMonthData.fifteenth - data.fifteenth) * diff / daysInMonth),
+              median:
+                data.median + ((nextMonthData.median - data.median) * diff / daysInMonth),
+              eightyfifth:
+                data.eightyfifth + ((nextMonthData.eightyfifth - data.eightyfifth) * diff / daysInMonth),
+              ninetyseventh:
+                data.ninetyseventh + ((nextMonthData.ninetyseventh - data.ninetyseventh) * diff / daysInMonth),
+            })
           }
-        });
+        }
+      });
+
+      standardsData[key] = expandedToDate;
+
+      /** convert unit when needed */
+      if ((key === 'height' || key === 'head') && displayUnits.length === 'in') {
+        standardsData[key] = this.convertUnit(standardsData[key], cmToIn);
       } else if (key === 'weight' && displayUnits.weight === 'lb') {
-        standardsData[key] = standardsData[key].map(data => {
-          return {
-            month: data.month,
-            third: kgToLb(data.third),
-            fifteenth: kgToLb(data.fifteenth),
-            median: kgToLb(data.median),
-            eightyfifth: kgToLb(data.eightyfifth),
-            ninetyseventh: kgToLb(data.ninetyseventh),
-          }
-        });
+        standardsData[key] = this.convertUnit(standardsData[key], kgToLb);
       }
 
-      const min = standardsData[key][0].third;
-      const max = standardsData[key][standardsData[key].length - 1].ninetyseventh;
-      const median = standardsData[key][0].median;
-
-      minMax[key] = {
-        min: min - (median * 0.1),
-        max: max + (median * 0.1),
+      yDomain[key] = {
+        min: parseInt(standardsData[key][0].third),
+        max: parseInt(standardsData[key][standardsData[key].length - 1].ninetyseventh),
       }
     });
 
-    return { standardsData, minMax };
+    return { standardsData, yDomain };
   }
-
-  getLastMeasure = source => {
-    let lastMeasure = {
-      height: 0,
-      weight: 0,
-      head: 0,
-    };
-
-    source.keys
-      .map(key => {
-        if (source[key].count !== 0) return source[key];
-        return undefined;
-      })
-      .filter(value => value)
-      .forEach(({ height, weight, head }) => {
-        if (height !== 0) lastMeasure.height = height;
-        if (weight !== 0) lastMeasure.weight = weight;
-        if (head !== 0) lastMeasure.head = head;
-      });
-
-    return (lastMeasure);
-  }
-  
-  onChartMouseOver = name => {
-    return [
-      {
-        target: "data",
-        mutation: props => {
-          const { style } = props;
-          const newStyle =
-            Object.assign(
-              {},
-              style,
-              {
-                fillOpacity: 0.7,
-                stroke: DATA_STROKE_COLOR[name],
-                strokeWidth: 1
-              }
-            );
-          return Object.assign({}, props, { style: newStyle });
-        }
-      }
-    ];
-  }
-  
-  onChartMouseOut = () => [{ target: "data", mutation: () => null }];
 
   render() {
     const { translate, source, baby, displayUnits } = this.props;
-    const ageInMonth = moment().diff(moment(baby.birthday), 'months');
-    const { standardsData, minMax } = this.getStandardsData(baby.gender, ageInMonth);
-    const lastMeasure = this.getLastMeasure(source);
+    const { width, height } = this.state;
 
-    if (displayUnits.length === 'in') {
-      lastMeasure.height = cmToIn(lastMeasure.height);
-      lastMeasure.head = cmToIn(lastMeasure.head);
+    const ageInMonth = moment().diff(moment(baby.birthday), 'months');
+    const { standardsData, yDomain } = this.getStandardsData(baby, ageInMonth);
+    let data = { height: [], weight: [], head: [] };
+
+    if (source) {
+      source.keys.forEach(key => {
+        ['height', 'weight', 'head'].forEach(name => {
+          standardsData[name]
+            .filter(({ date }) => date === key)
+            .forEach(standard => {
+              data[name].push({
+                date: key,
+                [`${translate('standard')}`]: [standard.third, standard.ninetyseventh]
+              });
+            });
+
+          if (source[key][name]) {
+            const dateIndex = data[name].findIndex(({ date }) => date === key);
+            data[name][dateIndex][`${translate(name)}`] = source[key][name];
+          }
+        });
+      })
     }
-    if (displayUnits.weight === 'lb') lastMeasure.weight = kgToLb(lastMeasure.weight);
 
     return (
       <div className="growth-chart">
@@ -155,70 +197,40 @@ class GrowthChart extends Component {
             (name === 'height' || name === 'head') ?
               displayUnits.length :
               name === 'weight' && displayUnits.weight;
-
-          if (lastMeasure[name] === 0) return undefined;
           
           return (
             <div key={name} className="growth-chart__item" >
-              <div>{translate(name)}</div>
-              <VictoryChart theme={VictoryTheme.material}>
-                <VictoryAxis tickFormat={x => `${x}m`} />
-                <VictoryAxis
-                  dependentAxis
-                  tickFormat={x => `${comma(x)}${unit}`}
-                />
-                <VictoryLegend
-                  x={20} y={10}
-                  orientation="horizontal"
-                  gutter={25}
-                  data={[{
-                    name: translate('WHOstandard'),
-                    symbol: { fill: DATA_FILL_COLOR['standard'] }
-                  }]}
-                />
-                <VictoryArea
-                  data={standardsData[name]}
-                  x="month"
-                  y0="third"
-                  y="ninetyseventh"
-                  interpolation="natural"
-                  domain={{ y: [minMax[name].min, minMax[name].max] }}
-                  style={{
-                    data: {
-                      fill: DATA_FILL_COLOR['standard'],
-                      fillOpacity: 0.7,
-                    },
+              <ComposedChart width={width} height={height} data={data[name]}>
+                <XAxis dataKey="date" tick={<XAxisTick />} />
+                <YAxis
+                  label={{
+                    value: translate(name),
+                    angle: -90,
+                    position: 'insideLeft'
                   }}
+                  orientation="left"
+                  tickFormatter={v => `${v}${unit}`}
+                  domain={[yDomain[name].min, yDomain[name].max]}
                 />
-                {lastMeasure[name] && (
-                  <VictoryScatter
-                    data={[{
-                      month: ageInMonth,
-                      [name]: parseFloat(lastMeasure[name].toFixed(2)),
-                    }]}
-                    x="month"
-                    y={name}
-                    size={5}
-                    labels={v => v[name]}
-                    style={{
-                      data: { fill: DATA_FILL_COLOR[name] },
-                      labels: {
-                        fill: LABEL_COLOR[name],
-                        fontSize: 20,
-                        stroke: LABEL_COLOR[name],
-                        strokeWidth: 1
-                      }
-                    }}
-                    events={[{
-                      target: "data",
-                      eventHandlers: {
-                        onMouseOver: () => this.onChartMouseOver(name),
-                        onMouseOut: this.onChartMouseOut,
-                      }
-                    }]}
-                  />
-                )}
-              </VictoryChart>
+                <Tooltip
+                  content={<CustomToolTip translate={translate} unit={unit} />}
+                />
+                <Legend />
+                <CartesianGrid strokeDasharray="3 3" />
+                <Area
+                  type="monotone"
+                  dataKey={translate('standard')}
+                  fill={DATA_FILL_COLOR.standard}
+                  fillOpacity={0.5}
+                  stroke={DATA_FILL_COLOR.standard}
+                />
+                <Line
+                  type="monotone"
+                  dataKey={translate(name)}
+                  stroke={DATA_FILL_COLOR[name]}
+                  activeDot={{r: 8}}
+                />
+              </ComposedChart>
             </div>
           )
         })}

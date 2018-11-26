@@ -1,17 +1,29 @@
 import moment from 'moment';
 
 export default (activities, options) => {
+  let isDataFeed = false;
+  /** check options */
+  if (options.names.includes('breast', 'bottle', 'babyfood')) isDataFeed = true;
+
   /** set default trend data */
-  const trend = { name: options.name, keys: [], totalCount: 0 };
-  switch (options.name) {
+  let trend = { name: options.names[0], keys: [], totalCount: 0 };
+  if (isDataFeed) {
+    trend = {
+      keys: [],
+      breast: { name: options.names[0], keys: [], totalCount: 0 },
+      bottle: { name: options.names[1], keys: [], totalCount: 0 },
+      babyfood: { name: options.names[2], keys: [], totalCount: 0 },
+    }
+  }
+  switch (options.names[0]) {
     case 'breast':
-    case 'sleep':
-      trend.totalDuration = 0;
+      trend.breast.totalDuration = 0;
+      trend.bottle.totalAmount = 0;
+      trend.babyfood.totalAmount = 0;
       break;
 
-    case 'bottle':
-    case 'babyfood':
-      trend.totalAmount = 0;
+    case 'sleep':
+      trend.totalDuration = 0;
       break;
     
     case 'diaper':
@@ -26,17 +38,27 @@ export default (activities, options) => {
   /** initialize data */
   for (let i = moment(options.from); i < moment(options.to); i.add(1, 'days')) {
     const date = i.format('MM-DD');
+    if (isDataFeed) {
+      trend.breast.keys.push(date);
+      trend.bottle.keys.push(date);
+      trend.babyfood.keys.push(date);
+      trend.breast[date] = { count: 0 };
+      trend.bottle[date] = { count: 0 };
+      trend.babyfood[date] = { count: 0 };
+    } else {
+      trend[date] = { count: 0 };
+    }
     trend.keys.push(date);
-    trend[date] = { count: 0 };
-    switch (options.name) {
+
+    switch (options.names[0]) {
       case 'breast':
-      case 'sleep':
-        trend[date].duration = 0;
+        trend.breast[date].duration = 0;
+        trend.bottle[date].amount = 0;
+        trend.babyfood[date].amount = 0;
         break;
 
-      case 'bottle':
-      case 'babyfood':
-        trend[date].amount = 0;
+      case 'sleep':
+        trend[date].duration = 0;
         break;
       
       case 'diaper':
@@ -66,28 +88,37 @@ export default (activities, options) => {
     weight,
     head,
   }) => {
-    const isNameSame = name === options.name;
+    const isNameSame = options.names.includes(name);
     const isInRange =
       moment(options.from) <= moment(time_start) &&
       moment(time_start) <= moment(options.to);
     
     if (isNameSame && isInRange) {
       const date = moment(time_start).format('MM-DD');
-  
-      trend[date].count ++;
-      trend.totalCount ++;
 
-      switch (options.name) {
+      if (isDataFeed) {
+        trend[name][date].count ++;
+        trend[name].totalCount ++;
+      } else {
+        trend[date].count ++;
+        trend.totalCount ++;
+      }
+  
+      switch (name) {
         case 'breast':
+          trend[name][date].duration += duration_total;
+          trend[name].totalDuration += duration_total;
+          break;
+          
+        case 'bottle':
+        case 'babyfood':
+          trend[name][date].amount += amount;
+          trend[name].totalAmount += amount;
+          break;
+
         case 'sleep':
           trend[date].duration += duration_total;
           trend.totalDuration += duration_total;
-          break;
-  
-        case 'bottle':
-        case 'babyfood':
-          trend[date].amount += amount;
-          trend.totalAmount += amount;
           break;
         
         case 'diaper':

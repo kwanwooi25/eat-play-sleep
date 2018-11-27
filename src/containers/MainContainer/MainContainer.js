@@ -14,8 +14,6 @@ const MainContainer = ({ route, children }) => {
         {children}
       </div>
       <BottomNavigation />
-
-
     </main>
   )
 }

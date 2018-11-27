@@ -14,4 +14,7 @@
   background: $color-grey--xlight;
   overflow-y: auto;
   grid-row: 1fr;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }

@@ -34,14 +34,17 @@ class NumberInput extends Component {
     const { maxValue = 999, unit } = this.props;
     if (value >= maxValue) value = maxValue;
     if (value <= 0) value = 0;
-
-    let decimalModifier = 10;
-    if (unit === 'oz' || unit === 'in' || unit === 'lb') decimalModifier = 100;
-
+    
     const hundred = Math.floor(value / 100) || 0;
     const ten = Math.floor((value - (hundred * 100)) / 10) || 0;
     const one = Math.floor(value - (hundred * 100) - (ten * 10)) || 0;
-    const decimal = Math.round((value - (hundred * 100) - (ten * 10) - one) * decimalModifier) || 0;
+    
+    let decimal = value - (hundred * 100) - (ten * 10) - one || 0;
+    if (unit === 'oz' || unit === 'in' || unit === 'lb') {
+      decimal = Math.round((decimal * 100) / 25) * 25;
+    } else {
+      decimal = Math.round(decimal * 10);
+    }
 
     return { hundred, ten, one, decimal };
   }

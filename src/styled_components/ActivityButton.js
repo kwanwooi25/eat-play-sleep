@@ -95,6 +95,7 @@ const Container = styled.div`
 
   ${({ buttons, theme: { space } }) => `
     padding: ${space.sm};
+    max-width: 480px;
 
     ${buttons.includes('breast', 'bottle', 'pump', 'babyfood', 'diaper', 'sleep', 'growth') ? `
       grid-gap: ${space.sm};

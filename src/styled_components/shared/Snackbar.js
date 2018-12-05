@@ -9,6 +9,7 @@ const Snackbar = styled(FlexRowDiv)`
   overflow: hidden;
 
   ${({ theme, variant, open }) => `
+    max-width: ${theme.breakPoints.sm};
     padding: ${theme.space.md};
     z-index: ${open ? 9999 : -1};
 

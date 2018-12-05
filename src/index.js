@@ -25,9 +25,6 @@ import * as serviceWorker from './serviceWorker';
 /** Components */
 import App from './containers/App';
 
-/** Styles */
-import './styles/index.scss';
-
 const locale = window.navigator.language.slice(0, 2) === 'ko' ? 'ko' : 'en';
 
 // create Redux + Multilingual store
@@ -38,21 +35,21 @@ const store = createStore(
   composeEnhancers(applyMiddleware(reduxThunk))
 );
 
+// moment localize
+moment.locale(locale);
+
 // Mui Theme
-const theme = createMuiTheme({
+const muiTheme = createMuiTheme({
   typography: {
     useNextVariants: true,
   },
 });
 
-// moment localize
-moment.locale(locale);
-
 ReactDOM.render(
   <Provider store={store}>
     <IntlProvider translations={translations}>
-      <MuiThemeProvider theme={theme}>
-        <App/>
+      <MuiThemeProvider theme={muiTheme}>
+        <App />
       </MuiThemeProvider>
     </IntlProvider>
   </Provider>,

@@ -4,14 +4,14 @@ import {
   GET_BABIES_FAILED
 } from './types';
 import { getCurrentUser } from './authActions';
-import {
-  getUserToken,
-  getGuestBabies,
-  addGuestBaby,
-  editGuestBaby,
-  deleteGuestBaby,
-} from '../helpers/localStorage';
 import { getActivities, updateActivitiesInProgress } from './activityActions';
+  import {
+    getUserToken,
+    getGuestBabies,
+    addGuestBaby,
+    editGuestBaby,
+    deleteGuestBaby,
+  } from '../utils/localStorage';
 
 const API_HOST = process.env.REACT_APP_API_HOST;
 

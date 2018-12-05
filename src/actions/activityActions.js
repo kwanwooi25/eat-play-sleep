@@ -21,9 +21,10 @@ import {
   addGuestActivity,
   updateGuestActivity,
   removeGuestActivity,
-} from '../helpers/localStorage';
-import Timer from '../helpers/Timer';
-import formTrendData from '../helpers/formTrendData';
+} from '../utils/localStorage';
+import { showSnackbar } from './snackbarActions';
+import Timer from '../utils/Timer';
+import formTrendData from '../utils/formTrendData';
 
 const API_HOST = process.env.REACT_APP_API_HOST;
 
@@ -162,9 +163,11 @@ export const resumeActivity = activity => dispatch => {
     if (currentSide === 'left') {
       activity.leftTimer.start();
       activity.rightTimer.stop();
+      activity.paused = false;
     } else if (currentSide === 'right') {
       activity.rightTimer.start();
       activity.leftTimer.stop();
+      activity.paused = false;
     }
   }
 
@@ -179,7 +182,7 @@ export const updateActivitiesInProgress = activities => dispatch => {
   dispatch({ type: UPDATE_ACTIVITIES_IN_PROGRESS, payload: activities });
 }
 
-export const saveActivity = (user, activity) => async dispatch => {
+export const saveActivity = (user, activity, successMessage, errorMessage) => async dispatch => {
   const { name } = activity;
   
   activity.guardianID = user.id;
@@ -192,41 +195,53 @@ export const saveActivity = (user, activity) => async dispatch => {
   }
 
   const activityToSave = formActivityToSave(activity);
-  if (user.provider === 'local') addGuestActivity(activityToSave);
-  else {
+  if (user.provider === 'local') {
+    addGuestActivity(activityToSave);
+    dispatch(showSnackbar(successMessage, 'success'));
+  } else {
     const userToken = getUserToken();
-    await axios.post(
+    const res = await axios.post(
       `${API_HOST}/api/activity`,
       activityToSave,
       { headers: { 'x-oauth-token': userToken } }
     );
+    if (res.data.success) dispatch(showSnackbar(successMessage, 'success'));
+    else dispatch(showSnackbar(errorMessage, 'error'));
   }
 
   dispatch(getActivities(user, activityToSave.baby_id));
 }
 
-export const updateActivity = (user, activity) => async dispatch => {
-  if (user.provider === 'local') updateGuestActivity(activity);
-  else {
+export const updateActivity = (user, activity, successMessage, errorMessage) => async dispatch => {
+  if (user.provider === 'local') {
+    updateGuestActivity(activity);
+    dispatch(showSnackbar(successMessage, 'success'));
+  } else {
     const userToken = getUserToken();
-    await axios.put(
+    const res = await axios.put(
       `${API_HOST}/api/activity`,
       activity,
       { headers: { 'x-oauth-token': userToken } }
     );
+    if (res.data.success) dispatch(showSnackbar(successMessage, 'success'));
+    else dispatch(showSnackbar(errorMessage, 'error'));
   }
 
   dispatch(getActivities(user, activity.baby_id));
 }
 
-export const removeActivity = (user, activity) => async dispatch => {
-  if (user.provider === 'local') removeGuestActivity(activity.id);
-  else {
+export const removeActivity = (user, activity, successMessage, errorMessage) => async dispatch => {
+  if (user.provider === 'local') {
+    removeGuestActivity(activity.id);
+    dispatch(showSnackbar(successMessage, 'success'));
+  } else {
     const userToken = getUserToken();
-    await axios.delete(
+    const res = await axios.delete(
       `${API_HOST}/api/activity?activityID=${activity.id}`,
       { headers: { 'x-oauth-token': userToken } }
     );
+    if (res.data.success) dispatch(showSnackbar(successMessage, 'success'));
+    else dispatch(showSnackbar(errorMessage, 'error'));
   }
 
   dispatch(getActivities(user, activity.baby_id));

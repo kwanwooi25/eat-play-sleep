@@ -1,6 +1,5 @@
 import {
   GET_CURRENT_USER,
-  LOGIN_AS_GUEST,
   AUTH_ERROR,
   LOGOUT_USER,
 } from '../actions/types';
@@ -21,15 +20,6 @@ export default (state = INITIAL_STATE, action) => {
         isLoggedInAsUser: true,
         currentUser: action.payload,
         loginMethod: action.payload.provider,
-        error: ''
-      };
-
-    case LOGIN_AS_GUEST:
-      return {
-        isLoggedInAsGuest: true,
-        isLoggedInAsUser: false,
-        currentUser: action.payload,
-        loginMethod: 'local',
         error: ''
       };
 

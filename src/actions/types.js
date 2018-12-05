@@ -2,7 +2,6 @@
  * Authentication
  */
 export const GET_CURRENT_USER = 'GET_CURRENT_USER';
-export const LOGIN_AS_GUEST = 'LOGIN_AS_GUEST';
 export const AUTH_ERROR = 'AUTH_ERROR';
 export const LOGOUT_USER = 'LOGOUT_USER';
 
@@ -25,3 +24,10 @@ export const START_ACTIVITY = 'START_ACTIVITY';
 export const UPDATE_ACTIVITY_IN_PROGRESS = 'UPDATE_ACTIVITY_IN_PROGRESS';
 export const UPDATE_ACTIVITIES_IN_PROGRESS = 'UPDATE_ACTIVITIES_IN_PROGRESS';
 export const ACTIVITY_ERROR = 'ACTIVITY_ERROR';
+
+/**
+ * Snackbar
+ */
+
+export const SHOW_SNACKBAR = 'SHOW_SNACKBAR';
+export const HIDE_SNACKBAR = 'HIDE_SNACKBAR';

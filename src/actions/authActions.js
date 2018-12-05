@@ -1,10 +1,11 @@
 import axios from 'axios';
+import { IntlActions } from 'react-redux-multilingual';
 import {
   GET_CURRENT_USER,
-  LOGIN_AS_GUEST,
   AUTH_ERROR,
   LOGOUT_USER,
 } from './types';
+import { getBabies } from './babyActions';
 import {
   getUserToken,
   setUserToken,
@@ -12,14 +13,10 @@ import {
   getGuestUser,
   setGuestUser,
   logoutGuestUser,
-} from '../helpers/localStorage';
-import {
-  getBabies
-} from './babyActions';
-import { IntlActions } from 'react-redux-multilingual';
+} from '../utils/localStorage';
 
 const API_HOST = process.env.REACT_APP_API_HOST;
-const SETTINGS_DEFAULT = {
+const DEFAULT_SETTINGS = {
   displayActivities: [
     'breast',
     'bottle',
@@ -34,13 +31,14 @@ const SETTINGS_DEFAULT = {
     length: 'cm',
     weight: 'kg'
   },
-  displayLanguage: 'ko',
+  displayLanguage: window.navigator.language.slice(0, 2) === 'ko' ? 'ko' : 'en',
+  theme: 'indigo',
 };
 
 const injectSettings = user => {
-  Object.keys(SETTINGS_DEFAULT).forEach(key => {
+  Object.keys(DEFAULT_SETTINGS).forEach(key => {
     if (!user.settings[key]) {
-      user.settings[key] = SETTINGS_DEFAULT[key];
+      user.settings[key] = DEFAULT_SETTINGS[key];
     }
   });
 
@@ -69,7 +67,7 @@ export const getCurrentUser = () => async dispatch => {
 
   user = injectSettings(user);
   
-  dispatch(IntlActions.setLocale(user.settings.displayLanguage));  
+  dispatch(IntlActions.setLocale(user.settings.displayLanguage));
   dispatch({ type: GET_CURRENT_USER, payload: user });
   dispatch(getBabies(user));
 }
@@ -99,8 +97,7 @@ export const loginAsGuest = () => dispatch => {
   // save guest info to localStorage;
   setGuestUser(user);
 
-  dispatch(getBabies(user));
-  dispatch({ type: LOGIN_AS_GUEST, payload: user });
+  dispatch(getCurrentUser());
 }
 
 export const loginUser = token => async dispatch => {

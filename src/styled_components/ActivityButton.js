@@ -5,7 +5,7 @@ import ButtonBase from './shared/Button';
 const ActivityButton = styled.div`
   overflow: hidden;
   display: grid;
-  grid-template-rows: 3fr auto 2fr;
+  grid-template-rows: 20% 65% 15%;
   
   ${({ theme, name, hasSides }) => `
     border-radius: ${theme.borderRadius};
@@ -15,9 +15,8 @@ const ActivityButton = styled.div`
     ${hasSides ? `
       grid-column: 1/3;
       ${ButtonGroup} {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-gap: ${theme.space.xs};
+        display: flex;
+        background: ${theme.color[`${theme[`${name}Color`]}${theme.xxlight}`]};
       }
     ` : ''}
 
@@ -68,12 +67,19 @@ const Info = styled(FlexRowDiv)`
   `}
 `;
 
-const ButtonGroup = styled.div``;
+const ButtonGroup = styled.div`
+  width: 100%;
+  height: 100%;
+`;
 
 const Button = styled(ButtonBase)`
   border-radius: 0;
+  width: 100%;
+  height: 100%;
+
   svg {
-    max-height: 4rem;
+    width: 80%;
+    height: 80%;
   }
 `;
 

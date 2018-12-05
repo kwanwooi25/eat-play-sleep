@@ -15,16 +15,22 @@ const Main = styled.main`
 `;
 
 const Header = styled.header`
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
   width: 100%;
-  min-height: 4rem;
 
   ${({ theme }) => `
     background: ${theme.color[`${theme.primary}${theme.main}`]};
     color: ${theme.color[`${theme.primary}${theme.textContrast}`]};
+  `}
+`;
+
+const HeaderWrapper = styled(FlexRowDiv)`
+  justify-content: space-between;
+  width: 100%;
+  min-height: 4rem;
+  margin: auto;
+
+  ${({ theme }) => `
+    max-width: ${theme.breakPoints.sm};
     padding: ${theme.space.md};
   `}
 `;
@@ -39,16 +45,35 @@ const HeaderContent = styled.span`
 
 const Content = styled.div`
   background: ${({ theme }) => theme.color[`${theme.grey}${theme.xlight}`]};
-  overflow-y: auto;
   grid-row: 1fr;
+  overflow-y: auto;
   &::-webkit-scrollbar {
     display: none;
   }
 `;
 
-const BottomNav = styled(FlexRowDiv)`
-  align-items: stretch;
+const ContentWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  margin: auto;
+
+  ${({ theme }) => `
+    max-width: ${theme.breakPoints.sm};
+  `}
+`;
+
+const BottomNav = styled.div`
+  width: 100%;
   border-top: 1px solid ${({ theme }) => theme.color[`${theme.primary}${theme.xxlight}`]};
+`;
+
+const BottomNavWrapper = styled(FlexRowDiv)`
+  align-items: stretch;
+  margin: auto;
+
+  ${({ theme }) => `
+    max-width: ${theme.breakPoints.sm};
+  `}
 `;
 
 const BottomNavLink = styled(ButtonBase)`
@@ -95,10 +120,13 @@ const BottomNavLinkLabel = styled.span`
 `;
 
 Main.Header = Header;
+Main.Header.Wrapper = HeaderWrapper;
 Main.Header.Title = HeaderTitle;
 Main.Header.Content = HeaderContent;
 Main.Content = Content;
+Main.Content.Wrapper = ContentWrapper;
 Main.BottomNav = BottomNav;
+Main.BottomNav.Wrapper = BottomNavWrapper;
 Main.BottomNav.Link = BottomNavLink;
 Main.BottomNav.Link.Label = BottomNavLinkLabel;
 

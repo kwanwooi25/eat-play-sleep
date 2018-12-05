@@ -19,9 +19,10 @@ const CustomSelector = ({
   small,
   multiChoice = false,
   horiScroll = false,
+  removeBottomMargin = false,
 }) => {
   return (
-    <FormElement labelAlign={labelAlign}>
+    <FormElement labelAlign={labelAlign} bottomMargin={!removeBottomMargin}>
       {label && <FormElement.Label>{label}</FormElement.Label>}
       <Selector.Container horiScroll={horiScroll}>
         {options.map(label => {

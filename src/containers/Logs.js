@@ -5,11 +5,13 @@ import { withTranslate } from 'react-redux-multilingual';
 
 /** Components */
 import RouteContainer from '../components/RouteContainer';
-import CustomSelector from '../components/CustomSelector';
 import Log from '../components/Log';
 import EditActivityDialog from '../components/EditActivityDialog';
 import CustomDialog from '../components/CustomDialog';
 import NoData from '../components/NoData';
+
+/** Styled Components */
+import Logs from '../styled_components/Logs';
 
 /** Actions */
 import * as actions from '../actions';
@@ -17,23 +19,8 @@ import * as actions from '../actions';
 /** Utils */
 import validate from '../utils/validateActivityBeforeSave';
 
-/** Styled Components */
-import Logs from '../styled_components/Logs';
-
-/** Constants */
-const DISPLAY_TOGGLE_OPTIONS = [
-  'breast',
-  'bottle',
-  'pump',
-  'babyfood',
-  'diaper',
-  'sleep',
-  'growth',
-];
-
 class LogsContainer extends Component {
   state = {
-    show: DISPLAY_TOGGLE_OPTIONS,
     isEditActivityDialogOpen: false,
     isConfirmModalOpen: false,
     isSnackbarOpen: false,
@@ -60,22 +47,6 @@ class LogsContainer extends Component {
 
     if (menuClicked === 'edit') this.openEditActivityDialog();
     else if (menuClicked === 'delete') this.openConfirmDialog();
-  }
-
-  handleDisplayOptionClick = e => {
-    const { value } = e.target;
-    const {
-      auth: { currentUser },
-      babies: { currentBaby },
-      getActivities
-    } = this.props;
-    let { show } = this.state;
-
-    if (show.includes(value)) show = show.filter(i => i !== value);
-    else show.push(value);
-    
-    getActivities(currentUser, currentBaby.id, { name: show });
-    this.setState({ show });
   }
 
   openEditActivityDialog = () => {
@@ -184,7 +155,6 @@ class LogsContainer extends Component {
 
   render() {
     const {
-      show,
       isEditActivityDialogOpen,
       isConfirmModalOpen,
     } = this.state;
@@ -196,24 +166,9 @@ class LogsContainer extends Component {
     } = this.props;
     const { all, currentActivity } = activities;
 
-    let toggleOptions = DISPLAY_TOGGLE_OPTIONS;
-    if (displayActivities) {
-      toggleOptions = DISPLAY_TOGGLE_OPTIONS.filter(name => displayActivities.includes(name));
-    }
-
     return (
       <RouteContainer route="logs" baby={currentBaby}>
         <Logs>
-          <Logs.DisplayOptionsContainer>
-            <CustomSelector
-              options={toggleOptions}
-              value={show}
-              onChange={this.handleDisplayOptionClick}
-              multiChoice
-              horiScroll
-            />
-          </Logs.DisplayOptionsContainer>
-      
           {all.length === 0
             ? <NoData icon="list" message={translate('noLogs')} />
             : this.renderLog(all, displayActivities)}

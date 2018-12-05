@@ -2,13 +2,22 @@ import styled from 'styled-components';
 import FlexRowDiv from './shared/FlexRowDiv';
 import ButtonBase from './shared/Button';
 
-const StatsNavigation = styled(FlexRowDiv)`
-  align-items: stretch;
+const SubNavigation = styled.div`
   width: 100%;
 
   ${({ theme }) => `
     background: white;
     border-bottom: 1px solid ${theme.color[`${theme.primary}${theme.xxlight}`]};
+  `}
+`;
+
+const SubNavigationWrapper = styled(FlexRowDiv)`
+  align-items: stretch;
+  width: 100%;
+  margin: auto;
+
+  ${({ theme }) => `
+    max-width: ${theme.breakPoints.sm};
   `}
 `;
 
@@ -60,7 +69,8 @@ const NavItemLabel = styled.span`
 
 `;
 
-StatsNavigation.NavItem = NavItem;
-StatsNavigation.NavItem.Label = NavItemLabel;
+SubNavigation.Wrapper = SubNavigationWrapper;
+SubNavigation.NavItem = NavItem;
+SubNavigation.NavItem.Label = NavItemLabel;
 
-export default StatsNavigation;
+export default SubNavigation;

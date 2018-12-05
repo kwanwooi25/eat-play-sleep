@@ -19,6 +19,7 @@ const DisplayOptionsContainer = styled.div`
 
 const LogGroup = styled.div`
   padding: ${({ theme: { space } }) => space.sm};
+  padding-bottom: 0;
 `;
 
 const LogGroupTitle = styled.div`

@@ -31,6 +31,15 @@ export default {
     xl: '2.5rem',
   },
 
+  /** Break points */
+  breakPoints: {
+    xs: '0px',
+    sm: '600px',
+    md: '960px',
+    lg: '1280px',
+    xl: '1920px',
+  },
+
   /** Fonts */
   fontSize: {
     xs: '0.7rem',

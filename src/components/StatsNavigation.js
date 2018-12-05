@@ -7,11 +7,11 @@ import { withTranslate } from 'react-redux-multilingual';
 import Icon from './Icon';
 
 /** Styled Components */
-import StatsNavigation from '../styled_components/StatsNavigation';
+import SubNavigation from '../styled_components/SubNavigation';
 
 const TOP_NAV_ITEMS = ['summary', 'feed', 'sleep', 'diaper', 'growth'];
 
-const StatsNavContainer = ({
+const StatsNavigation = ({
   translate,
   auth: { currentUser : { settings : { displayActivities } } },
 }) => {
@@ -32,26 +32,28 @@ const StatsNavContainer = ({
   }
 
   return (
-    <StatsNavigation>
-      {navItems.map(name => {
-        return (
-          <StatsNavigation.NavItem
-            as={NavLink}
-            to={`/stats/${name}`}
-            key={name}
-            active={(pathname === name).toString()}
-          >
-            <Icon name={name} />
-            <StatsNavigation.NavItem.Label>
-              {translate(`${name}Label`)}
-            </StatsNavigation.NavItem.Label>
-          </StatsNavigation.NavItem>
-        )
-      })}
-    </StatsNavigation>
+    <SubNavigation>
+      <SubNavigation.Wrapper>
+        {navItems.map(name => {
+          return (
+            <SubNavigation.NavItem
+              as={NavLink}
+              to={`/stats/${name}`}
+              key={name}
+              active={(pathname === name).toString()}
+            >
+              <Icon name={name} />
+              <SubNavigation.NavItem.Label>
+                {translate(`${name}Label`)}
+              </SubNavigation.NavItem.Label>
+            </SubNavigation.NavItem>
+          )
+        })}
+      </SubNavigation.Wrapper>
+    </SubNavigation>
   )
 }
 
 const mapStateToProps = ({ auth }) => ({ auth });
 
-export default withTranslate(connect(mapStateToProps)(StatsNavContainer));
+export default withTranslate(connect(mapStateToProps)(StatsNavigation));

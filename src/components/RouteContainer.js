@@ -42,38 +42,44 @@ const RouteContainer = ({
   return (
     <Main route={route}>
       <Main.Header>
-        {babyName && <Main.Header.Title>{babyName}</Main.Header.Title>}
-        {babyAge && (
-          <Main.Header.Content>
-            {translate('babyAge', { age: babyAge})}
-          </Main.Header.Content>
-        )}
+        <Main.Header.Wrapper>
+          {babyName && <Main.Header.Title>{babyName}</Main.Header.Title>}
+          {babyAge && (
+            <Main.Header.Content>
+              {translate('babyAge', { age: babyAge})}
+            </Main.Header.Content>
+          )}
+        </Main.Header.Wrapper>
       </Main.Header>
 
       {route === 'stats' && <StatsNavigation />}
 
-      <Main.Content>{children}</Main.Content>
+      <Main.Content>
+        <Main.Content.Wrapper>{children}</Main.Content.Wrapper>
+      </Main.Content>
 
       <Main.BottomNav>
-        {BOTTOM_NAV_ITEMS.map(({ label, icon }) => {
-          const isActive = route === label;
-          const shouldDisableNavLink = ['logs', 'stats'].includes(label) && !baby;
+        <Main.BottomNav.Wrapper>
+          {BOTTOM_NAV_ITEMS.map(({ label, icon }) => {
+            const isActive = route === label;
+            const shouldDisableNavLink = ['logs', 'stats'].includes(label) && !baby;
 
-          return (
-            <Main.BottomNav.Link
-              key={label}
-              as={NavLink}
-              to={`/${label}`}
-              active={isActive.toString()}
-              disabled={shouldDisableNavLink}
-            >
-              <Icon color="inherit">{icon}</Icon>
-              <Main.BottomNav.Link.Label>
-                {translate(`${label}Label`)}
-              </Main.BottomNav.Link.Label>
-            </Main.BottomNav.Link>
-          )
-        })}
+            return (
+              <Main.BottomNav.Link
+                key={label}
+                as={NavLink}
+                to={`/${label}`}
+                active={isActive.toString()}
+                disabled={shouldDisableNavLink}
+              >
+                <Icon color="inherit">{icon}</Icon>
+                <Main.BottomNav.Link.Label>
+                  {translate(`${label}Label`)}
+                </Main.BottomNav.Link.Label>
+              </Main.BottomNav.Link>
+            )
+          })}
+        </Main.BottomNav.Wrapper>
       </Main.BottomNav>
       
       <Snackbar open={snackbar.open} variant={snackbar.variant}>

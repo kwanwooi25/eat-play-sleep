@@ -38,8 +38,8 @@ const CustomToolTip = ({ active, payload, label, translate, unit }) => {
   if (!active) return null;
 
   return (
-    <div className="growth-chart__item__custom-tooltip">
-      <h3 className="growth-chart__item__custom-tooltip__label">{label}</h3>
+    <Chart.Tooltip>
+      <h3>{label}</h3>
       {payload.map(({ name, value }) => {
         const propName = ['standard', 'height', 'weight', 'head']
           .find(propName => translate(propName) === name);
@@ -52,21 +52,13 @@ const CustomToolTip = ({ active, payload, label, translate, unit }) => {
         }
 
         return (
-          <div
-            key={name}
-            className="growth-chart__item__custom-tooltip__content"
-            style={{ color: DATA_FILL_COLOR[propName] }}
-          >
-            <span className="growth-chart__item__custom-tooltip__content__name">
-              {name}
-            </span>
-            <span className="growth-chart__item__custom-tooltip__content__value">
-              {formattedValue}
-            </span>
-          </div>
+          <Chart.Tooltip.Content key={name} style={{ color: DATA_FILL_COLOR[propName] }}>
+            <span>{name}</span>
+            <span>{formattedValue}</span>
+          </Chart.Tooltip.Content>
         )
       })}
-    </div>
+    </Chart.Tooltip>
   )
 }
 

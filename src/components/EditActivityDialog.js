@@ -16,7 +16,6 @@ import TimeInput from './TimeInput';
 import CustomSelector from './CustomSelector';
 import CustomTextInput from './CustomTextInput';
 
-
 const Transition = props => <Slide direction="up" {...props} />;
 
 const CUSTOM_SELECTOR_OPTIONS = {

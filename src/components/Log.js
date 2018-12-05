@@ -185,10 +185,10 @@ class LogContainer extends Component {
           onClose={() => { this.handleMenuClose(false) }}
         >
           <MenuItem onClick={() => { this.handleMenuClose('edit') }}>
-            <MuiIcon className="log__menu__icon">edit</MuiIcon>
+            <MuiIcon color="inherit">edit</MuiIcon>
           </MenuItem>
           <MenuItem onClick={() => { this.handleMenuClose('delete') }}>
-            <MuiIcon className="log__menu__icon">delete</MuiIcon>
+            <MuiIcon color="inherit">delete</MuiIcon>
           </MenuItem>
         </Menu>
 

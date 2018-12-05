@@ -9,7 +9,11 @@ const LoginForm = styled(Box)`
   flex-direction: column;
   justify-content: center;
   width: 100%;
-  padding: ${({ theme: { space } }) => space.sm};
+
+  ${({ theme }) => `
+    max-width: ${theme.breakPoints.sm};
+    padding: ${theme.space.sm};
+  `}
 `;
 
 const Container = styled.main`
@@ -38,7 +42,8 @@ const Title = styled.h2`
 `;
 
 const ButtonGroup = styled(ButtonGroupBase)`
-  padding: ${({ theme: { space } }) => `${space.md} ${space.sm}`};
+  justify-content: space-around;
+  /* padding: ${({ theme: { space } }) => `${space.sm}`}; */
 `;
 
 const OauthLink = styled.a`
@@ -49,10 +54,13 @@ const OauthLink = styled.a`
   border: none;
   outline: none;
   border-radius: 100%;
-  width: 3rem;
-  height: 3rem;
+  width: auto;
+  max-width: 4rem;
   cursor: pointer;
-  margin: ${({ theme: { space } }) => space.sm};
+
+  ${({ theme: { space } }) => `
+    margin: ${`${space.md} ${space.xs}`};
+  `}
 `;
 
 const Divider = styled.div`

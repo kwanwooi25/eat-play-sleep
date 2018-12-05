@@ -32,7 +32,7 @@ const DEFAULT_SETTINGS = {
     weight: 'kg'
   },
   displayLanguage: window.navigator.language.slice(0, 2) === 'ko' ? 'ko' : 'en',
-  theme: 'indigo',
+  themeColor: 'indigo',
 };
 
 const injectSettings = user => {

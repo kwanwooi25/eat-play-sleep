@@ -5,7 +5,7 @@ import TextAreaBase from './TextArea';
 import ButtonBase from './Button';
 
 const FormElement = styled.div`
-  ${({ theme, labelAlign, error, bottomMargin }) => `
+  ${({ theme, labelAlign, error, bottomMargin = true }) => `
     width: 100%;
     margin-bottom: ${bottomMargin ? theme.space.sm : 0};
     align-items: center;

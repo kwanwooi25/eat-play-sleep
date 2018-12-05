@@ -20,6 +20,7 @@ const APP_SETTINGS = [
   'displayActivities',
   'displayLanguage',
   'displayUnits',
+  'themeColor',
 ];
 
 class SettingsContainer extends Component {
@@ -112,6 +113,7 @@ class SettingsContainer extends Component {
           displayActivities={currentUser.settings.displayActivities}
           displayLanguage={currentUser.settings.displayLanguage}
           displayUnits={currentUser.settings.displayUnits}
+          themeColor={currentUser.settings.themeColor}
         />
       </RouteContainer>
     )

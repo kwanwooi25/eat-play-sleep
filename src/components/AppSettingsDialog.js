@@ -11,6 +11,7 @@ import AppSettings from '../styled_components/AppSettings';
 /** Components */
 import CustomSelector from './CustomSelector';
 import CustomRadioGroup from './CustomRadioGroup';
+import ColorSelect from './ColorSelect';
 
 const ACTIVITY_OPTIONS = [
   'breast',
@@ -27,32 +28,49 @@ const UNITS = {
   length: [{ value: 'cm', label: 'CM' }, { value: 'in', label: 'IN' }],
   weight: [{ value: 'kg', label: 'KG' }, { value: 'lb', label: 'LB' }],
 };
+const COLOR_OPTIONS = [
+  'red',
+  'pink',
+  'purple',
+  'deepPurple',
+  'indigo',
+  'blue',
+  'lightBlue',
+  'cyan',
+  'teal',
+  'green',
+  'lightGreen',
+  'lime',
+  'yellow',
+  'amber',
+  'orange',
+  'deepOrange',
+  'brown',
+  'grey',
+  'blueGrey',
+];
 
 const Transition = props => <Slide direction="left" {...props} />;
 
 class AppSettingsDialog extends Component {
-  constructor(props) {
-    super(props);
-
-    const displayActivities = props.displayActivities || ACTIVITY_OPTIONS;
-    const displayLanguage = props.displayLanguage || 'en';
-    const displayUnits = props.displayUnits || { volume: 'ml', length: 'cm', weight: 'kg' };
-
-    this.state = {
-      displayActivities,
-      displayLanguage,
-      displayUnits,
-    }
+  state = {
+    displayActivities: ACTIVITY_OPTIONS,
+    displayLanguage: window.navigator.language.slice(0, 2) === 'ko' ? 'ko' : 'en',
+    displayUnits: { volume: 'ml', length: 'cm', weight: 'kg' },
+    themeColor: 'indigo',
   }
+
   componentWillReceiveProps(props) {
     const displayActivities = props.displayActivities || ACTIVITY_OPTIONS;
     const displayLanguage = props.displayLanguage || 'en';
     const displayUnits = props.displayUnits || { volume: 'ml', length: 'cm', weight: 'kg' };
+    const themeColor = props.themeColor || 'indigo';
 
     this.setState({
       displayActivities,
       displayLanguage,
       displayUnits,
+      themeColor,
     })
   }
 
@@ -88,6 +106,8 @@ class AppSettingsDialog extends Component {
     this.setState({ displayUnits });
   }
 
+  handleColorChange = themeColor => this.setState({ themeColor });
+
   render() {
     const {
       translate,
@@ -99,6 +119,7 @@ class AppSettingsDialog extends Component {
       displayActivities,
       displayLanguage,
       displayUnits,
+      themeColor,
     } = this.state;
 
     const languageRadioOptions = 
@@ -135,7 +156,7 @@ class AppSettingsDialog extends Component {
             )}
 
             {settingsLabel === 'displayUnits' && (
-              <div>
+              <>
                 {Object.keys(UNITS).map(key => {
                   return (
                     <CustomRadioGroup
@@ -149,7 +170,15 @@ class AppSettingsDialog extends Component {
                     />
                   )
                 })}
-              </div>
+              </>
+            )}
+
+            {settingsLabel === 'themeColor' && (
+              <ColorSelect
+                selected={themeColor}
+                colors={COLOR_OPTIONS}
+                onChange={this.handleColorChange}
+              />
             )}
           </AppSettings.Content>
 

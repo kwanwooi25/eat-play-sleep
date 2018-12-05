@@ -153,6 +153,7 @@ export default {
       volumeUnit: 'Volume',
       lengthUnit: 'Length',
       weightUnit: 'Weight',
+      themeColor: 'Theme Color',
     }
   },
   ko: {
@@ -309,6 +310,7 @@ export default {
       volumeUnit: '부피',
       lengthUnit: '길이',
       weightUnit: '무게',
+      themeColor: '테마 색상',
     }
   }
 }

@@ -80,7 +80,7 @@ class App extends Component {
   render() {
     const { currentUser } = this.props.auth;
     const isLoggedIn = Boolean(currentUser);
-    const primary = (currentUser && currentUser.settings.theme) || 'indigo';
+    const primary = (currentUser && currentUser.settings.themeColor) || 'indigo';
     const theme = Object.assign({}, themeBase, { primary });
 
     return (

@@ -18,8 +18,10 @@ export const getGuestUser = () => JSON.parse(localStorage.getItem(GUEST_USER));
 export const setGuestUser = user => localStorage.setItem(GUEST_USER, JSON.stringify(user));
 export const logoutGuestUser = () => {
   const guest = getGuestUser();
-  guest.isLoggedIn = false;
-  setGuestUser(guest);
+  if (guest) {
+    guest.isLoggedIn = false;
+    setGuestUser(guest);
+  }
 }
 
 /** Guest's baby info */
@@ -44,7 +46,8 @@ export const addGuestBaby = baby => {
 }
 export const editGuestBaby = baby => {
   const babies = getGuestBabies();
-  const updated = babies.filter(({ id }) => id !== baby.id).push(baby);
+  const updated = babies.filter(({ id }) => id !== baby.id);
+  updated.push(baby);
   setGuestBabies(updated);
   return getGuestBabies();
 }

@@ -101,6 +101,7 @@ const BottomNavLink = styled(ButtonBase)`
     ${disabled ? `
       color: ${theme.color[`${theme.grey}${theme.main}`]};
       cursor: default;
+      pointer-events: none;
 
       &:hover {
         background: transparent;

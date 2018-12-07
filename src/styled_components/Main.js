@@ -26,12 +26,12 @@ const Header = styled.header`
 const HeaderWrapper = styled(FlexRowDiv)`
   justify-content: space-between;
   width: 100%;
-  min-height: 4rem;
+  min-height: 3rem;
   margin: auto;
 
   ${({ theme }) => `
     max-width: ${theme.breakPoints.sm};
-    padding: ${theme.space.md};
+    padding: ${theme.space.sm};
   `}
 `;
 

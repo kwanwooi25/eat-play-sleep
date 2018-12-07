@@ -168,6 +168,7 @@ class Home extends Component {
           TransitionComponent={Transition}
           fullScreen
           keepMounted
+          style={{ maxWidth: '600px', margin: 'auto' }}
         >
           {activity ? (
             <Activity

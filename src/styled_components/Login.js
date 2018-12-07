@@ -9,9 +9,9 @@ const LoginForm = styled(Box)`
   flex-direction: column;
   justify-content: center;
   width: 100%;
+  max-width: 480px;
 
   ${({ theme }) => `
-    max-width: ${theme.breakPoints.sm};
     padding: ${theme.space.sm};
   `}
 `;

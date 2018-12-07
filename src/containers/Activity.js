@@ -198,10 +198,12 @@ class ActivityContainer extends Component {
     return (
       <Activity>
         <Activity.Header>
-          <Activity.Header.Title>{title}</Activity.Header.Title>
-          <Activity.Header.Button onClick={onBack}>
-            <Icon name="arrow_down" />
-          </Activity.Header.Button>
+          {/* <Activity.Header.Wrapper> */}
+            <Activity.Header.Title>{title}</Activity.Header.Title>
+            <Activity.Header.Button onClick={onBack}>
+              <Icon name="arrow_down" />
+            </Activity.Header.Button>
+          {/* </Activity.Header.Wrapper> */}
         </Activity.Header>
 
         {this.renderContent()}

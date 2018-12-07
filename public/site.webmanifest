@@ -1,0 +1,19 @@
+{
+    "name": "Eap Play Sleep",
+    "short_name": "Eap Play Sleep",
+    "icons": [
+        {
+            "src": "/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#fbb03b",
+    "background_color": "#fbb03b",
+    "display": "standalone"
+}

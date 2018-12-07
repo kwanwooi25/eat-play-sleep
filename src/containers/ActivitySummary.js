@@ -119,7 +119,6 @@ class ActivitySummaryContainer extends Component {
     const { date } = this.state;
 
     const isToday = moment(date).format('YYYYMMDD') === moment().format('YYYYMMDD');
-    const dateFormat = isToday ? translate('today') : translate('dateFormatLong');
 
     return (
       <RouteContainer route="stats" baby={currentBaby}>
@@ -134,7 +133,7 @@ class ActivitySummaryContainer extends Component {
             <CustomDateTimePicker
               value={date}
               onChange={this.handleDateChange}
-              dateFormat={dateFormat}
+              dateFormat={translate('dateFormatLong')}
               timePicker={false}
               showNowButton={false}
               max={moment()}
